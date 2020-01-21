@@ -1,15 +1,10 @@
-const express = require('express'); //
+const express = require('express'); 
+const routes = require('./routes');
 
 const PORT = 3000;
 
 const app = express();
-
-app.get("/", (request, response) => {
-  response.json({
-      status: "connected",
-      message: "Hello world"
-    });
-  });
+app.use(routes);
 
 app.listen(PORT, () =>{
   console.log("The server is running!");
