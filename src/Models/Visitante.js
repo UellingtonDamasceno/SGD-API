@@ -1,7 +1,7 @@
 const conection = require("./conection.js")
 
 exports.add = function add(idPessoa, callback){
-    var sql = "INSERT INTO visitantes (idPessoa) VALUES = ?"
+    var sql = "INSERT INTO visitantes (idPessoa) VALUES ?"
     conection.query(sql, idPessoa, function(err, result){
         if (err) throw err;
         callback(result);

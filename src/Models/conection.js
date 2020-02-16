@@ -1,4 +1,6 @@
 const mySql = require("mysql");
+const Pessoa = require("./Pessoa");
+
 //Conexão com o banco de dados não alterar
 const conection = mySql.createConnection({
     host: "sql130.main-hosting.eu",
