@@ -7,7 +7,7 @@ const conection = require("./conection.js");
         var values = [[CPF_CNPJ, Nome, Estado, Cidade, Endereço, email, telefone]];
         conection.query(sql, [values], function(err, result){
             if (err) throw err;
-            return result
+            callback(result)
         });
     }
 
@@ -32,8 +32,8 @@ const conection = require("./conection.js");
 
     // Busca a pessoa pelo CPF ou CNPJ  em tbl_pessoa. Retorna o resultado. Retorna um objeto no final
     exports.getByCPF = function getByCPF(CPF_CNPJ, callback){
-        var sql = "SELECT * FROM pessoas WHERE PF_CNPJ = ?";
-        conection.query(sql, PF_CNPJ, function(err, result){
+        var sql = "SELECT * FROM pessoas WHERE CPF_CNPJ = ?";
+        conection.query(sql, CPF_CNPJ, function(err, result){
             if (err) throw err;
             callback(result);
         });

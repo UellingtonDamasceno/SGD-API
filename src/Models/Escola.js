@@ -4,7 +4,7 @@ const conection = require("./conection.js")
 exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa, callback){
     var sql = "INSERT INTO escolas (idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa) VALUES ?"
     var values = [[idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa]]
-    conection.query(sql, values, function(err, result){
+    conection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     })
