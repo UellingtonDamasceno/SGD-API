@@ -3,8 +3,9 @@ const mysql = require('mysql');
 const Person = require('./Controller/Person')
 const Visitor = require('./Controller/Visitor')
 const School = require('./Controller/School')
-const AuthSchool = require('./Auth/AuthSchool')
-const passport = require('./Auth/passportSchool')()
+const User = require('./Controller/User')
+const authSchool = require('./Auth/authSchool')
+const passportSchool = require('./Auth/passportSchool')()
 
 let connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -23,7 +24,7 @@ routes.get("/", (request, response) => {
 });
 
 routes.post("/validateSchoolToken",  (request, response) => {
-  AuthSchool.validateToken(request, response)
+  authSchool.validateToken(request, response)
 })
 
 routes.post("/cadastroEscola", (request, response) => {
@@ -31,11 +32,22 @@ routes.post("/cadastroEscola", (request, response) => {
 })
  
 routes.post("/entrarEscola", (request, response) => {
-  AuthSchool.signIn(request, response)
+  authSchool.signIn(request, response)
+}) 
+
+routes.get("/usuario", (request, response) => {
+  User.getUserByLogin(request, response, result => {
+    response.json({ result })
+  })
 })
 
+routes.post("/escolaPorLogin", (request, response) => {
+    School.getSchoolByLogin(request, response, result => {
+      response.json(result)
+    })
+})
 
-routes.get("/escolaPerfil", passport.authenticate(), (request, response) => {
+routes.get("/escolaPerfil", passportSchool.authenticate(), (request, response) => {
   response.json({
     worked: true
   })

@@ -3,33 +3,37 @@ const authSecret = process.env.AUTH_SECRET
 const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 const School = require('../Controller/School')
+const User = require('../Controller/User')
 
 const signIn = (request, response) => {
     const bodyReq = {...request.body}
 
-    if(!bodyReq.respName || !bodyReq.respPhone) return response.status(400).send('Informe o usuário e a senha') // Alterar depois
+    if(!bodyReq.login || !bodyReq.password) return response.status(400).send('Informe o usuário e a senha')
 
-    School.getSchoolByRespName(request, response, result => {
-        let first = result[0]
-        if(first){
-            const isMatch = (first.telefoneResponsavel == bodyReq.respPhone) // Substituir isso pelo bcrypt após a senha
+    User.getUserByLogin(request, response, result => {
+        let firstUser = result[0]
+        if(firstUser){
+            const isMatch = bcrypt.compareSync(request.body.password, firstUser.Senha)
             if(!isMatch) return response.status(401).send('Login incorreto')
             else {
-                const now = Math.floor(Date.now() / 1000)
+                School.getSchoolByLogin(request, response, result => {
+                    let firstSchool = result[0]
+                    const now = Math.floor(Date.now() / 1000)
 
-                const payload = {
-                    idSchool: first.idEscola,
-                    respName: first.nomeResponsavel,
-                    respPhone: first.telefoneResponsavel,
-                    idVisitor: first.idVisitante,
-                    idPerson: first.idPessoa,
-                    iat: now,
-                    exp: now + (60 * 60 * 24 * 3) // 3 days
-                }
-
-                response.json({
-                    ...payload,
-                    token: jwt.encode(payload, authSecret)
+                    const payload = {
+                        idSchool: firstSchool.idEscola,
+                        respName: firstSchool.nomeResponsavel,
+                        respPhone: firstSchool.telefoneResponsavel,
+                        idVisitor: firstSchool.idVisitante,
+                        idPerson: firstSchool.idPessoa,
+                        iat: now,
+                        exp: now + (60 * 60 * 24 * 3) // 3 days
+                    }
+    
+                    response.json({
+                        ...payload,
+                        token: jwt.encode(payload, authSecret)
+                    }) 
                 })
             }
         } else {

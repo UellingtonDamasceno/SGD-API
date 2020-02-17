@@ -4,6 +4,7 @@ const modelVisitante = require('../Models/Visitante')
 const modelEscola = require('../Models/Escola')
 const Person = require('./Person')
 const Visitor = require('./Visitor')
+const User = require('./User')
 
 const addNewSchool = (request, response) => {
     const bodyReq = {...request.body}
@@ -11,13 +12,15 @@ const addNewSchool = (request, response) => {
     Person.getPersonByName(request, response, result => {
         let first = result[0]
         if(first) { // There is a person with that 'name'
-            response.status(400).send('Bad request')
+            response.status(400).send('Já existe uma pessoa cadastrada com esse nome')
         } else {
             Person.addNewPerson(request, response, result => {
                 request.body.idPerson = result.insertId
                 Visitor.addNewVisitor(request, response, result => {      
                     modelEscola.add(result.insertId, bodyReq.respName, bodyReq.respPhone, bodyReq.login, request.body.idPerson, result => {
-                        response.status(200).send(result)
+                        User.addNewUser(request, response, result => {
+                            response.status(200).send(result)
+                        })
                     })
                 })
             })
@@ -37,4 +40,10 @@ const getSchoolById = (request, response, next) => {
     modelEscola.getByIdEscola(bodyReq.idSchool, next)
 }
 
-module.exports = { addNewSchool, getSchoolByRespName, getSchoolById }
+const getSchoolByLogin = (request, response, next) => {
+    const bodyReq = {...request.body}
+    //next(bodyReq)
+    modelEscola.getByLogin(bodyReq.login, next)
+}
+ 
+module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByLogin }

@@ -16,7 +16,7 @@ module.exports = function() {
         School.getSchoolById(payload, null, result => {
             let first = result[0]
             if(first){
-                return done(null, first ? { ...payload } : false)
+                return done(null, { ...payload })
             } else {
                 return done(new Error("Usuário não encontrado"), false)
             }

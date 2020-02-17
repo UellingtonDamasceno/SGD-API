@@ -1,9 +1,10 @@
 require('dotenv/config');
 const mySql = require("mysql");
+const Pessoa = require("./Pessoa");
 
-// Conexão com o banco de dados não alterar
-/* 
-    const conection = mySql.createConnection({
+/*
+//Conexão com o banco de dados não alterar
+const conection = mySql.createConnection({
     host: "sql130.main-hosting.eu",
     port: "3306",
     user: 'u970457530_sgda_root',

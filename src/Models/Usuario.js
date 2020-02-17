@@ -2,12 +2,12 @@ const conection = require("./conection.js")
 const Pessoa = require("./Pessoa.js");
 
 
-exports.add = function add(Login, Senha, idPessoa){
+exports.add = function add(Login, Senha, idPessoa, callback){
     var sql = "INSERT INTO usuarios (Login, Senha, idPessoa) VALUES ?";
     var values = [[Login, Senha, idPessoa]];
-    conection.query(sql, values, function(err, result){
+    conection.query(sql, [values], function(err, result){
         if (err) throw err;
-        console.log(result)
+        callback(result)
     })
 }
 
