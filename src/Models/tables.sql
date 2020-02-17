@@ -1,4 +1,4 @@
-create table if not exists tbl_pessoa (
+create table if not exists pessoas(
 idPessoa int auto_increment primary key,
 CPF_CNPJ char(16) unique,
 Nome char(50) not null,
@@ -9,22 +9,22 @@ Email char(40) not null,
 Telefone char(20) not null
 );
 
-create table if not exists tbl_usuario(
+create table if not exists usuario(
 Login char(30) primary key unique,
 Senha char(40) not null,
 idPessoa int,
 foreign key (idPessoa) references tbl_pessoa (idPessoa)
 );
 
-create table if not exists tbl_visitante(
+create table if not exists visitantes(
 idVisitante int primary key not null unique auto_increment,
 idPessoa int,
 foreign key (idPessoa)references tbl_pessoa(idPessoa)
 );
 
-create table if not exists tbl_bolsista(
+create table if not exists bolsistas(
 idBolsista int unique primary key auto_increment,
-Login char,
+Login char(30),
 nomeResponsavel char(50) not null,
 telefoneResponsavel char(20),
 idPessoa int,
@@ -33,16 +33,16 @@ foreign key (Login) references tbl_usuario(Login),
 foreign key (idPessoa) references tbl_usuario(idPessoa) 
 );
 
-create table if not exists tbl_horarioTrabalho(
+create table if not exists horarioTrabalhos(
 idBolsista int,
 inicioPeriodo Date not null,
 fimPeriodo Date not null,
 foreign key (idBolsista) references tbl_bolsista(idBolsista)
 );
 
-create table if not exists tbl_funcionario(
+create table if not exists funcionarios(
 idFuncionario int primary key not null unique auto_increment,
-Login char,
+Login char(30),
 idPessoa int,
 idPermissoes int,
 Inativo boolean not null,
@@ -51,14 +51,14 @@ foreign key (Login) references tbl_usuario (Login),
 foreign key (idPessoa) references tbl_usuario (idPessoa)
 );
 
-create table if not exists tbl_relatorio(
+create table if not exists relatorios(
 idRelatorio int primary key unique not null auto_increment,
 idFuncionario int,
 criadoEm Date not null,
 foreign key (idFuncionario) references tbl_Funcionario(idFuncionario)
 );
 
-create table if not exists tbl_permissoes(
+create table if not exists permissoes(
 idPermissoes int unique primary key auto_increment,
 idFuncionario int,
 gerirBolsistas boolean not null,
@@ -72,36 +72,36 @@ gerirHorarioBolsista boolean not null,
 foreign key (idFuncionario) references tbl_funcionario(idFuncionario)
 );
 
-alter table tbl_funcionario
+alter table funcionarios
 add constraint fk_idPermissoes
-foreign key (idPermissoes) references tbl_permissoes(idPermissoes);
+foreign key (idPermissoes) references permissoes(idPermissoes);
 
-create table if not exists tbl_individuoVisitante(
+create table if not exists individuoVisitantes(
 RG char(15) primary key not null unique,
 idVisitante int,
 foreign key (idVisitante) references tbl_visitante (idVisitante)
 );
 
-create table if not exists tbl_escola(
+create table if not exists escolas(
 idEscola int primary key unique auto_increment,
 idVisitante int,
 nomeResponsavel char(50) not null,
 telefoneResponsavel char(20),
 Login char,
 idPessoa int,
-foreign key (idVisitante) references tbl_visitante (idVisitante),
-foreign key (Login) references tbl_usuario (Login),
-foreign key (idPessoa) references tbl_usuario (idPessoa)
+foreign key (idVisitante) references visitantes (idVisitante),
+foreign key (Login) references usuarios (Login),
+foreign key (idPessoa) references usuarios (idPessoa)
 );
 
-create table if not exists tbl_visita(
+create table if not exists visitas(
 idVisitante int,
 numAlunos int not null,
 Responsavel char(50) not null,
 status int not null
 );
 
-create table if not exists tbl_atracao(
+create table if not exists atracoes(
 Nome char(25) primary key not null,
 incioPeriodo Time not null,
 fimPeriodo Time not null,
@@ -109,7 +109,7 @@ Descricao text,
 Tipo int not null
 );
 
-create table if not exists tbl_horario(
+create table if not exists horarios(
 _data Date primary key not null,
 hora Time not null
 )
