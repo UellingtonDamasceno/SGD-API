@@ -3,7 +3,7 @@ const connection = require("../services/database/connection");
 exports.add = function add(idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao, callback){
     var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamento, confirmarVisita, gerarRelatorio, inserirAtividades, cadastrarAtracao) VALUES  ?"
     var values = [[idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao]]
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     });
