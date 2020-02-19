@@ -3,7 +3,11 @@ const conection = require("./conection");
 exports.add = function add(Login, idPessoa, idPermissões, adm, callback){
     var sql = "INSERT INTO funcionarios (Login, idPessoa, idPermissões, adm, Inativo) VALUES ?";
     var values = [[Login, idPessoa, idPermissões, adm, 0]]
+<<<<<<< Updated upstream:src/Models/Funcionario.js
     conection.query(sql, values, function(err, result){
+=======
+    connection.query(sql, [values], function(err, result){
+>>>>>>> Stashed changes:src/models/Employee.js
         if (err) throw err;
         callback(result);
     })

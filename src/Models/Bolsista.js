@@ -3,7 +3,11 @@ const conection = require("./conection.js");
 exports.add = function add(Login, idPessoa, callback){
     var sql = "INSERT INTO bolisistas (Login, idPessoa, Inativo) VALUES ?";
     var values = [[Login, idPessoa, 0]];
+<<<<<<< Updated upstream:src/Models/Bolsista.js
     conection.query(sql, values, function(err, result){
+=======
+    connection.query(sql, [values], function(err, result){
+>>>>>>> Stashed changes:src/models/Scholarship.js
         if (err) throw err;
         callback(result);
     })

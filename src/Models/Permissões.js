@@ -3,7 +3,11 @@ const conection = require("./conection");
 exports.add = function add(idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao, callback){
     var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamento, confirmarVisita, gerarRelatorio, inserirAtividades, cadastrarAtracao) VALUES  ?"
     var values = [[idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao]]
+<<<<<<< Updated upstream:src/Models/Permissões.js
     conection.query(sql, values, function(err, result){
+=======
+    connection.query(sql, [values], function(err, result){
+>>>>>>> Stashed changes:src/models/Permissions.js
         if (err) throw err;
         callback(result);
     });
