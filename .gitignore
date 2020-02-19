@@ -1,3 +1,4 @@
 node_modules
-
+src/services/database/tables.sql
 .env
+
