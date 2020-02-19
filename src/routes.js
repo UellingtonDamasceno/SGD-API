@@ -7,7 +7,6 @@ const Visitor = require("./controllers/VisitorController");
 const routes = Router();
 
 routes.get("/", (request, response) => {
-  Visitor.addNewVisitor()
   response.json({
       status: "connected",
       message: "Hello world"
