@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt-nodejs')
-const modelPessoa = require('../Models/Pessoa')
+const bcrypt = require('bcrypt-nodejs');
+const modelPessoa = require('../models/Person');
 
 const sendMessage = (request, response, result) => {
     response.status(200).send(result)

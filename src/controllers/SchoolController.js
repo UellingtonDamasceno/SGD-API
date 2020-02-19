@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt-nodejs')
-const modelPessoa = require('../Models/Pessoa')
-const modelVisitante = require('../Models/Visitante')
-const modelEscola = require('../Models/Escola')
-const Person = require('./Person')
-const Visitor = require('./Visitor')
-const User = require('./User')
+const bcrypt = require('bcrypt-nodejs');
+const modelPessoa = require('../models/Person');
+const modelVisitante = require('../models/Visitor');
+const modelEscola = require('../models/School');
+const Person = require('./PersonController');
+const Visitor = require('./VisitorController');
+const User = require('./UserController');
 
 const addNewSchool = (request, response) => {
     const bodyReq = {...request.body}
@@ -25,25 +25,25 @@ const addNewSchool = (request, response) => {
                 })
             })
         }
-    })
-}
+    });
+};
 
 const getSchoolByRespName = (request, response, next) => {
-    const bodyReq = {...request.body}
+    const bodyReq = {...request.body};
     
-    modelEscola.getByNome(bodyReq.respName, next)
-}
+    modelEscola.getByNome(bodyReq.respName, next);
+};
 
 const getSchoolById = (request, response, next) => {
-    const bodyReq = {...request}
+    const bodyReq = {...request};
 
-    modelEscola.getByIdEscola(bodyReq.idSchool, next)
-}
+    modelEscola.getByIdEscola(bodyReq.idSchool, next);
+};
 
 const getSchoolByLogin = (request, response, next) => {
-    const bodyReq = {...request.body}
+    const bodyReq = {...request.body};
     //next(bodyReq)
-    modelEscola.getByLogin(bodyReq.login, next)
-}
+    modelEscola.getByLogin(bodyReq.login, next);
+};
  
-module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByLogin }
+module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByLogin };

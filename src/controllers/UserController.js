@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt-nodejs')
-const modelPessoa = require('../Models/Pessoa')
-const modelVisitante = require('../Models/Visitante')
-const modelEscola = require('../Models/Escola')
-const modelUsuario = require('../Models/Usuario')
-const Person = require('./Person')
-const Visitor = require('./Visitor')
+const bcrypt = require('bcrypt-nodejs');
+const modelPessoa = require('../models/Person');
+const modelVisitante = require('../models/Visitor');
+const modelEscola = require('../models/School');
+const modelUsuario = require('../models/User');
+const Person = require('./PersonController');
+const Visitor = require('./VisitorController');
 
 const encryptPassword = password => {
     const salt = bcrypt.genSaltSync(10)

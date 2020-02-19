@@ -1,9 +1,10 @@
 require('dotenv/config');
-const authSecret = process.env.AUTH_SECRET
-const jwt = require('jwt-simple')
-const bcrypt = require('bcrypt-nodejs')
-const School = require('../Controller/School')
-const User = require('../Controller/User')
+const jwt = require('jwt-simple');
+const bcrypt = require('bcrypt-nodejs');
+const School = require('../controllers/SchoolController');
+const User = require('../controllers/UserController');
+
+const authSecret = process.env.AUTH_SECRET;
 
 const signIn = (request, response) => {
     const bodyReq = {...request.body}

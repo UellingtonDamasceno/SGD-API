@@ -1,10 +1,10 @@
 require('dotenv/config');
-const authSecret = process.env.AUTH_SECRET
-const passport = require('passport')
-const passportJwt = require('passport-jwt')
-const { Strategy, ExtractJwt } = passportJwt
-const School = require('../Controller/School')
+const passport = require('passport');
+const passportJwt = require('passport-jwt');
+const { Strategy, ExtractJwt } = passportJwt;
+const School = require('../controllers/SchoolController');
 
+const authSecret = process.env.AUTH_SECRET
 
 module.exports = function() {
     const param = {
