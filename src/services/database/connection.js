@@ -3,11 +3,10 @@ const mySql = require("mysql");
 
 //Conexão com o banco de dados não alterar
 const connection = mySql.createConnection({
-  host: "sql130.main-hosting.eu",
-  port: "3306",
-  database: "u970457530_sgda",
-  user: "u970457530_sgda_root",
-  password: "123456789"
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS
 });
 
 mySql.createConnection({multipleStatements: true});
