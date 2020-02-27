@@ -12,5 +12,5 @@ app.use(bodyParser.json())
 app.use(routes);
 
 app.listen(process.env.PORT || port, () =>{
-  console.log("The server is running!");
+  console.log("The server is running in port: " + port);
 });
