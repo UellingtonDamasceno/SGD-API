@@ -1,5 +1,4 @@
-const bcrypt = require('bcrypt-nodejs');
-const modelPessoa = require('../models/Person');
+const modelPerson = require('../models/Person');
 
 const sendMessage = (request, response, result) => {
     response.status(200).send(result)
@@ -9,7 +8,7 @@ const addNewPerson = (request, response, next) => {
     const bodyReq = {...request.body}
     
     try {
-        modelPessoa.addPessoa(bodyReq.cpf || bodyReq.cnpj, bodyReq.name, bodyReq.state, bodyReq.city,
+        modelPerson.addPessoa(bodyReq.cpf || bodyReq.cnpj, bodyReq.name, bodyReq.state, bodyReq.city,
             bodyReq.address, bodyReq.email, bodyReq.phone, next)
     } catch(err) {
         response.status(500).send(err)
@@ -24,7 +23,7 @@ const getPersonByName = (request, response, next) => {
     const bodyReq = {...request.body}
 
     try {
-        modelPessoa.getByNome(bodyReq.name, next)
+        modelPerson.getByNome(bodyReq.name, next)
     } catch(err) {
         response.status(500).send(err)
     }
@@ -34,7 +33,7 @@ const removePersonById = (request, response) => {
     const bodyReq = {...request.body}
     
     try {
-        modelPessoa.remove(bodyReq.id, result => {
+        modelPerson.remove(bodyReq.id, result => {
             if(result) response.status(200).send()
             else response.status(400).send()
         })   
