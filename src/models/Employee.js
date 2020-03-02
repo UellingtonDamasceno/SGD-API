@@ -78,7 +78,7 @@ exports.setLogin = function setLogin(idFuncionario, Login, callback){
 exports.setIdPessoa = function setIdPessoa(idFuncionario, idPessoa, callback){
     var sql = "UPDATE funcionarios SET idPessoa = ? WHERE idFuncionario = ?";
     var values = [idPessoa, idFuncionario];
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     });
@@ -87,7 +87,7 @@ exports.setIdPessoa = function setIdPessoa(idFuncionario, idPessoa, callback){
 exports.setidPermissões = function setidPermissões(idPermissões, idFuncionario, callback){
     var sql = "UPDATE funcionarios SET idPermissões = ? WHERE idFuncionario = ?";
     var values = [idPermissões, idFuncionario, callback];
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     });
