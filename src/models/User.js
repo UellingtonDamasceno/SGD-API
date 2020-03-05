@@ -8,15 +8,15 @@ exports.add = function add(Login, Senha, idPessoa, callback){
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    }) 
 }
 
 exports.getById = function getById(idPessoa, callback){
     var sql = "SELECT * FROM usuarios WHERE idPessoa = ?"
     connection.query(sql, idPessoa, function(err, result){
         if (err) throw err;
-        callback(result)
-    });
+        callback(result);
+    }); 
 }
 
 exports.getByLogin = function getByLogin(Login, callback){
@@ -24,7 +24,7 @@ exports.getByLogin = function getByLogin(Login, callback){
     connection.query(sql, Login, function(err, result){
         if(err) throw err;
         callback(result);
-    })
+    });  
 }
 
 exports.setLogin = function setLogin(idPessoa, Login, callback){
@@ -33,7 +33,7 @@ exports.setLogin = function setLogin(idPessoa, Login, callback){
     connection.query(sql, values, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });  
 }
 
 exports.setSenha = function setSenha(idPessoa, Senha, callback){
@@ -42,7 +42,7 @@ exports.setSenha = function setSenha(idPessoa, Senha, callback){
     connection.query(sql, values, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });
 }
 
 exports.remove = function remove(idPessoa, callback){

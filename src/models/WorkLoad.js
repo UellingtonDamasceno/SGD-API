@@ -41,8 +41,8 @@ exports.setidBolsista = function setidBolsista(idBolsista, newId, callback){
     var values = [newId, idBolsista]
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
-        callback(result)
-    })
+        callback(result);
+    });
 }
 
 exports.setInicioPeriodo = function setInicioPeriodo(idBolsista, inicioPeriodo, callback){
@@ -51,7 +51,7 @@ exports.setInicioPeriodo = function setInicioPeriodo(idBolsista, inicioPeriodo, 
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });
 }
 
 exports.setFimPeriodo = function setFimPeriodo(idBolsista, fimPeriodo, callback){
@@ -60,7 +60,7 @@ exports.setFimPeriodo = function setFimPeriodo(idBolsista, fimPeriodo, callback)
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });
 }
 
 exports.setSemana = function setSemana(idBolsista, semana, callback){
@@ -78,5 +78,5 @@ exports.remove = function remove(idBolsista, callback){
     connection.query(sql, idBolsista, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });
 } 

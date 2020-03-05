@@ -6,7 +6,7 @@ exports.add = function add(Login, idPessoa, callback){
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });    
 }
 
 exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
@@ -14,7 +14,7 @@ exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
     connection.query(sql, idPessoa, function(err, result){
         if(err) throw err;
         callback(result);
-    })
+    })    
 }
 
 exports.getByLogin = function getByLogin(Login, callback){
@@ -22,7 +22,7 @@ exports.getByLogin = function getByLogin(Login, callback){
     connection.query(sql, Login, function(err, result){
         if(err) throw err;
         callback(result);
-    })
+    })     
 }
 
 exports.getByIdBolsista = function getByIdBolsista(idBolsista, callback){
@@ -30,7 +30,7 @@ exports.getByIdBolsista = function getByIdBolsista(idBolsista, callback){
     connection.query(sql, idBolsista, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });  
 }
 
 exports.getAtivos = function getAtivos(callback){
@@ -38,7 +38,7 @@ exports.getAtivos = function getAtivos(callback){
     connection.query(sql, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });   
 }
 
 exports.getInativos = function getInativos(callback){
@@ -46,7 +46,7 @@ exports.getInativos = function getInativos(callback){
     connection.query(sql, function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });    
 }
 
 exports.setAtivo = function setAtivo(idBolsista, callback){
@@ -54,7 +54,7 @@ exports.setAtivo = function setAtivo(idBolsista, callback){
     connection.query(sql, idBolsista, function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });   
 }
 
 exports.setInativo = function setInativo(idBolsista, callback){
@@ -62,7 +62,7 @@ exports.setInativo = function setInativo(idBolsista, callback){
     connection.query(sql, idBolsista, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    })  
 }
 
 exports.setLogin = function setLogin(idBolsista, Login, callback){
@@ -71,7 +71,7 @@ exports.setLogin = function setLogin(idBolsista, Login, callback){
     connection.query(sql, values, function(err, result){
         if(err) throw err;
         callback (result);
-    })
+    });  
 }
 
 exports.remove = function remove(idBolsista, callback){
@@ -79,5 +79,5 @@ exports.remove = function remove(idBolsista, callback){
     connection.query(sql, idBolsista, function(err, result){
         if(err) throw err;
         callback(result);
-    })
+    });    
 }

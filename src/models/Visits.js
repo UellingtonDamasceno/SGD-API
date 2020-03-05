@@ -5,7 +5,7 @@ exports.add = function add(idVisitante, numAlunos, Responsavel, status, agendame
     var values  = [[idVisitante, numAlunos, Responsavel, status, agendamento]];
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
-        callback(result)
+        callback(result);
     });
 }
 
@@ -14,7 +14,7 @@ exports.getByResponsavel = function getByResponsavel(Responsavel, callback){
     connection.query(sql, Responsavel, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });
 }
 
 exports.getByStatus = function getByStatus(status, callback){
@@ -39,5 +39,5 @@ exports.remove = function remove(nome, callback){
     connection.query(sql, nome, function(err, result){
         if(err) throw err;
         callback(result);
-    })
+    }); 
 }

@@ -4,7 +4,7 @@ exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Lo
     var sql = "INSERT INTO escolas (idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa) VALUES ?"
     var values = [[idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa]]
 
-    conection.query(sql, [values], function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     })
@@ -15,7 +15,7 @@ exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
     connection.query(sql, idVisitante, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    }); 
 }
 
 exports.getByNome = function getByNome(nomeResponsavel, callback){
@@ -23,7 +23,7 @@ exports.getByNome = function getByNome(nomeResponsavel, callback){
     connection.query(sql, nomeResponsavel, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    }); 
 }
 
 exports.getByTelefone = function getByTelefone(telefoneResponsavel, callback){
@@ -31,7 +31,7 @@ exports.getByTelefone = function getByTelefone(telefoneResponsavel, callback){
     connection.query(sql, telefoneResponsavel, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });   
 }
 
 exports.getByLogin = function getByLogin(Login, callback){
@@ -39,7 +39,7 @@ exports.getByLogin = function getByLogin(Login, callback){
     connection.query(sql, Login, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });  
 }
 
 exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
@@ -55,34 +55,34 @@ exports.getByIdEscola = function getByidEscola(idEscola, callback){
     connection.query(sql, idEscola, function(err, result){
         if(err) throw err;
         callback(result);
-    });
+    }); 
 }
 
 exports.setLogin = function setLogin(idEscola, Login, callback){
     var sql = "UPDATE escolas Login = ? WHERE idEscola = ?"
     var values = [Login, idEscola];
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });   
 }
 
 exports.setNome = function setNome(idEscola, nomeResponsavel, callback){
     var sql = "UPDATE escolas nomeResponsavel = ? WHERE idEscola = ?"
     var values = [nomeResponsavel, idEscola];
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });     
 }
 
 exports.setTelefone = function setTelefone(idEscola, telefoneResponsavel, callback){
     var sql = "UPDATE escolas telefoneResponsavel ? WHERE idEscola = ?"
     var values = [telefoneResponsavel, idEscola];
-    connection.query(sql, values, function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    }); 
 }
 
 exports.remove = function remove(idEscola, callback){

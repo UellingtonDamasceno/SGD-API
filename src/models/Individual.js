@@ -4,7 +4,7 @@ exports.add = function add(RG, callback){
     var sql = "INSERT INTO individuoVisitante (RG) VALUES ?"
     connection.query(sql, RG, function(err, result){
         callback(result)
-    })
+    });
 }
 
 
@@ -13,7 +13,9 @@ exports.getById = function getById(id, callback){
     connection.query(sql, id, function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });
+
+     
 }
 
 exports.getByRG = function getByRG (RG, callback){
@@ -21,7 +23,7 @@ exports.getByRG = function getByRG (RG, callback){
     connection.query(sql, RG, function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });     
 }
 
 exports.remove = function remove(RG, callback){
@@ -29,5 +31,5 @@ exports.remove = function remove(RG, callback){
     connection.query(sql, RG, function(err, result){
         if (err) throw err;
         callback(result)
-    })
+    });     
 }
