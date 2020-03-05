@@ -9,10 +9,10 @@ var db_config = {
     password: process.env.DB_PASS
 };
 
-var connection;
+const connection;
 
 function handleDisconnect() {
-  const connection = mySql.createConnection(db_config); 
+  connection = mySql.createConnection(db_config); 
 
   connection.connect(function(err) {              
     if(err) {
