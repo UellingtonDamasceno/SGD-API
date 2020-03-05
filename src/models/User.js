@@ -22,7 +22,7 @@ exports.getById = function getById(idPessoa, callback){
 exports.getByLogin = function getByLogin(Login, callback){
     var sql = "SELECT * FROM usuarios WHERE Login = ?"
     connection.query(sql, Login, function(err, result){
-        if(err) throw err;
+        if (err) throw err;
         callback(result);
     })
 }

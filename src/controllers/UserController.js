@@ -14,9 +14,9 @@ const addNewUser = (request, response, next) => {
 }
 
 const getUserByLogin = (request, response, next) => {
-    const bodyReq = {...request.body}
+    let bodyReq = { ...request.body }
 
     modelUser.getByLogin(bodyReq.login, next)
 }
-
+ 
 module.exports = { addNewUser, getUserByLogin }

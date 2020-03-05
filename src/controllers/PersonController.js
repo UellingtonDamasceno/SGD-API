@@ -1,11 +1,7 @@
 const modelPerson = require('../models/Person');
 
-const sendMessage = (request, response, result) => {
-    response.status(200).send(result)
-}
-
 const addNewPerson = (request, response, next) => {
-    const bodyReq = {...request.body}
+    const bodyReq = { ...request.body }
     
     try {
         modelPerson.addPessoa(bodyReq.cpf || bodyReq.cnpj, bodyReq.name, bodyReq.state, bodyReq.city,
@@ -16,11 +12,17 @@ const addNewPerson = (request, response, next) => {
 }
 
 const getPersonById = (request, response, next) => {
-     
+     const bodyReq = { ...request.body }
+
+     try {
+        modelPerson.getByPessoa(bodyReq.idPerson, next)
+     } catch(err) {
+        response.status(500).send(err)
+     }
 }
 
 const getPersonByName = (request, response, next) => {
-    const bodyReq = {...request.body}
+    const bodyReq = { ...request.body }
 
     try {
         modelPerson.getByNome(bodyReq.name, next)
@@ -30,10 +32,10 @@ const getPersonByName = (request, response, next) => {
 }
 
 const removePersonById = (request, response) => {
-    const bodyReq = {...request.body}
+    const bodyReq = { ...request.body }
     
     try {
-        modelPerson.remove(bodyReq.id, result => {
+        modelPerson.remove(bodyReq.idPerson, result => {
             if(result) response.status(200).send()
             else response.status(400).send()
         })   
@@ -42,4 +44,4 @@ const removePersonById = (request, response) => {
     }
 }
 
-module.exports = { addNewPerson, getPersonByName, sendMessage, removePersonById }
+module.exports = { addNewPerson, getPersonByName, getPersonById, removePersonById }

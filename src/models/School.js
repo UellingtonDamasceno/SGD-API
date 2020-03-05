@@ -4,7 +4,7 @@ exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Lo
     var sql = "INSERT INTO escolas (idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa) VALUES ?"
     var values = [[idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa]]
 
-    conection.query(sql, [values], function(err, result){
+    connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
     })

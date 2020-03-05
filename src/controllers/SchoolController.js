@@ -4,7 +4,7 @@ const Visitor = require('./VisitorController');
 const User = require('./UserController');
 
 const addNewSchool = (request, response) => {
-    const bodyReq = {...request.body}
+    const bodyReq = { ...request.body }
 
     Person.getPersonByName(request, response, result => {
         let first = result[0]
@@ -26,21 +26,27 @@ const addNewSchool = (request, response) => {
 };
 
 const getSchoolByRespName = (request, response, next) => {
-    const bodyReq = {...request.body};
+    const bodyReq = { ...request.body };
     
     modelSchool.getByNome(bodyReq.respName, next);
 };
 
 const getSchoolById = (request, response, next) => {
-    const bodyReq = {...request};
-
+    const bodyReq = { ...request.body };
+    
     modelSchool.getByIdEscola(bodyReq.idSchool, next);
 };
 
+const getSchoolByIdPerson = (request, response, next) => {
+    const bodyReq = { ...request.body };
+
+    modelSchool.getByIdPessoa(bodyReq.idPerson, next);
+};
+
 const getSchoolByLogin = (request, response, next) => {
-    const bodyReq = {...request.body};
-    //next(bodyReq)
+    const bodyReq = { ...request.body };
+
     modelSchool.getByLogin(bodyReq.login, next);
 };
  
-module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByLogin };
+module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByIdPerson, getSchoolByLogin };
