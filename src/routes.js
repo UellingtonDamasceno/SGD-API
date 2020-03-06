@@ -3,8 +3,8 @@ const School = require('./controllers/SchoolController');
 const User = require('./controllers/UserController');
 const Visitor = require("./controllers/VisitorController");
 const Auth = require('./auth/Auth');
-const passportSchool = require('./auth/PassportSchool')();
-const passportUser = require('./auth/PassportUser')();
+const passportSchool = require('./auth/PassportSchool')
+//const passportUser = require('./auth/PassportUser')
 const routes = Router();
 
 routes.get("/", (request, response) => {
@@ -85,11 +85,12 @@ routes.get("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
 
+/*
 routes.get("/userPerfil", passportUser.authenticate(), (request, response) => {
   response.json({
     worked: true
   });
 });
-
+*/
   
 module.exports = routes;
