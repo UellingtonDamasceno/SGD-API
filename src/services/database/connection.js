@@ -3,35 +3,17 @@ const mySql = require("mysql");
 
 //Conexão com o banco de dados não alterar
 var db_config = {
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS
+    host: "sql130.main-hosting.eu",
+    database: "u970457530_sgda",
+    user: "u970457530_sgda_root",
+    password: "123456789",
+    connectionLimit: 100,
+    wait_timeout: 100000000,
+    connect_timeout: 10
 };
 
-const connection;
+var pool;
 
-function handleDisconnect() {
-  connection = mySql.createConnection(db_config); 
+pool = mySql.createPool(db_config); 
 
-  connection.connect(function(err) {              
-    if(err) {
-      console.log("db erro:" + err);                                   
-      setTimeout(handleDisconnect, 0); 
-    }
-    else {
-      console.log("Conectou")
-    }
-  });                                     
-                
-  connection.on('error', function(err) {
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
-      handleDisconnect();                        
-    } else {
-      throw err;
-    }
-  });
-}
-handleDisconnect();
-
-module.exports = connection;
+module.exports = pool;
