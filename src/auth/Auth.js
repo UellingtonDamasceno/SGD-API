@@ -4,6 +4,7 @@ const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 const School = require('../controllers/SchoolController')
 const User = require('../controllers/UserController')
+const { ROLES } = require('../auth/Roles')
 
 const signIn = (request, response) => {
     const bodyReq = { ...request.body }
@@ -33,6 +34,7 @@ const signIn = (request, response) => {
                         payload.body.respName = firstSchool.nomeResponsavel
                         payload.body.respPhone = firstSchool.telefoneResponsavel
                         payload.body.idVisitor = firstSchool.idVisitante
+                        payload.body.role = ROLES.School
 
 
                         response.json({ // The response must be the last function, after all Promises be resolved (Change this way)

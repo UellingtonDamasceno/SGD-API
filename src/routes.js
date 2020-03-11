@@ -3,9 +3,12 @@ const School = require('./controllers/SchoolController');
 const User = require('./controllers/UserController');
 const Visitor = require("./controllers/VisitorController");
 const Auth = require('./auth/Auth');
-const passportSchool = require('./auth/PassportSchool')
-//const passportUser = require('./auth/PassportUser')
+const Passport = require('./auth/Passport')
+const { ROLES } = require('./auth/Roles')
+const Utils = require('./auth/Utils')
 const routes = Router();
+
+Passport.initialize()
 
 routes.get("/", (request, response) => {
   response.json({
@@ -25,6 +28,10 @@ routes.post("/adicionarEscola", (request, response) => {
 routes.post("/entrarEscola", (request, response) => {
   Auth.signIn(request, response);
 }); 
+
+routes.post("/login", (request, response) => {
+  //
+})
 
 routes.post("/autenticaUsuario", (request, response) => {
   User.getUserByLogin(request, response, result => {
@@ -75,22 +82,27 @@ routes.post("/adicionarVisitante", (request, response) =>{
   });
 });
 
-routes.get("/escolaPerfil", passportSchool.authenticate(), (request, response) => {
-  response.json({
-    worked: true
-  });
+routes.get("/escolaPerfil", 
+  Passport.authenticate(), 
+  Utils.checkIsInRole(ROLES.School),
+  (request, response) => {
+    response.json({
+      worked: true,
+      type: 'School'
+    });
 });
 
-routes.get("/authUser", (request, response) => {
+routes.post("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
 
-/*
-routes.get("/userPerfil", passportUser.authenticate(), (request, response) => {
+
+routes.get("/userPerfil", Passport.authenticate(), (request, response) => {
   response.json({
-    worked: true
+    worked: true,
+    type: 'User'
   });
 });
-*/
+
   
 module.exports = routes;
