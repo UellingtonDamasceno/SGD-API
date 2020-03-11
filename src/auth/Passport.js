@@ -2,20 +2,16 @@ require('dotenv/config');
 const passport = require('passport');
 const passportJwt = require('passport-jwt');
 const { Strategy, ExtractJwt } = passportJwt;
-const School = require('../controllers/SchoolController');
 const User = require('../controllers/UserController');
 
 const authSecret = process.env.AUTH_SECRET
-
 
 const param = {
     secretOrKey: authSecret,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }
 
-// Marco, você vai ter que verificar o payload para descobrir o tipo de usuario (e também que tipo de rota ele quer acessar) 
-// e então fazer a Strategy procurar beaseado nisso.
-const strategy = new Strategy(param, (payload, done) => { // EM TESTE
+const strategy = new Strategy(param, (payload, done) => {
     console.log('User (Passport2) \n' + JSON.stringify(payload))
     
     User.getUserByLogin(payload, null, result => {

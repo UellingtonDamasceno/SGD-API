@@ -7,7 +7,7 @@ const encryptPassword = password => {
 }
 
 const addNewUser = (request, response, next) => {
-    const bodyReq = {...request.body}
+    const bodyReq = { ...request.body }
 
     bodyReq.password = encryptPassword(bodyReq.password)
     modelUser.add(bodyReq.login, bodyReq.password, bodyReq.idPerson, next)

@@ -2,6 +2,7 @@ const { Router } = require('express');
 const School = require('./controllers/SchoolController');
 const User = require('./controllers/UserController');
 const Visitor = require("./controllers/VisitorController");
+const Scholarship = require("./controllers/ScholarshipController");
 const Auth = require('./auth/Auth');
 const Passport = require('./auth/Passport')
 const { ROLES } = require('./auth/Roles')
@@ -103,6 +104,21 @@ routes.get("/userPerfil", Passport.authenticate(), (request, response) => {
     type: 'User'
   });
 });
+ 
+routes.post("/adicionarBolsista", (request, response) => {
+  Scholarship.addNewScholarship(request, response);
+});
 
-  
+routes.get("/scholarshipPerfil", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Scholarship),
+  (request, response) => {
+    response.json({
+      worked: true,
+      type: 'Scholarship'
+    });
+  }
+)
+
+
 module.exports = routes;

@@ -3,6 +3,7 @@ const authSecret = process.env.AUTH_SECRET
 const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 const School = require('../controllers/SchoolController')
+const Scholarship = require('../controllers/ScholarshipController')
 const User = require('../controllers/UserController')
 const { ROLES } = require('../auth/Roles')
 
@@ -43,11 +44,25 @@ const signIn = (request, response) => {
                         }) 
                     } else {
                         // New checks should be here, following the same pattern as above
+                        Scholarship.getScholarshipByLogin(request, response, result => {
+                            if(result.length !== 0) {
+                                let firstScholarship = result[0]
 
-                        response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
-                            ...payload,
-                            token: jwt.encode(payload, authSecret)
-                        }) 
+                                payload.body.idScholarship = firstScholarship.idBolsista
+                                payload.body.inactive = firstScholarship.Inativo
+                                payload.body.role = ROLES.Scholarship
+
+                                response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
+                                    ...payload,
+                                    token: jwt.encode(payload, authSecret)
+                                }) 
+                            } else {
+                                response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
+                                    ...payload,
+                                    token: jwt.encode(payload, authSecret)
+                                })
+                            }
+                        })   
                     }              
                 })
 

@@ -8,7 +8,7 @@ const port = 3333;
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(routes);
 
 app.listen(process.env.PORT || port, () =>{

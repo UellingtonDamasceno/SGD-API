@@ -3,7 +3,9 @@ const Person = require('./PersonController');
 const Visitor = require('./VisitorController');
 const User = require('./UserController');
 
-const addNewSchool = (request, response) => {
+// THIS FUNCTION SHOULD CHANGE TO MANTAIN INTEGRATY OF DATABASE (IN CASE OF FAIL IN SOME PART,
+// DELETE THE INFORMATATION THAT HAD SUCCESS BEING INSERTED)
+const addNewSchool = (request, response) => { 
     const bodyReq = { ...request.body }
 
     Person.getPersonByName(request, response, result => {
