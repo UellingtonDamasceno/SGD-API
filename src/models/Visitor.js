@@ -7,7 +7,7 @@ exports.add = function add(idPessoa, callback){
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });  
 }
 
 exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
@@ -15,7 +15,7 @@ exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
     connection.query(sql, idPessoa, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });   
 }
 
 exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
@@ -23,7 +23,7 @@ exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
     connection.query(sql, idVisitante, function(err, result){
         if (err) throw err;
         callback(result);
-    });
+    });   
 }
 
 exports.setIdPessoa = function setIdPessoa(idPessoa, idVisitante, callback){
@@ -32,7 +32,7 @@ exports.setIdPessoa = function setIdPessoa(idPessoa, idVisitante, callback){
     connection.query(sql, values, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });
 }
 
 exports.remove = function remove(idVisitante, callback){
@@ -40,5 +40,5 @@ exports.remove = function remove(idVisitante, callback){
     connection.query(sql, idVisitante, function(err, result){
         if (err) throw err;
         callback(result);
-    })
+    });    
 }
