@@ -17,7 +17,9 @@ exports.add = function add(idPessoa, callback){
 exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM visitantes WHERE idPessoa = ?"
+        var sql = "SELECT * FROM visitantes WHERE idPessoa = ?;"
+        //console.log(idPessoa)
+        //var sql = 'SELECT * FROM visitantes WHERE idPessoa = ?';
         connection.query(sql, idPessoa, function(err, result){
             if (err) throw err;
             callback(result);

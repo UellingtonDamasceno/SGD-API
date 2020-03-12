@@ -3,7 +3,7 @@ const pool = require("../services/database/connection");
 exports.add = function add(idVisitante, numAlunos, Responsavel, status, agendamento, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO visitas (idVisitante, numAlunos, Responsavel, status, agendamento) VALUES = ?"
+        var sql = "INSERT INTO visitas (idVisitante, numAlunos, Responsavel, status, agendamento) VALUES  ?"
         var values  = [[idVisitante, numAlunos, Responsavel, status, agendamento]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
