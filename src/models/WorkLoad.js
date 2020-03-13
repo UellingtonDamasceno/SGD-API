@@ -14,6 +14,18 @@ exports.add = function add(idBolsista, inicioPeriodo, fimPeriodo,  semana, callb
     })
 }
 
+exports.getHorario = function getHorario(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = 'SELECT semana, inicioPeriodo, fimPeriodo FROM horarioTrabalho';
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+
 exports.getById = function getById(idBolsista, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
