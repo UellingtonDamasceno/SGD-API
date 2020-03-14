@@ -35,6 +35,7 @@ exports.getInfo = function getInfo(idPessoa, callback){
         });
     });
 };
+
 //Busca da pessoa pelo idPessoa. Retorna um objeto no final
 exports.getByPessoa = function getByPessoa(idPessoa, callback){
     pool.getConnection(function(err, connection){
@@ -73,17 +74,6 @@ exports.getByCPF = function getByCPF(CPF_CNPJ, callback){
         });
     })   
 }
-
-exports.getInfo = function getInfo(idPessoa, callback){
-    pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "SELECT nome, email, telefone FROM pessoas WHERE idPessoa = ?";
-        connection.query(sql, idPessoa, function(err, result){
-            if (err) throw err;
-            callback(result);
-        });
-    });
-};
 
 //Busca em tbl_pessoa a pessoa pelo idPessoa. Retorna um objeto no final
 exports.getByNome = function getByNome(Nome, callback){

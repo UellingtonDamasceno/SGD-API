@@ -50,18 +50,6 @@ exports.getByPeriodo = function getByPeriodo(inicioPeriodo, callback){
     });
 }
 
-exports.getHorario = function getHorario(callback){
-    pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = 'SELECT semana, inicioPeriodo, fimPeriodo FROM horarioTrabalho';
-        connection.query(sql, function(err, result){
-            if (err) throw err;
-            callback(result);
-            connection.release();
-        });
-    });
-}
-
 
 exports.getBySemana = function getByWeek(semana, callback){
     pool.getConnection(function(err, connection){
