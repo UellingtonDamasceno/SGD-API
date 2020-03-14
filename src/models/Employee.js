@@ -1,10 +1,10 @@
 const pool = require("../services/database/connection");
 
-exports.add = function add(Login, idPessoa, idPermissões, adm, callback){
+exports.add = function add(Login, idPessoa, idPermissoes, adm, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO funcionarios (Login, idPessoa, idPermissões, adm, Inativo) VALUES ?";
-        var values = [[Login, idPessoa, idPermissões, adm, 0]]
+        var sql = "INSERT INTO funcionarios (Login, idPessoa, idPermissoes, adm, Inativo) VALUES ?";
+        var values = [[Login, idPessoa, idPermissoes, adm, 0]]
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result);
@@ -124,11 +124,11 @@ exports.setIdPessoa = function setIdPessoa(idFuncionario, idPessoa, callback){
     });
 }
 
-exports.setidPermissões = function setidPermissões(idPermissões, idFuncionario, callback){
+exports.setidPermissoes = function setidPermissoes(idPermissoes, idFuncionario, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE funcionarios SET idPermissões = ? WHERE idFuncionario = ?";
-        var values = [idPermissões, idFuncionario, callback];
+        var sql = "UPDATE funcionarios SET idPermissoes = ? WHERE idFuncionario = ?";
+        var values = [idPermissoes, idFuncionario, callback];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result);

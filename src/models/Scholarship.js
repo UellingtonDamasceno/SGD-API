@@ -3,7 +3,7 @@ const pool = require("../services/database/connection");
 exports.add = function add(Login, idPessoa, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO bolisistas (Login, idPessoa, Inativo) VALUES ?";
+        var sql = "INSERT INTO bolsistas (Login, idPessoa, intaivo) VALUES ?";
         var values = [[Login, idPessoa, 0]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
@@ -52,7 +52,7 @@ exports.getByIdBolsista = function getByIdBolsista(idBolsista, callback){
 exports.getAtivos = function getAtivos(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM bolsistas WHERE Inativos = 0";
+        var sql = "SELECT * FROM bolsistas WHERE intaivo = 0";
         connection.query(sql, function(err, result){
             if (err) throw err;
             callback(result);
@@ -61,10 +61,10 @@ exports.getAtivos = function getAtivos(callback){
     });   
 }
 
-exports.getInativos = function getInativos(callback){
+exports.getintaivos = function getintaivos(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM bolsistas WHERE Inativo = 1"
+        var sql = "SELECT * FROM bolsistas WHERE intaivo = 1"
         connection.query(sql, function(err, result){
             if (err) throw err;
             callback(result);
@@ -76,7 +76,7 @@ exports.getInativos = function getInativos(callback){
 exports.setAtivo = function setAtivo(idBolsista, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE bolsistas SET inativo = 0 WHERE idBolsista = ?"
+        var sql = "UPDATE bolsistas SET intaivo = 0 WHERE idBolsista = ?"
         connection.query(sql, idBolsista, function(err, result){
             if (err) throw err;
             callback(result);
@@ -85,10 +85,10 @@ exports.setAtivo = function setAtivo(idBolsista, callback){
     });
 }
 
-exports.setInativo = function setInativo(idBolsista, callback){
+exports.setintaivo = function setintaivo(idBolsista, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE bolsistas SET inativo = 1 WHERE idBolsista = ?";
+        var sql = "UPDATE bolsistas SET intaivo = 1 WHERE idBolsista = ?";
         connection.query(sql, idBolsista, function(err, result){
             if (err) throw err;
             callback(result);
