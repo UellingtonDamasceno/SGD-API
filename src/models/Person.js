@@ -1,11 +1,11 @@
 const pool = require("../services/database/connection");
 
 // Adição de pessoa em tbl_pessoa. Retorna um objeto
-exports.addPessoa = function addPessoa(CPF_CNPJ, Nome, Estado, Cidade, Endereço, email, telefone, callback){
+exports.addPessoa = function addPessoa(CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, email, numero, telefone, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO pessoas (CPF_CNPJ, Nome, Estado, Cidade, Endereço, email, telefone) VALUES ?" ;
-        var values = [[CPF_CNPJ, Nome, Estado, Cidade, Endereço, email, telefone]];
+        var sql = "INSERT INTO pessoas (CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, numero, email, telefone) VALUES ?" ;
+        var values = [[CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, email, telefone]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result)
@@ -172,7 +172,7 @@ exports.setCPF_CNPJ = function  setCPF_CNPJ(idPessoa, CPF_CNPJ, callback){
         if (err) throw err;
         var sql = "UPDATE pessoas SET CPF_CNPJ ? WHERE idPessoa = ?";
         var values = [CPF_CNPJ, idPessoa]
-        connection.query(sql, [values], function(err, result){
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -185,7 +185,7 @@ exports.setEstado = function  setEstado(idPessoa, Estado, callback){
         if (err) throw err;
         var sql = "UPDATE pessoas SET Estado ? WHERE idPessoa = ?";
         var values = [Estado, idPessoa]
-        connection.query(sql, [values], function(err, result){
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -193,12 +193,12 @@ exports.setEstado = function  setEstado(idPessoa, Estado, callback){
     })
 }
 
-exports.setEndereco = function  setEndereco(idPessoa, Endereço, callback){
+exports.setEndereco = function  setBairro(idPessoa, bairro, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "UPDATE pessoas SET Endereço ? WHERE idPessoa = ?";
         var values = [Endereço, idPessoa]
-        connection.query(sql, [values], function(err, result){
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -211,7 +211,7 @@ exports.setCidade = function setCidade(idPessoa, cidade, callback){
         if (err) throw err;
         var sql = "UPDATE pessoas SET cidade ? WHERE idPessoa = ?";
         var values = [cidade, idPessoa]
-        connection.query(sql, [values], function(err, result){
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
