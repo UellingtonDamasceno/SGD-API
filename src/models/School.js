@@ -1,10 +1,10 @@
 const pool = require("../services/database/connection");
 
-exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa, callback){
+exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa, repSurname, tipoEscola, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO escolas (idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa) VALUES ?"
-        var values = [[idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa]]
+        var sql = "INSERT INTO escolas (idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa, repSurname, tipoEscola) VALUES ?"
+        var values = [[idVisitante, nomeResponsavel, telefoneResponsavel, Login, idPessoa, repSurname, tipoEscola]]
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result);
@@ -123,6 +123,35 @@ exports.setTelefone = function setTelefone(idEscola, telefoneResponsavel, callba
         }); 
     })
 }
+
+
+exports.setSurName = function setSurname(idEscola, surName, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE escolas repSurname ? WHERE idEscola = ?"
+        var values = [surName, idEscola];
+        connection.query(sql, [values], function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        }); 
+    })
+}
+
+exports.setTipo = function setTipo(idEscola, tipoEscola, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE escolas tipoEscola ? WHERE idEscola = ?"
+        var values = [tipoEscola, idEscola];
+        connection.query(sql, [values], function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        }); 
+    })
+}
+
+
 
 exports.remove = function remove(idEscola, callback){
     pool.getConnection(function(err, connection){
