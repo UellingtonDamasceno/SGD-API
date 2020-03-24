@@ -48,7 +48,7 @@ console.log(result);
 routes.post("/adicionarEscola", (request, response) => {
   const email = request.body.email;
   const password = request.body.password;
-  const schoolName = request.body.schoolName;
+  const schoolName = request.body.name;
   const address = request.body.address;
   const city = request.body.city;
   const state = request.body.state;
@@ -140,9 +140,9 @@ routes.post("/dadosBolsista", (request, response) => {
   bolsistas.push({ id: 2, name: "Daniel", phone: "75941145215" });
   bolsistas.push({ id: 3, name: "Moisas", phone: "75464646646" });
   bolsistas.push({ id: 4, name: "Riquelme", phone: "75464646646" });
-  console.log(request.body.idScholarschip)
+  console.log(request.body.idScholarschip) s
   var bolsista= bolsistas.find(Element => bolsistas.id==request.body.idScholarschip)
-  console.log(bolsista)
+  console.log(bolsista)s
   */
 
   scholar.getByIdPessoa(request.body.idScholarschip, (result) => {
@@ -150,40 +150,52 @@ routes.post("/dadosBolsista", (request, response) => {
     response.send(bolsista);
   });
 });
-//TODO VER ESSA ROTA DPS
+//NOTE TAs
 routes.post("/retornaDadosEscola", (request, response) => {
-  var escolas;
-  /*  
-//bolsistas.push({ id: 1, name: "Roberto", phone: "75988498927" });
-escolas.push({ id: 2, name: "Helyos", phone: "75941145215" });
-escolas.push({ id: 3, name: "CPO", phone: "75464646646" });
-console.log(request.body.idSchool)
-var bolsista= escolas.find(Element => escolas.id==request.body.idSchool)//
-  console.log(bolsista)*/
-  /*TUDO QUE EU PRECISO::
-      1-Nome da escola OK
-      2-Endereço OK
-      3-Cidade OK
-      4-Estado  OK
-      5-CNPJ OK
-      6-Telefone OK
-      7-Nome do responsavel OK
-      8-Tipo de escola
-      9-Escolaridade
-      10-Email OK
-      11-Nome do usuario = Login
-      12-senha OK
-  */
-  school.getByIdEscola(request.body.IDSchool, function(result){//NOME RESPONSAVEL, TELEFONE RESPONSAVEL, EMAIL
-    var segundosDados=person.getByPessoa(result[0].idPessoa,)//NOME DA ESCOLA,ESTADO DA ESCOLA, CIDADE, ENDEREÇO, EMAIL, TELEFONE E CNPJ
-    var terceiroDados=user.getById(resul[0].idPessoa)//SENHA S
-    var primeirosNumeros=result;
+  school.getByIdEscola(request.body.IDSchool, function(result){
+    var primeiroDados=result[0]
+    person.getByPessoa(result[0].idPessoa,function(result){
+      var segundosDados=result[0]
+      user.getById(result[0].idPessoa, function(result){
+          var terceirosDados=result[0]
+          var escola={
+            email:segundosDados.email,
+            login:terceirosDados.Login,
+            password:terceirosDados.senha,
+            respName:primeiroDados.nomeResponsavel,
+            respSurname:primeiroDados.repSurname,
+            schoolType:primeiroDados.tipoEscola,
+            name:segundosDados.nome,
+            district:segundosDados.bairro,
+            number:segundosDados.numero,
+            street:segundosDados.rua,
+            city:segundosDados.cidade,
+            state:segundosDados.estado,
+            CNPJ:segundosDados.CPF_CNPJ,
+            phone:segundosDados.telefone,
+            idPessoa:segundosDados.idPessoa,
+            loginUsuario:terceirosDados.Login
+          }
+          response.send(escola)  
+      })
+    })
   })
-
-
-
-  response.send(escolas);
 });
+
+  routes.post("/atualizaDadosEscola", (request, response) =>{
+    console.log("coe")
+    /*person.setCPF_CNPJ(43,123,function(result){})
+    person.setCidade(43,"setCidade",function(result){})
+    person.setEndereco(43,"setEndereco",function(result){})
+    person.setEstado(43,"setEstado",function(result){})
+    person.setNome(43,"setNome",function(result){})
+    person.setTelefone(43,"setTelefone",function(result){})
+    school.setLogin(15,"setLogin",function(result){})
+    school.setNome(15,"setNome",function(result){})
+    school.setTelefone(15,"setTelefone",function(result){})
+    user.setLogin("danieldouradofsa@gmail.com","setLogin",function(result){})
+    user.setSenha("danieldouradofsa@gmail.com","setSenha",function(result){})*/
+  })
 //NOTE TA FEITO
 routes.post("/listarBolsistas", (request, response) => {
   var bolsistas=[]
