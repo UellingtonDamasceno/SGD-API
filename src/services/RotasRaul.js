@@ -136,7 +136,7 @@ routes.post("/listarHorarioBolsistas", (request, response) => {
 
 routes.post("/dadosBolsista", (request, response) => {
   let bolsistas;
-  /*bolsistas.push({ id: 1, name: "Roberto", phone: "75988498927" });
+  /*bolsistas.push({ id: 1, name: "Roberto", phone: "75988498927" }); sss
   bolsistas.push({ id: 2, name: "Daniel", phone: "75941145215" });
   bolsistas.push({ id: 3, name: "Moisas", phone: "75464646646" });
   bolsistas.push({ id: 4, name: "Riquelme", phone: "75464646646" });
@@ -152,6 +152,7 @@ routes.post("/dadosBolsista", (request, response) => {
 });
 //NOTE TAs
 routes.post("/retornaDadosEscola", (request, response) => {
+  console.log(request.body.IDSchool)
   school.getByIdEscola(request.body.IDSchool, function(result){
     var primeiroDados=result[0]
     person.getByPessoa(result[0].idPessoa,function(result){
