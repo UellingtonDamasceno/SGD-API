@@ -1,13 +1,12 @@
-const bcrypt = require('bcrypt-nodejs');
-const modelPessoa = require('../models/Person');
-const modelVisitante = require('../models/Visitor');
-const modelEscola = require('../models/School');
+const modelSchool = require('../models/School');
 const Person = require('./PersonController');
 const Visitor = require('./VisitorController');
 const User = require('./UserController');
 
-const addNewSchool = (request, response) => {
-    const bodyReq = {...request.body}
+// THIS FUNCTION SHOULD CHANGE TO MANTAIN INTEGRATY OF DATABASE (IN CASE OF FAIL IN SOME PART,
+// DELETE THE INFORMATATION THAT HAD SUCCESS BEING INSERTED)
+const addNewSchool = (request, response) => { 
+    const bodyReq = { ...request.body }
 
     Person.getPersonByName(request, response, result => {
         let first = result[0]
@@ -17,7 +16,7 @@ const addNewSchool = (request, response) => {
             Person.addNewPerson(request, response, result => {
                 request.body.idPerson = result.insertId
                 Visitor.addNewVisitor(request, response, result => {      
-                    modelEscola.add(result.insertId, bodyReq.respName, bodyReq.respPhone, bodyReq.login, request.body.idPerson, result => {
+                    modelSchool.add(result.insertId, bodyReq.respName, bodyReq.respPhone, bodyReq.login, request.body.idPerson, result => {
                         User.addNewUser(request, response, result => {
                             response.status(200).send(result)
                         })
@@ -29,21 +28,27 @@ const addNewSchool = (request, response) => {
 };
 
 const getSchoolByRespName = (request, response, next) => {
-    const bodyReq = {...request.body};
+    const bodyReq = { ...request.body };
     
-    modelEscola.getByNome(bodyReq.respName, next);
+    modelSchool.getByNome(bodyReq.respName, next);
 };
 
 const getSchoolById = (request, response, next) => {
-    const bodyReq = {...request};
+    const bodyReq = { ...request.body };
+    
+    modelSchool.getByIdEscola(bodyReq.idSchool, next);
+};
 
-    modelEscola.getByIdEscola(bodyReq.idSchool, next);
+const getSchoolByIdPerson = (request, response, next) => {
+    const bodyReq = { ...request.body };
+
+    modelSchool.getByIdPessoa(bodyReq.idPerson, next);
 };
 
 const getSchoolByLogin = (request, response, next) => {
-    const bodyReq = {...request.body};
-    //next(bodyReq)
-    modelEscola.getByLogin(bodyReq.login, next);
+    const bodyReq = { ...request.body };
+
+    modelSchool.getByLogin(bodyReq.login, next);
 };
  
-module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByLogin };
+module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByIdPerson, getSchoolByLogin };
