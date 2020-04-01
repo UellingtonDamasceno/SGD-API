@@ -1,8 +1,8 @@
 const connection = require("../services/database/connection");
 
-exports.add = function add(idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao, callback){
-    var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamento, confirmarVisita, gerarRelatorio, inserirAtividades, cadastrarAtracao) VALUES  ?"
-    var values = [[idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao]]
+exports.add = function add(idFuncionario, gerirBolsistas, gerirHorarioBolsista, gerirFuncionarios, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao, callback){
+    var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsistas, gerirHorarioBolsista, gerirFuncionarios, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao) VALUES  ?"
+    var values = [[idFuncionario, gerirBolsistas, gerirHorarioBolsista, gerirFuncionarios, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao]]
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
         callback(result);

@@ -1,7 +1,7 @@
 const connection = require("../services/database/connection");
 
 exports.add = function add(Login, idPessoa, idPermissões, adm, callback){
-    var sql = "INSERT INTO funcionarios (Login, idPessoa, idPermissões, adm, Inativo) VALUES ?";
+    var sql = "INSERT INTO funcionarios (Login, idPessoa, idPermissoes, adm, Inativo) VALUES ?";
     var values = [[Login, idPessoa, idPermissões, adm, 0]]
     connection.query(sql, [values], function(err, result){
         if (err) throw err;
@@ -88,10 +88,10 @@ exports.setIdPessoa = function setIdPessoa(idFuncionario, idPessoa, callback){
     });
 }
 
-exports.setidPermissões = function setidPermissões(idPermissões, idFuncionario, callback){
-    var sql = "UPDATE funcionarios SET idPermissões = ? WHERE idFuncionario = ?";
-    var values = [idPermissões, idFuncionario, callback];
-    connection.query(sql, [values], function(err, result){
+exports.setidPermissoes = function setidPermissões(idPermissoes, idFuncionario, callback){
+    var sql = "UPDATE funcionarios SET idPermissoes = ? WHERE idFuncionario = ?";
+    var values = [idPermissoes, idFuncionario];
+    connection.query(sql, values, function(err, result){
         if (err) throw err;
         callback(result);
     });     

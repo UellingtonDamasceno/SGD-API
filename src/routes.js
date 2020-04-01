@@ -3,6 +3,7 @@ const School = require('./controllers/SchoolController');
 const User = require('./controllers/UserController');
 const Visitor = require("./controllers/VisitorController");
 const Scholarship = require("./controllers/ScholarshipController");
+const Employee = require("./controllers/EmployeeController");
 const Auth = require('./auth/Auth');
 const Passport = require('./auth/Passport')
 const { ROLES } = require('./auth/Roles')
@@ -120,5 +121,8 @@ routes.get("/scholarshipPerfil",
   }
 )
 
-
+routes.post("/adicionarFuncionario", (request, response) => {
+  Employee.addNewEmployee(request, response)
+})
+  
 module.exports = routes;
