@@ -135,5 +135,11 @@ routes.get("/employeePerfil",
     });
   }
 )
+
+routes.get("/getEmployeeByLogin", (request, response) => {
+  Employee.getEmployeeByLogin(request, response, result => {
+    response.json(result)
+  })
+})
   
 module.exports = routes;

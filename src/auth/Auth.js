@@ -62,30 +62,31 @@ const signIn = (request, response) => {
                                     if(result.length !== 0) {
                                         let firstEmployee = result[0]
                                         request.body.idEmployee = firstEmployee.idFuncionario
-                                        
+
                                         // payload related to the employee
                                         payload.body.idEmployee = firstEmployee.idFuncionario
                                         payload.body.inactive = firstEmployee.Inativo
                                         payload.body.admin = firstEmployee.adm
                                         payload.body.role = ROLES.Employee
-
+                                        
                                         Permissions.getPermissionsByIdEmployee(request, response, result => {
+                                            let firstPermissionRow = result[0]
+                                            
                                             // payload related to the employee's permissions
-                                            payload.body.manageScholarship = result.gerirBolsistas
-                                            payload.body.manageScheduleScholarship = result.gerirHorarioBolsista
-                                            payload.body.manageEmployee = result.gerirFuncionarios
-                                            payload.body.validateSchedules = result.validarAgendamentos
-                                            payload.body.confirmVisits = result.confirmarVisita
-                                            payload.body.generateReport = result.gerarRelatorio
-                                            payload.body.insertActivity = result.inserirAtividade
-                                            payload.body.registerAttraction = result.cadastrarAtracao
+                                            payload.body.manageScholarship = firstPermissionRow.gerirBolsistas
+                                            payload.body.manageScheduleScholarship = firstPermissionRow.gerirHorarioBolsista
+                                            payload.body.manageEmployee = firstPermissionRow.gerirFuncionarios
+                                            payload.body.validateSchedules = firstPermissionRow.validarAgendamentos
+                                            payload.body.confirmVisits = firstPermissionRow.confirmarVisita
+                                            payload.body.generateReport = firstPermissionRow.gerarRelatorio
+                                            payload.body.insertActivity = firstPermissionRow.inserirAtividade
+                                            payload.body.registerAttraction = firstPermissionRow.cadastrarAtracao
 
                                             response.json({ 
                                                 ...payload,
                                                 token: jwt.encode(payload, authSecret)
                                             })
                                         })
-
                                     } else {
                                         // New checks should be here, following the same pattern as above
                                         response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
