@@ -4,6 +4,8 @@ const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 const School = require('../controllers/SchoolController')
 const Scholarship = require('../controllers/ScholarshipController')
+const Employee = require('../controllers/EmployeeController')
+const Permissions = require('../controllers/PermissionsController')
 const User = require('../controllers/UserController')
 const { ROLES } = require('../auth/Roles')
 
@@ -38,12 +40,11 @@ const signIn = (request, response) => {
                         payload.body.role = ROLES.School
 
 
-                        response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
+                        response.json({ 
                             ...payload,
                             token: jwt.encode(payload, authSecret)
                         }) 
                     } else {
-                        // New checks should be here, following the same pattern as above
                         Scholarship.getScholarshipByLogin(request, response, result => {
                             if(result.length !== 0) {
                                 let firstScholarship = result[0]
@@ -52,21 +53,51 @@ const signIn = (request, response) => {
                                 payload.body.inactive = firstScholarship.Inativo
                                 payload.body.role = ROLES.Scholarship
 
-                                response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
+                                response.json({ 
                                     ...payload,
                                     token: jwt.encode(payload, authSecret)
                                 }) 
                             } else {
-                                response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
-                                    ...payload,
-                                    token: jwt.encode(payload, authSecret)
-                                })
+                                Employee.getEmployeeByLogin(request, response, result => {
+                                    if(result.length !== 0) {
+                                        let firstEmployee = result[0]
+                                        request.body.idEmployee = firstEmployee.idFuncionario
+                                        
+                                        // payload related to the employee
+                                        payload.body.idEmployee = firstEmployee.idFuncionario
+                                        payload.body.inactive = firstEmployee.Inativo
+                                        payload.body.admin = firstEmployee.adm
+                                        payload.body.role = ROLES.Employee
+
+                                        Permissions.getPermissionsByIdEmployee(request, response, result => {
+                                            // payload related to the employee's permissions
+                                            payload.body.manageScholarship = result.gerirBolsistas
+                                            payload.body.manageScheduleScholarship = result.gerirHorarioBolsista
+                                            payload.body.manageEmployee = result.gerirFuncionarios
+                                            payload.body.validateSchedules = result.validarAgendamentos
+                                            payload.body.confirmVisits = result.confirmarVisita
+                                            payload.body.generateReport = result.gerarRelatorio
+                                            payload.body.insertActivity = result.inserirAtividade
+                                            payload.body.registerAttraction = result.cadastrarAtracao
+
+                                            response.json({ 
+                                                ...payload,
+                                                token: jwt.encode(payload, authSecret)
+                                            })
+                                        })
+
+                                    } else {
+                                        // New checks should be here, following the same pattern as above
+                                        response.json({ // The response must be the last function, after all Promises be resolved (Change this way)
+                                            ...payload,
+                                            token: jwt.encode(payload, authSecret)
+                                        })
+                                    }
+                                })    
                             }
                         })   
                     }              
-                })
-
-                
+                }) 
             }
         } else response.status(400).send('Usuário não encontrado')  
     })

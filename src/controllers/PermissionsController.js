@@ -9,4 +9,10 @@ const addNewPermissionRow = (request, response, next) => {
           bodyReq.registerAttraction, next)
 }
 
-module.exports = { addNewPermissionRow }
+const getPermissionsByIdEmployee = (request, response, next) => {
+    const bodyReq = { ...request.body }
+
+    modelPermissions.getByIdFuncionario(bodyReq.idEmployee, next)
+}
+
+module.exports = { addNewPermissionRow, getPermissionsByIdEmployee }

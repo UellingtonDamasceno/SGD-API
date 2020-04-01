@@ -124,5 +124,16 @@ routes.get("/scholarshipPerfil",
 routes.post("/adicionarFuncionario", (request, response) => {
   Employee.addNewEmployee(request, response)
 })
+
+routes.get("/employeePerfil",
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
+    response.json({
+      worked: true,
+      type: 'Employee'
+    });
+  }
+)
   
 module.exports = routes;

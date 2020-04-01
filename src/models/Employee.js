@@ -24,9 +24,7 @@ exports.getByLogin = function getByLogin(Login, callback){
     connection.query(sql, Login, function(err, result){
         if (err) throw err;
         callback(result);
-    });
-
-     
+    });   
 }
 
 exports.getByIdFuncionario = function getByIdFuncionario(idFuncionario, callback){

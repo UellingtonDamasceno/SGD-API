@@ -32,10 +32,16 @@ const addNewEmployee = (request, response) => {
     });
 }
 
+const getEmployeeByLogin = (request, response, next) => {
+    const bodyReq = { ...request.body }
+
+    modelEmployee.getByLogin(bodyReq.login, next)
+}
+
 const setEmployeeIdPermission = (request, response, next) => {
     const bodyReq = { ...request.body }
 
     modelEmployee.setidPermissoes(bodyReq.idPermission, bodyReq.idEmployee, next)
 }
 
-module.exports = { addNewEmployee }
+module.exports = { addNewEmployee, getEmployeeByLogin }
