@@ -4,8 +4,8 @@ const pool = require("../services/database/connection");
 exports.addPessoa = function addPessoa(CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, email, numero, telefone, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO pessoas (CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, numero, email, telefone) VALUES ?" ;
-        var values = [[CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, email, telefone]];
+        var sql = "INSERT INTO pessoas (CPF_CNPJ, Nome, Estado, cidade, bairro, rua, numero, email, telefone) VALUES ?" ;
+        var values = [[CPF_CNPJ, Nome, Estado, Cidade, bairro, rua, numero, email, telefone]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result)
@@ -104,7 +104,7 @@ exports.getByEstado = function getByEstado(Estado, callback){
 exports.getByCidade = function getByCidade(Cidade, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = 'SELECT * FROM pessoas WHERE Cidade = ?;';
+        var sql = 'SELECT * FROM pessoas WHERE cidade = ?;';
         connection.query(sql, Cidade, function(err, result){
             if (err) throw err;
             callback(result);
@@ -113,12 +113,23 @@ exports.getByCidade = function getByCidade(Cidade, callback){
     });
 }
 
-    // Busca em tbl_pessoa as pessoas pelo Endereço. Retorna um objeto no final
-exports.getByEndereço = function getByEndereço(Endereço, callback){
+exports.getByRua = function getByRua(rua, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = 'SELECT * FROM pessoas WHERE Endereço = ?;';
-        connection.query(sql, Endereço, function(err, result){
+        var sql = 'SELECT * FROM pessoas WHERE rua = ?;';
+        connection.query(sql, rua, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+
+exports.getByBairro = function getByBairro(bairro, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = 'SELECT * FROM pessoas WHERE bairro = ?;';
+        connection.query(sql, bairro, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -210,6 +221,47 @@ exports.setCidade = function setCidade(idPessoa, cidade, callback){
         if (err) throw err;
         var sql = "UPDATE pessoas SET cidade ? WHERE idPessoa = ?";
         var values = [cidade, idPessoa]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
+
+exports.setBairro = function setBairro(idPessoa, bairro, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE pessoas SET bairro ? WHERE idPessoa = ?";
+        var values = [bairro, idPessoa]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
+
+exports.setRua = function setRua(idPessoa, rua, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE pessoas SET rua ? WHERE idPessoa = ?";
+        var values = [rua, idPessoa]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
+exports.setNumero = function setNumero(idPessoa, numero, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE pessoas SET numero ? WHERE idPessoa = ?";
+        var values = [numero, idPessoa]
         connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
