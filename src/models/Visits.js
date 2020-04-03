@@ -66,7 +66,7 @@ exports.remove = function remove(nome, callback){
 exports.setConfirmado = function setConfirmado(idVisitante){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE visitas set status = 1 WHERE idVisitante = ?"
+        var sql = "UPDATE visitas SET status = 1 WHERE idVisitante = ?"
         connection.query(sql, idVisitante, function (err, result){
             if (err) throw err;
             callback(result);
@@ -79,7 +79,7 @@ exports.setConfirmado = function setConfirmado(idVisitante){
 exports.setRealizado = function setRealizado(idVisitante){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE visitas set status = 2 WHERE idVisitante = ?"
+        var sql = "UPDATE visitas SET status = 2 WHERE idVisitante = ?"
         connection.query(sql, idVisitante, function(err, result){
             if (err) throw err;
             callback(result);
@@ -91,7 +91,7 @@ exports.setRealizado = function setRealizado(idVisitante){
 exports.setCancelado = function setCancelado(idVisitante){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE visitas set status = 3 WHERE idVisitante = ?"
+        var sql = "UPDATE visitas SET status = 3 WHERE idVisitante = ?"
         connection.query(sql, idVisitante, function(err, result){
             if (err) throw err;
             callback(result);
