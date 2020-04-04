@@ -104,7 +104,7 @@ exports.getByEstado = function getByEstado(Estado, callback){
 exports.getByCidade = function getByCidade(Cidade, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = 'SELECT * FROM pessoas WHERE Cidade = ?;';
+        var sql = 'SELECT * FROM pessoas WHERE cidade = ?;';
         connection.query(sql, Cidade, function(err, result){
             if (err) throw err;
             callback(result);
@@ -113,12 +113,23 @@ exports.getByCidade = function getByCidade(Cidade, callback){
     });
 }
 
-    // Busca em tbl_pessoa as pessoas pelo Endereço. Retorna um objeto no final
-exports.getByEndereço = function getByEndereço(Endereço, callback){
+exports.getByRua = function getByRua(rua, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = 'SELECT * FROM pessoas WHERE Endereço = ?;';
-        connection.query(sql, Endereço, function(err, result){
+        var sql = 'SELECT * FROM pessoas WHERE rua = ?;';
+        connection.query(sql, rua, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+
+exports.getByBairro = function getByBairro(bairro, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = 'SELECT * FROM pessoas WHERE bairro = ?;';
+        connection.query(sql, bairro, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -192,7 +203,7 @@ exports.setEstado = function  setEstado(idPessoa, Estado, callback){
     })
 }
 
-exports.setEndereco = function  setEndereco(idPessoa, Endereço, callback){
+exports.setEndereco = function  setBairro(idPessoa, bairro, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "UPDATE pessoas SET Endereço = ? WHERE idPessoa = ?";

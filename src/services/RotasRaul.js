@@ -44,7 +44,7 @@ console.log(result);
 
 })
 /**
- * Route responsible for receiving data from a school and adding it to the database
+ * Route responsible for receiving data from a school and adding it to the databasess
  */
 //NOTE TA FEITO
 routes.post("/adicionarEscola", (request, response) => {
