@@ -15,6 +15,9 @@ const Utils = require('./auth/Utils')
 // const Visitor = require("./controllers/VisitorController");
 const routes = Router();
 const correio = require("./services/mail/email");
+const backupManager = require("./services/backup/backupManager");
+
+const routes = Router();
 
 Passport.initialize()
 
@@ -115,4 +118,17 @@ routes.get("/getEmployeeByLogin", (request, response) => {
   })
 })
   
+routes.post("/backup", (request, respose) =>{
+  backupManager.createNewBackup();
+  respose.sendStatus(200);
+});
+
+routes.get("/backup", (request, response) =>{
+  backupManager.listAllDirectoryFiles().then((files)=>{
+    response.json({
+      backups: files
+    })
+  });
+});
+
 module.exports = routes;
