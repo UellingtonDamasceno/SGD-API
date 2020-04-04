@@ -7,8 +7,10 @@ const Auth = require('./auth/Auth');
 const Passport = require('./auth/Passport')
 const { ROLES } = require('./auth/Roles')
 const Utils = require('./auth/Utils')
-const routes = Router();
 const correio = require("./services/mail/email");
+const backupManager = require("./services/backup/backupManager");
+
+const routes = Router();
 
 Passport.initialize()
 
@@ -121,5 +123,17 @@ routes.get("/scholarshipPerfil",
   }
 )
 
+routes.post("/backup", (request, respose) =>{
+  backupManager.createNewBackup();
+  respose.sendStatus(200);
+});
+
+routes.get("/backup", (request, response) =>{
+  backupManager.listAllDirectoryFiles().then((files)=>{
+    response.json({
+      backups: files
+    })
+  });
+});
 
 module.exports = routes;

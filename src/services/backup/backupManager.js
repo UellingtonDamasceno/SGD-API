@@ -15,8 +15,8 @@ async function createNewBackup(){
   });
 }
 
-async function listAllDirectoryFiles(path) {
-  const dir = await fs.promises.opendir(path);
+async function listAllDirectoryFiles() {
+  const dir = await fs.promises.opendir(directory);
   let files = [];
   for await (const dirent of dir) {
     files.push(dirent.name);
