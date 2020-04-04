@@ -12,6 +12,17 @@ exports.add = function add(idVisitante, nomeResponsavel, telefoneResponsavel, Lo
         });
     });
 }
+exports.getSchools = function getSchools(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT * FROM escolas"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
 
 exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
     pool.getConnection(function(err, connection){
@@ -114,7 +125,7 @@ exports.setNome = function setNome(idEscola, nomeResponsavel, callback){
 exports.setTelefone = function setTelefone(idEscola, telefoneResponsavel, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE escolas SET telefoneResponsavel ? WHERE idEscola = ?"
+        var sql = "UPDATE escolas SET telefoneResponsavel = ? WHERE idEscola = ?"
         var values = [telefoneResponsavel, idEscola];
         connection.query(sql, values, function(err, result){
             if (err) throw err;
@@ -128,7 +139,7 @@ exports.setTelefone = function setTelefone(idEscola, telefoneResponsavel, callba
 exports.setSurName = function setSurname(idEscola, surName, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE escolas SET repSurname ? WHERE idEscola = ?"
+        var sql = "UPDATE escolas SET repSurname = ? WHERE idEscola = ?"
         var values = [surName, idEscola];
         connection.query(sql, values, function(err, result){
             if (err) throw err;
@@ -141,7 +152,7 @@ exports.setSurName = function setSurname(idEscola, surName, callback){
 exports.setTipo = function setTipo(idEscola, tipoEscola, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE escolas SET tipoEscola ? WHERE idEscola = ?"
+        var sql = "UPDATE escolas SET tipoEscola = ? WHERE idEscola = ?"
         var values = [tipoEscola, idEscola];
         connection.query(sql, values, function(err, result){
             if (err) throw err;
