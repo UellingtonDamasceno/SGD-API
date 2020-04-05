@@ -22,27 +22,28 @@ routes.use(bodyParser.json());
 app.use(Cors());
 app.use(routes);
 
-//REVIEW 
+//REVIEW Dei uma revisada
 routes.post("/adicionarAgendamento", (request, response) => {
-  var responsavel = request.body.responsible
-  var estudantes = request.body.students
-  var data = request.body.date
-  var numero = request.body.number
-  var observacao = request.body.obs
-
-  console.log(responsavel)
-  console.log(estudantes)
-  console.log(data)
-  console.log(numero)
-  console.log(observacao)
-
-  //Adiciona uma agendamento ao banco de dados ss
-
-  visits.add(16, estudantes, responsavel,"A", data, (result) =>{
-console.log(result);
-  });
-
+  school.getByIdEscola(request.body.idSchool,function(result){
+    var responsavel = request.body.responsible
+    var qtdeEstudantes = request.body.students
+    var horarioVisita = request.body.date
+    var serie = request.body.number
+    var observacao = request.body.obs
+    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"A", horarioVisita, (result) =>{});
+  })
 })
+
+// Dei uma revisada
+routes.post("/agendamentos", (request, response) => {
+  school.getByIdEscola(request.body.idSchooll,function(result){
+    visits.getByIdVisitante(result[0].idVisitante,function(result){
+      response.send(result)
+    })
+  })
+})
+
+
 /**
  * Route responsible for receiving data from a school and adding it to the database
  */
@@ -207,7 +208,9 @@ routes.post("/retornaDadosEscola", (request, response) => {
 
     person.setCPF_CNPJ(request.body.idPessoa,request.body.CNPJ,function(result){})
     person.setCidade(request.body.idPessoa,request.body.city,function(result){})
-    //person.setEndereco(request.body.idPessoa,"setEndereco",function(result){console.log(result)})GUSTAVO RESOLVEE
+    person.setBairro(request.body.idPessoa, request.body.district,function(result){})
+    person.setNumero(request.body.idPessoa, request.body.number,function(result){})
+    person.setRua(request.body.idPessoa, request.body.street,function(result){})
     person.setEstado(request.body.idPessoa,request.body.state,function(result){})
     person.setNome(request.body.idPessoa,request.body.name,function(result){})
     person.setTelefone(request.body.idPessoa,request.body.phone,function(result){})

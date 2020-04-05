@@ -204,11 +204,37 @@ exports.setEstado = function  setEstado(idPessoa, Estado, callback){
     })
 }
 
-exports.setEndereco = function  setBairro(idPessoa, bairro, callback){
+exports.setBairro= function  setBairro(idPessoa, bairro, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE pessoas SET Endereço = ? WHERE idPessoa = ?";
-        var values = [Endereço, idPessoa]
+        var sql = "UPDATE pessoas SET bairro = ? WHERE idPessoa = ?";
+        var values = [bairro, idPessoa]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })         
+}
+
+exports.setRua= function  setRua(idPessoa, rua, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE pessoas SET rua = ? WHERE idPessoa = ?";
+        var values = [rua, idPessoa]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })         
+}
+
+exports.setNumero= function  setNumero(idPessoa, numero, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "UPDATE pessoas SET numero = ? WHERE idPessoa = ?";
+        var values = [numero, idPessoa]
         connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
