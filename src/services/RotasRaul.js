@@ -253,9 +253,9 @@ routes.post("/listarFuncionarios", (request, response) => {
 });
 //NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!
 routes.post("/listarEscolas", (request, response) => {
-  school.getSchools(function(result){
-    var escolas= result
-    response.send(escolas)
+  joins.getEscolas(function(result){
+    console.log(result)
+    response.send(result)
   })
 });
 

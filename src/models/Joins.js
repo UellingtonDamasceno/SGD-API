@@ -26,3 +26,15 @@ exports.getBolsistasAtivos = function getBolsitasAtivos(callback){
         });
     });
 }
+
+exports.getEscolas = function getEscolas(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT p.nome, e.nomeResponsavel, p.email, p.telefone FROM pessoas p JOIN escolas e ON p.idPessoa=e.idPessoa"
+        connection.query(sql, function(err, result){
+            if(err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
