@@ -15,7 +15,7 @@ const Utils = require('./auth/Utils')
 // const Visitor = require("./controllers/VisitorController");
 const routes = Router();
 const correio = require("./services/mail/email");
-const backupManager = require("./services/backup/backupManager");
+const backupManager = require("./services/backup/BackupManager");
 
 const routes = Router();
 
@@ -110,7 +110,7 @@ routes.get("/employeePerfil",
       type: 'Employee'
     });
   }
-)
+);
 
 routes.get("/getEmployeeByLogin", (request, response) => {
   Employee.getEmployeeByLogin(request, response, result => {
@@ -118,17 +118,34 @@ routes.get("/getEmployeeByLogin", (request, response) => {
   })
 })
   
-routes.post("/backup", (request, respose) =>{
-  backupManager.createNewBackup();
-  respose.sendStatus(200);
-});
 
-routes.get("/backup", (request, response) =>{
-  backupManager.listAllDirectoryFiles().then((files)=>{
-    response.json({
-      backups: files
-    })
+routes.post("/backup", (request, response) =>{
+  backupManager.createNewBackup().then(()=>{
+    response.sendStatus(200);
   });
 });
+
+routes.get("/backup", (request, response)=>{
+  backupManager.getAllBackups().then((nameFiles)=>{
+    response.json({
+      files: nameFiles
+    });
+  });
+});
+
+routes.delete("/backup", (request, response) =>{
+  backupManager.deleteBackup(request.body.fileName, response);
+  response.sendStatus(200);
+});
+
+routes.get("/backup/download/", (request, response)=>{
+  const fileName = request.query.fileName;
+  response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
+    if(err){
+      console.log(err);
+    }
+  });
+});
+
 
 module.exports = routes;
