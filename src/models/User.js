@@ -28,13 +28,6 @@ exports.getById = function getById(idPessoa, callback){
 }
 
 exports.getByLogin = function getByLogin(Login, callback){
-<<<<<<< HEAD
-    var sql = "SELECT * FROM usuarios WHERE Login = ?"
-    connection.query(sql, Login, function(err, result){
-        if (err) throw err;
-        callback(result);
-    });  
-=======
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "SELECT * FROM usuarios WHERE Login = ?"
@@ -44,7 +37,6 @@ exports.getByLogin = function getByLogin(Login, callback){
             connection.release();
         });  
     });
->>>>>>> Correção banco fatal
 }
 
 exports.setLogin = function setLogin(idPessoa, Login, callback){
