@@ -13,7 +13,7 @@ const employee = require('../models/Employee.js');
 const horarioTrabalho = require("../models/WorkLoad.js")
 const atracoes = require("../models/Atraction.js")
 const joins = require("../models/Joins.js")
-const backupManager = require("./services/backup/BackupManager");
+const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
 
 /*configurando bodyparser  S*/
