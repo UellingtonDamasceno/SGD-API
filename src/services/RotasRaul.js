@@ -30,7 +30,7 @@ routes.post("/adicionarAgendamento", (request, response) => {
     var horarioVisita = request.body.date
     var serie = request.body.number
     var observacao = request.body.obs
-    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"A", horarioVisita, (result) =>{});
+    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,0, horarioVisita, (result) =>{});
   })
 })
 
