@@ -6,6 +6,11 @@ const passportSchool = require('./auth/PassportSchool')();
 const Visitor = require("./controllers/VisitorController");
 const routes = Router();
 
+//Dependências para relatório
+const fs = require("fs");
+const pdf = require("html-pdf");
+
+
 routes.get("/", (request, response) => {
   response.json({
       status: "connected",
@@ -77,6 +82,59 @@ routes.get("/escolaPerfil", passportSchool.authenticate(), (request, response) =
     worked: true
   });
 });
+
+
+routes.get('/MakeReport/:name&:novasEscolas&:novosFuncionarios&:novosBolsistas'+
+'&:agCancelados&:agConcluidos&:agConfNaoRealizados&:agCancelFuncionario'+
+'&:agNaoAceito&:agCanceladoRealizado&:fimEstagio&:fimFuncionario'+
+'&:escolasMaisFreq&:quantAgNoturno&:noturnoMaisFreq', (req,res)=>{
+  var content = fs.readFileSync('./src/models/report/report.html', 'utf-8');
+  content = contentReplace(content, req);
+  var x = './'+req.params.name+'.pdf'
+  pdf.create(content, {})
+    .toFile(x,(err, jj)=>{
+      if(err)
+          console.log("Erro ao salvar o arquivo.") 
+  });
+  pdf.create(content,{format: 'letter'
+  }).toStream((err, stream) =>{
+    if (err)
+      console.log("Erro ao exibir o arquivo!");
+    else{
+      stream.pipe(res);
+    }
+  });
+});
+
+
+
+
+function contentReplace(content, req){
+  var data = new Date();
+  content = content.replace('inicioPeriodo = "?"','inicioPeriodo = "3/1/2020"');
+  content = content.replace('fimPeriodo = "?"','fimPeriodo = "3/12/2020"');
+  content = content.replace("%UserEm%","Usuário Logado");
+  content = content.replace("%DataEm%",data.getDate()+'/'+data.getMonth()+'/'+data.getFullYear());
+  content = content.replace("%HoraEm%",data.getHours()+'h:'+data.getMinutes()+'min');
+  content = content.replace("novasEscolas = false", "novasEscolas = " + req.params.novasEscolas);
+  content = content.replace("novosFuncionarios = false", "novosFuncionarios = " + req.params.novosFuncionarios);
+  content = content.replace("novosBolsistas = false", "novosBolsistas = " + req.params.novosBolsistas);
+  content = content.replace("agCancelados = false", "agCancelados = " + req.params.agCancelados);
+  content = content.replace("agConcluidos = false", "agConcluidos = " + req.params.agConcluidos);
+  content = content.replace("agConfNaoRealizados = false", "agConfNaoRealizados = " + req.params.agConfNaoRealizados);
+  content = content.replace("agCancelFuncionario = false", "agCancelFuncionario = " + req.params.agCancelFuncionario);
+  content = content.replace("agNaoAceito = false", "agNaoAceito = " + req.params.agNaoAceito);
+  content = content.replace("agCanceladoRealizado = false", "agCanceladoRealizado = " + req.params.agCanceladoRealizado);
+  content = content.replace("fimEstagio = false", "fimEstagio = " + req.params.fimEstagio);
+  content = content.replace("fimFuncionario = false", "fimFuncionario = " + req.params.fimFuncionario);
+  content = content.replace("escolasMaisFreq = false", "escolasMaisFreq = " + req.params.escolasMaisFreq);
+  content = content.replace("quantAgNoturno = false", "quantAgNoturno = " + req.params.quantAgNoturno);
+  content = content.replace("noturnoMaisFreq = false", "noturnoMaisFreq = " + req.params.noturnoMaisFreq);
+  return content;
+}
+
+
+
 
 
 module.exports = routes;
