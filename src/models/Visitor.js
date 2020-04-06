@@ -1,44 +1,66 @@
-const connection = require("../services/database/connection");
+const pool = require("../services/database/connection");
 
 
 exports.add = function add(idPessoa, callback){
-    var sql = "INSERT INTO visitantes (idPessoa) VALUES ?" ;
-    var values = [[idPessoa]]
-    connection.query(sql, [values], function(err, result){
+    pool.getConnection(function(err, connection){
         if (err) throw err;
-        callback(result);
-    });  
+        var sql = "INSERT INTO visitantes (idPessoa) VALUES ?" ;
+        var values = [[idPessoa]]
+        connection.query(sql, [values], function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });  
+    });
 }
 
 exports.getByIdPessoa = function getByIdPessoa(idPessoa, callback){
-    var sql = "SELECT * FROM visitantes WHERE idPessoa = ?"
-    connection.query(sql, idPessoa, function(err, result){
+    pool.getConnection(function(err, connection){
         if (err) throw err;
-        callback(result);
-    });   
+        var sql = "SELECT * FROM visitantes WHERE idPessoa = ?;"
+        //console.log(idPessoa)
+        //var sql = 'SELECT * FROM visitantes WHERE idPessoa = ?';
+        connection.query(sql, idPessoa, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });   
+    });
 }
 
 exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
-    var sql = "SELECT * FROM visitantes WHERE idVistante = ?"
-    connection.query(sql, idVisitante, function(err, result){
+    pool.getConnection(function(err, connection){
         if (err) throw err;
-        callback(result);
-    });   
+        var sql = "SELECT * FROM visitantes WHERE idVistante = ?"
+        connection.query(sql, idVisitante, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });   
+    });
 }
 
 exports.setIdPessoa = function setIdPessoa(idPessoa, idVisitante, callback){
-    var sql = "UPDATE visitantes SET idPessoa = ? WHERE idVisitante = ?"
-    var values = [idPessoa, idVisitante]
-    connection.query(sql, values, function(err, result){
+    pool.getConnection(function(err, connection){
         if (err) throw err;
-        callback(result);
+        var sql = "UPDATE visitantes SET idPessoa = ? WHERE idVisitante = ?"
+        var values = [idPessoa, idVisitante]
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release()
+        });
     });
 }
 
 exports.remove = function remove(idVisitante, callback){
-    var sql = "DELETE FROM visitantes WHERE idVisitante = ?"
-    connection.query(sql, idVisitante, function(err, result){
+    pool.getConnection(function(err, connection){
         if (err) throw err;
-        callback(result);
-    });    
+        var sql = "DELETE FROM visitantes WHERE idVisitante = ?"
+        connection.query(sql, idVisitante, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release()
+        });    
+    });
 }
