@@ -15,6 +15,13 @@ const atracoes = require("../models/Atraction.js")
 const joins = require("../models/Joins.js")
 const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
+const bcrypt = require('bcrypt-nodejs');
+
+
+const encryptPassword = password => {
+  const salt = bcrypt.genSaltSync(10)
+  return bcrypt.hashSync(password, salt)
+}
 
 /*configurando bodyparser  S*/
 routes.use(bodyParser.urlencoded({ extended: false }));
@@ -51,6 +58,8 @@ routes.post("/agendamentos", (request, response) => {
 routes.post("/adicionarEscola", (request, response) => {
   const email = request.body.email;
   const password = request.body.password;
+  const passwordEncriptado = encryptPassword(request.body.password);
+  console.log(passwordEncriptado)
   const schoolName = request.body.name;
   const address = request.body.address;
   const city = request.body.city;
@@ -62,11 +71,10 @@ routes.post("/adicionarEscola", (request, response) => {
   const scholarity = request.body.scholarity;
   var idPessoa;
   var idVisitante;
-  console.log(directorName + "-----");
   //ff
 
   //isso aqui resolve tudo, nao faça perguntas!
-  person.addPessoaPessoa(CNPJ, directorName, state, city, address, email, phone, (result) => {
+  person.addPessoa(CNPJ, directorName, state, city, address, email, phone, (result) => {
     person.getByNome(directorName, (result) => {
       idPessoa = result.filter(x => x.email == email)[0].idPessoa
       user.add(email, password, idPessoa, (result) => {
