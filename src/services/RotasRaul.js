@@ -311,7 +311,7 @@ routes.delete("/backup", (request, response) =>{
  * 
  * Retorna: Uma solicitação para downloads;
  */
-routes.get("/backup/download", (request, response)=>{
+routes.get("/backup/download/", (request, response)=>{
   const fileName = request.query.fileName;
   response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
     if(err){
