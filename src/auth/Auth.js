@@ -45,7 +45,7 @@ const signIn = (request, response) => {
                             token: jwt.encode(payload, authSecret)
                         }) 
                     } else {
-                        Scholarship.getScholarshipByLogin(request, response, result => {
+                        Scholarship.getScholarshipByLogin(request, response, result => { // 'Checks' if the user is a scholarship
                             if(result.length !== 0) {
                                 let firstScholarship = result[0]
 
@@ -58,7 +58,7 @@ const signIn = (request, response) => {
                                     token: jwt.encode(payload, authSecret)
                                 }) 
                             } else {
-                                Employee.getEmployeeByLogin(request, response, result => {
+                                Employee.getEmployeeByLogin(request, response, result => { // 'Checks' if the user is a employee
                                     if(result.length !== 0) {
                                         let firstEmployee = result[0]
                                         request.body.idEmployee = firstEmployee.idFuncionario
@@ -69,7 +69,7 @@ const signIn = (request, response) => {
                                         payload.body.admin = firstEmployee.adm
                                         payload.body.role = ROLES.Employee
                                         
-                                        Permissions.getPermissionsByIdEmployee(request, response, result => {
+                                        Permissions.getPermissionsByIdEmployee(request, response, result => { // gets the employee's permissions
                                             let firstPermissionRow = result[0]
                                             
                                             // payload related to the employee's permissions

@@ -17,6 +17,7 @@ const addNewSchool = (request, response) => {
                 request.body.idPerson = result.insertId
                 Visitor.addNewVisitor(request, response, result => {      
                     modelSchool.add(result.insertId, bodyReq.respName, bodyReq.respPhone, bodyReq.login, request.body.idPerson, result => {
+                        request.body.idSchool = result.insertId
                         User.addNewUser(request, response, result => {
                             response.status(200).send(result)
                         })
@@ -50,5 +51,11 @@ const getSchoolByLogin = (request, response, next) => {
 
     modelSchool.getByLogin(bodyReq.login, next);
 };
- 
+
+const removeSchoolById = (request, response, next) => {
+    const bodyReq = { ...request.body };
+
+    modelSchool.remove(bodyReq.idSchool)
+};
+
 module.exports = { addNewSchool, getSchoolByRespName, getSchoolById, getSchoolByIdPerson, getSchoolByLogin };
