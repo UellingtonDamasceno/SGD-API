@@ -8,7 +8,7 @@ const Passport = require('./auth/Passport')
 const { ROLES } = require('./auth/Roles')
 const Utils = require('./auth/Utils')
 const correio = require("./services/mail/email");
-const backupManager = require("./services/backup/backupManager");
+const backupManager = require("./services/backup/BackupManager");
 
 const routes = Router();
 
@@ -121,19 +121,35 @@ routes.get("/scholarshipPerfil",
       type: 'Scholarship'
     });
   }
-)
+);
 
-routes.post("/backup", (request, respose) =>{
-  backupManager.createNewBackup();
-  respose.sendStatus(200);
-});
-
-routes.get("/backup", (request, response) =>{
-  backupManager.listAllDirectoryFiles().then((files)=>{
-    response.json({
-      backups: files
-    })
+routes.post("/backup", (request, response) =>{
+  backupManager.createNewBackup().then(()=>{
+    response.sendStatus(200);
   });
 });
+
+routes.get("/backup", (request, response)=>{
+  backupManager.getAllBackups().then((nameFiles)=>{
+    response.json({
+      files: nameFiles
+    });
+  });
+});
+
+routes.delete("/backup", (request, response) =>{
+  backupManager.deleteBackup(request.body.fileName, response);
+  response.sendStatus(200);
+});
+
+routes.get("/backup/download/", (request, response)=>{
+  const fileName = request.query.fileName;
+  response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
+    if(err){
+      console.log(err);
+    }
+  });
+});
+
 
 module.exports = routes;

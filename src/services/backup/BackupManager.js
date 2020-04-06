@@ -15,11 +15,13 @@ async function createNewBackup(){
   });
 }
 
-async function listAllDirectoryFiles() {
+async function getAllBackups() {
   const dir = await fs.promises.opendir(directory);
   let files = [];
   for await (const dirent of dir) {
-    files.push(dirent.name);
+    if(dirent.name !== "_no_delete_"){
+      files.push(dirent.name);
+    }
   }
   return files;
 }
@@ -34,4 +36,13 @@ function deleteBackup(fileName){
   });
 }
 
-module.exports = {listAllDirectoryFiles, createNewBackup, deleteBackup};
+function getCompletePath(fileName){
+  return directory+fileName;
+}
+
+module.exports = {
+  getAllBackups,
+  createNewBackup,
+  deleteBackup,
+  getCompletePath
+};

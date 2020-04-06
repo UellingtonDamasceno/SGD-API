@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 const cron = require('node-cron');
-const {createNewBackup}= require("./services/backup/backupManager");
+const {createNewBackup}= require("./services/backup/BackupManager");
 
 const port = 3000;
 
