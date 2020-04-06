@@ -122,13 +122,26 @@ routes.get("/scholarshipPerfil",
     });
   }
 );
-
+/**
+ * Rota: /backup
+ *  - Tipo: post
+ * 
+ * Params: Não recebe.
+ * Retorna: 200 como sinal de sucesso.
+ */
 routes.post("/backup", (request, response) =>{
   backupManager.createNewBackup().then(()=>{
     response.sendStatus(200);
   });
 });
 
+/**
+ * Rota: /backup
+ *  Tipo: get
+ * 
+ * Params: Não recebe.
+ * Retorna: Lista de todos os arquivos backups encontrados.
+ */
 routes.get("/backup", (request, response)=>{
   backupManager.getAllBackups().then((nameFiles)=>{
     response.json({
@@ -137,12 +150,31 @@ routes.get("/backup", (request, response)=>{
   });
 });
 
+/**
+ * Rota: /backup
+ *  - Tipo: delete
+ * 
+ * Params: 
+ *  - fileName: Nome do arquivo que deverá ser deletado.
+ *  -- Vem pelo corpo da requisição: body
+ *
+ *  Retorna: Sucesso em todos os casos.
+ */
 routes.delete("/backup", (request, response) =>{
   backupManager.deleteBackup(request.body.fileName, response);
   response.sendStatus(200);
 });
 
-routes.get("/backup/download/", (request, response)=>{
+/**
+ * Rota: /backup/download/ 
+ *  - Tipo: get
+ * Params
+ *  - Nome do arquivo que deverá ser baixado.
+ *  -- Vem pela query/url: query
+ * 
+ * Retorna: Uma solicitação para downloads;
+ */
+routes.get("/backup/download", (request, response)=>{
   const fileName = request.query.fileName;
   response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
     if(err){
