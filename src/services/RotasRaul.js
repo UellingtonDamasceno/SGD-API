@@ -1,3 +1,4 @@
+require("dotenv/config")
 const Cors = require("cors");
 const { Router } = require("express");
 const bodyParser = require("body-parser");
@@ -16,6 +17,7 @@ const joins = require("../models/Joins.js")
 const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
 const bcrypt = require('bcrypt-nodejs');
+const email= require("./mail/email")
 
 
 const encryptPassword = password => {
@@ -254,6 +256,7 @@ routes.post("/removerFuncionario", (request, response) => {
 
 //NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss
 routes.post("/listarFuncionarios", (request, response) => {
+  email.sendMail("romaiajr5@gmail.com","teste","ve se ta indo certo ai ")
   joins.getFuncionarioAtivos(function(result){
     var funcionarios = result
     response.send(funcionarios)
