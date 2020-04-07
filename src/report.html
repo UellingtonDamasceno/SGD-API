@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Realtório de visitação do Observatório Antares referente ao período %periodo% </title>
     <style>
         .SectionTitulo{
           text-align: center;
@@ -83,7 +82,7 @@
   </div>
   
   
-  <!-- Página Novos Funcionários -->
+  <!-- Página Novas Escolas -->
   <div class=novasEscolas>
     <div class="SectionTitulo" >Escolas que se cadastraram no período vigente</div>
     <div class="textSection">
@@ -153,6 +152,8 @@
   <div class=novosFuncionarios>
     <div class="SectionTitulo" >Novos Funcionários</div>
     <div class="textSection">
+
+      <table id=DALEXD></table>
 
     </div>
     <div style="page-break-after: always"></div>
@@ -287,7 +288,7 @@
   }
   
   var novasEscolas = false;
-  var novosFuncionarios = false;
+  var novosFuncionarios = 1;
   var novosBolsistas = false;
   var agCancelados = false;
   var agConcluidos = false;
@@ -398,4 +399,41 @@
       els[i].innerHTML = "";
     }
   }
+
+
+
+
+
+
+  var mountains = true;
+
+function generateTableHead(table, data) {
+  var thead = table.createTHead();
+  var row = thead.insertRow();
+  for (key in data) {
+    var th = document.createElement("th");
+    var text = document.createTextNode(data[key]);
+    th.appendChild(text);
+    row.appendChild(th);
+  }
+}
+
+function generateTable(table, data) {
+  for (element in data) {
+    var row = table.insertRow();
+    for (key in data[element]) {
+      var cell = row.insertCell();
+      var text = document.createTextNode(data[element][key]);
+      cell.appendChild(text);
+    }
+  }
+}
+
+var table = document.getElementById("DALEXD");
+var data = Object.keys(mountains[0]);
+generateTable(table, mountains);
+generateTableHead(table, data);
+
+
+
 </script>
