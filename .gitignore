@@ -7,3 +7,4 @@ src/services/database/tables.sql
 src/services/backup/temp
 
 .env
+.env.example
