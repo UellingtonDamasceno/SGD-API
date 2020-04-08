@@ -21,7 +21,7 @@ routes.get("/", (request, response) => {
       message: "Hello world"
   });
 });
-
+ 
 /*
 routes.post("/adicionarEscola", (request, response) => {
   School.addNewSchool(request, response);
