@@ -1,8 +1,4 @@
-const Cors = require("cors");
 const { Router } = require("express");
-const bodyParser = require("body-parser");
-const express = require("express");
-const app = express();
 const visits = require('../models/Visits.js');
 const school = require('../models/School.js');
 const person = require('../models/Person.js');
@@ -15,12 +11,6 @@ const atracoes = require("../models/Atraction.js")
 const joins = require("../models/Joins.js")
 const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
-
-/*configurando bodyparser  S*/
-routes.use(bodyParser.urlencoded({ extended: false }));
-routes.use(bodyParser.json());
-app.use(Cors());
-app.use(routes);
 
 //REVIEW Dei uma revisada
 routes.post("/adicionarAgendamento", (request, response) => {
@@ -322,6 +312,3 @@ routes.get("/backup/download/", (request, response)=>{
 
 
 module.exports = routes;
-app.listen(9000, function () {
-  console.log("Servidor Rodando");
-});
