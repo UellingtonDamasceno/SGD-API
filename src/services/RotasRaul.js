@@ -39,11 +39,13 @@ app.use(routes);
   routes.post("/adicionarAgendamento", (request, response) => {
     school.getByIdEscola(request.body.idSchool,function(result){
       var responsavel = request.body.responsible
+      var agendamento = request.body.date1
       var qtdeEstudantes = request.body.students
       var horarioVisita = request.body.date
-      var serie = request.body.number
       var observacao = request.body.obs
-      visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"0", horarioVisita, (result) =>{});
+      var serie= request.body.number;
+      var atracoes =request.body.atraçõesT.toString()
+      visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
     })
   })
 
