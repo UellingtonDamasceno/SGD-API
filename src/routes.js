@@ -8,10 +8,6 @@ const Auth = require('./auth/Auth');
 const Passport = require('./auth/Passport')
 const { ROLES } = require('./auth/Roles')
 const Utils = require('./auth/Utils')
-// const School = require('./controllers/SchoolController');
-// const User = require('./controllers/UserController');
-// const authSchool = require('./auth/AuthSchool');
-// const Visitor = require("./controllers/VisitorController");
 const correio = require("./services/mail/email");
 const backupManager = require("./services/backup/BackupManager");
 
@@ -66,13 +62,6 @@ routes.get("/employeePerfil",
     });
   }
 );
-
-routes.get("/getEmployeeByLogin", (request, response) => {
-  Employee.getEmployeeByLogin(request, response, result => {
-    response.json(result)
-  })
-})
-
 /**
  * Rota: /backup
  *  - Tipo: post

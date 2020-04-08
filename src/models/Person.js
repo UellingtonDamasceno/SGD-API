@@ -35,13 +35,24 @@ exports.getInfo = function getInfo(idPessoa, callback){
         });
     });
 };
-
 //Busca da pessoa pelo idPessoa. Retorna um objeto no final
 exports.getByPessoa = function getByPessoa(idPessoa, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "SELECT * FROM pessoas WHERE idPessoa = ?";
         connection.query(sql, idPessoa, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
+exports.getByEmail = function getByEmail(email, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT * FROM pessoas WHERE email = ?";
+        connection.query(sql, email, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -256,45 +267,16 @@ exports.setCidade = function setCidade(idPessoa, cidade, callback){
     })
 }
 
-
-exports.setBairro = function setBairro(idPessoa, bairro, callback){
+exports.remove = function  remove(idPessoa, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE pessoas SET bairro ? WHERE idPessoa = ?";
-        var values = [bairro, idPessoa]
-        connection.query(sql, values, function(err, result){
+        var sql = "DELETE FROM pessoas WHERE idPessoa = ?"
+        connection.query(sql, idPessoa, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
         });
-    })
-}
-
-
-exports.setRua = function setRua(idPessoa, rua, callback){
-    pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "UPDATE pessoas SET rua ? WHERE idPessoa = ?";
-        var values = [rua, idPessoa]
-        connection.query(sql, values, function(err, result){
-            if (err) throw err;
-            callback(result);
-            connection.release();
-        });
-    })
-}
-
-exports.setNumero = function setNumero(idPessoa, numero, callback){
-    pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "UPDATE pessoas SET numero ? WHERE idPessoa = ?";
-        var values = [numero, idPessoa]
-        connection.query(sql, values, function(err, result){
-            if (err) throw err;
-            callback(result);
-            connection.release();
-        });
-    })
+    });
 }
 
 exports.remove = function  remove(idPessoa, callback){
