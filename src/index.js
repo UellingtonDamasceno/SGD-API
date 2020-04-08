@@ -6,7 +6,7 @@ const routes = require('./services/RotasRaul');
 const cron = require('node-cron');
 const {createNewBackup}= require("./services/backup/BackupManager");
 
-const port = 3000;
+const port = 9000;
 
 const app = express();
 app.use(cors());
