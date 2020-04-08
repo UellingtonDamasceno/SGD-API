@@ -26,6 +26,7 @@ routes.get("/", (request, response) => {
   });
 });
 
+/*
 routes.post("/adicionarEscola", (request, response) => {
   School.addNewSchool(request, response);
 });
@@ -42,14 +43,18 @@ routes.post("/adicionarVisitante", (request, response) =>{
     }
   });
 });
- 
+
+*/
+
 routes.post("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
 
+/*
 routes.post("/adicionarFuncionario", (request, response) => {
   Employee.addNewEmployee(request, response)
 })
+*/
 
 routes.get("/employeePerfil",
   Passport.authenticate(),
