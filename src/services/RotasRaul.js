@@ -1,5 +1,3 @@
-require("dotenv/config")
-const Cors = require("cors");
 const { Router } = require("express");
 const bodyParser = require("body-parser");
 const express = require("express");
@@ -32,13 +30,21 @@ const encryptPassword = password => {
   return bcrypt.hashSync(password, salt)
 }
 
-/*configurando bodyparser  S*/
-routes.use(bodyParser.urlencoded({ extended: false }));
-routes.use(bodyParser.json());
-app.use(Cors());
-app.use(routes);
+routes.post("/authUser", (request, response) => {
+  Auth.signIn(request, response)
+});
 
-//ROTAS DE ADICIONAR ALGOs
+//REVIEW Dei uma revisada [PRECISA AUTENTICAR?]
+routes.post("/adicionarAgendamento", (request, response) => {
+  school.getByIdEscola(request.body.idSchool,function(result){
+    var responsavel = request.body.responsible
+    var qtdeEstudantes = request.body.students
+    var horarioVisita = request.body.date
+    var serie = request.body.number
+    var observacao = request.body.obs
+    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"A", horarioVisita, (result) =>{});
+  })
+})
 
   //REVIEW Dei uma revisada [AUTENTICAR ESCOLA]
   routes.post("/adicionarAgendamento", 
@@ -221,7 +227,7 @@ Utils.checkIsInRole(ROLES.Employee),
   })
 })
 
-//NOTE Retorna todos os agendamentos [AUTENTICA FUNCIONARIO]
+//NOTE Retorna todos os agendamentos [AUTENTICAR FUNCIONARIO]
 routes.post("/cancelaConfirmaAgendamento", 
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
@@ -261,7 +267,10 @@ Utils.checkIsInRole(ROLES.Employee),
 });
 
 //NOTE retorna as atracoes cadastradas no sistema [PRECISA AUTENTICAR?]
-routes.post("/retornaAtracoes", (request, response) => {
+routes.post("/retornaAtracoes", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee, ROLES.School),
+(request, response) => {
   atracoes.getAtracoes(function(result){
     var atracoes= result;
     response.send(atracoes)
@@ -280,8 +289,11 @@ Utils.checkIsInRole(ROLES.Employee),
   })
 });
 
-//NOTE retorna as informações de uma escola [AUTENTICAR EM QUE?]
-routes.post("/retornaDadosEscola", (request, response) => {
+//NOTE retorna as informações de uma escola [AUTENTICAR ESCOLA]
+routes.post("/retornaDadosEscola", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.School),
+(request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
     var primeiroDados=result[0]
     person.getByPessoa(result[0].idPessoa,function(result){
@@ -405,7 +417,7 @@ routes.post("/esqueciSenha", (request, response) => {
     if(result.length !== 0){
       user.getById(result[0].idPessoa), function(result){
         correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
-        user.setSenha("123456",function(result){})
+        user.setSenha(encryptPassword(123456),function(result){})
       }
     } else {
       response.sendStatus(400)
@@ -421,8 +433,11 @@ routes.post("/esqueciSenha", (request, response) => {
  * 
  * Params: Não recebe.
  * Retorna: 200 como sinal de sucesso.
- */
-routes.post("/backup", (request, response) =>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.post("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   backupManager.createNewBackup().then(()=>{
     response.sendStatus(200);
   });
@@ -434,8 +449,11 @@ routes.post("/backup", (request, response) =>{
  * 
  * Params: Não recebe.
  * Retorna: Lista de todos os arquivos backups encontrados.
- */
-routes.get("/backup", (request, response)=>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.get("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   backupManager.getAllBackups().then((nameFiles)=>{
     response.json({
       files: nameFiles
@@ -452,8 +470,11 @@ routes.get("/backup", (request, response)=>{
  *  -- Vem pelo corpo da requisição: body
  *
  *  Retorna: Sucesso em todos os casos.
- */
-routes.delete("/backup", (request, response) =>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.delete("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   backupManager.deleteBackup(request.body.fileName, response);
   response.sendStatus(200);
 });
@@ -466,8 +487,11 @@ routes.delete("/backup", (request, response) =>{
  *  -- Vem pela query/url: query
  * 
  * Retorna: Uma solicitação para downloads;
- */
-routes.get("/backup/download/", (request, response)=>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.get("/backup/download/", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   const fileName = request.query.fileName;
   response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
     if(err){
@@ -478,6 +502,3 @@ routes.get("/backup/download/", (request, response)=>{
 
 
 module.exports = routes;
-app.listen(9000, function () {
-  console.log("Servidor Rodando");
-});
