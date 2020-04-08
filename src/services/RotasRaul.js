@@ -4,6 +4,10 @@ const { Router } = require("express");
 const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
+const Auth = require('../auth/Auth');
+const Passport = require('../auth/Passport')
+const { ROLES } = require('../auth/Roles')
+const Utils = require('../auth/Utils')
 const visits = require('../models/Visits.js');
 const school = require('../models/School.js');
 const person = require('../models/Person.js');
@@ -36,8 +40,11 @@ app.use(routes);
 
 //ROTAS DE ADICIONAR ALGOs
 
-  //REVIEW Dei uma revisada
-  routes.post("/adicionarAgendamento", (request, response) => {
+  //REVIEW Dei uma revisada [AUTENTICAR ESCOLA]
+  routes.post("/adicionarAgendamento", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.School),
+  (request, response) => {
     school.getByIdEscola(request.body.idSchool,function(result){
       var responsavel = request.body.responsible
       var agendamento = request.body.date1
@@ -91,7 +98,12 @@ app.use(routes);
       });
     });
   });
-  routes.post("/adicionarBolsista", (request, response) => {
+
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/adicionarBolsista", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     const login = request.body.login;
     const cidade = request.body.cidade;
     const name = request.body.name;
@@ -117,8 +129,13 @@ app.use(routes);
       });
     });
   });
-  //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADOss
-  routes.post("/adicionarFuncionario", (request, response) => {
+
+
+  //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADOss [AUTENTICAR FUNCIONARIO]
+  routes.post("/adicionarFuncionario", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     const login = request.body.login;
     const cidade = request.body.cidade;
     const name = request.body.name;
@@ -149,8 +166,11 @@ app.use(routes);
     });    
   });
 
-  //NOTE TA FEITO
-  routes.post("/addPermissoes", (request, response) => {
+  //NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
+  routes.post("/addPermissoes", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
   idFuncionario=request.body.id
   console.log(request.body)
   //idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup
@@ -160,19 +180,30 @@ app.use(routes);
   //permissoes.add(request.body.id,false,false,false,false,false,false,false,function(result){})  
   })
 
-  routes.post("/addHorarioBolsista", (request, response) => {
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/addHorarioBolsista", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     horarioTrabalho.add(request.body.idScholarschip,request.body.inicioPeriodo,request.body.fimPeriodo, request.body.semana, function(){
     })
   });
 
-  routes.post("/addAtracoes", (request, response) => {
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/addAtracoes", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     atracoes.add(request.body.name,request.body.inicioPeriodo,request.body.fimPeriodo,
     request.body.description,request.body.type, request.body.week,function(){      
     })
   });
 
-//NOTE Retorna os agendamentos de uma escola
-routes.post("/agendamentos", (request, response) => {
+//NOTE Retorna os agendamentos de uma escola [AUTENTICAR FUNCIONARIO]
+routes.post("/agendamentos", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   school.getByIdEscola(request.body.idSchooll,function(result){
     visits.getByIdVisitante(result[0].idVisitante,function(result){
       response.send(result)
@@ -180,15 +211,21 @@ routes.post("/agendamentos", (request, response) => {
   })
 })
 
-//NOTE Retorna todos os agendamentos
-routes.post("/retornaAgendamentos", (request, response) => {
+//NOTE Retorna todos os agendamentos [AUTENTICAR FUNCIONARIO]
+routes.post("/retornaAgendamentos", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   visits.getVisitas(function(result){
     response.send(result)
   })
 })
 
-//NOTE Retorna todos os agendamentos
-routes.post("/cancelaConfirmaAgendamento", (request, response) => {
+//NOTE Retorna todos os agendamentos [AUTENTICA FUNCIONARIO]
+routes.post("/cancelaConfirmaAgendamento", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   if(request.body.status==1)
     visits.setConfirmado(request.body.idVisitante)
   else if(request.body.status==2)
@@ -198,8 +235,11 @@ routes.post("/cancelaConfirmaAgendamento", (request, response) => {
 })
 
   //Rotas que enviam/listam algo
-//NOTE TA FEITO
-routes.post("/listarHorarioBolsistas", (request, response) => {
+//NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
+routes.post("/listarHorarioBolsistas", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   var horarios = [];
   //Falta adicionar os horários dos bolsistas.
   horarioTrabalho.getHorario(function(result){
@@ -208,14 +248,19 @@ routes.post("/listarHorarioBolsistas", (request, response) => {
     response.send(horarios)
   })
 })
-//NOTE retorna os dados de um bolsista
-routes.post("/dadosBolsista", (request, response) => {
+
+//NOTE retorna os dados de um bolsista [AUTENTICAR FUNCIONARIO]
+routes.post("/dadosBolsista", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   horarioTrabalho.getById(request.body.idScholarschip,function(result){
     var horarioBolsista= result
     response.send(horarioBolsista)
   })
 });
-//NOTE retorna as atracoes cadastradas no sistema
+
+//NOTE retorna as atracoes cadastradas no sistema [PRECISA AUTENTICAR?]
 routes.post("/retornaAtracoes", (request, response) => {
   atracoes.getAtracoes(function(result){
     var atracoes= result;
@@ -223,8 +268,11 @@ routes.post("/retornaAtracoes", (request, response) => {
   })
 });
 
-//NOTE retorna as permissoes de um funcionario 
-routes.post("/retornarPermissoes", (request, response) => {
+//NOTE retorna as permissoes de um funcionario [AUTENTICAR FUNCIONARIO]
+routes.post("/retornarPermissoes", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   console.log(request.body.idFuncionario)
   permissoes.getByIdFuncionario(request.body.idFuncionario, function(result){
     console.log(result)
@@ -232,7 +280,7 @@ routes.post("/retornarPermissoes", (request, response) => {
   })
 });
 
-//NOTE retorna as informações de uma escola
+//NOTE retorna as informações de uma escola [AUTENTICAR EM QUE?]
 routes.post("/retornaDadosEscola", (request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
     var primeiroDados=result[0]
@@ -267,23 +315,33 @@ routes.post("/retornaDadosEscola", (request, response) => {
 });
 
   
-//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss
- routes.post("/listarBolsistas", (request, response) => {
+//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss [AUTENTICAR FUNCIONAR]
+ routes.post("/listarBolsistas", 
+ Passport.authenticate(),
+ Utils.checkIsInRole(ROLES.Employee),
+ (request, response) => {
   joins.getBolsistasAtivos(function(result){
     var bolsistas = result
     response.send(bolsistas)
   })
 });
 
-//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss
-routes.post("/listarFuncionarios", (request, response) => {
+//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss [AUTENTICAR FUNCIONARIO]
+routes.post("/listarFuncionarios", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   joins.getFuncionarioAtivos(function(result){
     var funcionarios = result
     response.send(funcionarios)
   })
 });
-//NOTE Lista os dados das escolas cadastradas
-routes.post("/listarEscolas", (request, response) => {
+
+//NOTE Lista os dados das escolas cadastradas [AUTENTICAR FUNCIONARIO]
+routes.post("/listarEscolas", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   joins.getEscolas(function(result){
     console.log(result)
     response.send(result)
@@ -291,8 +349,11 @@ routes.post("/listarEscolas", (request, response) => {
 });
 
 
-//NOTE atualiza os dados de uma escola
-routes.post("/atualizaDadosEscola", (request, response) =>{
+//NOTE atualiza os dados de uma escola [AUTENTICAR ESCOLA]
+routes.post("/atualizaDadosEscola", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.School),
+(request, response) =>{
   person.setCPF_CNPJ(request.body.idPessoa,request.body.CNPJ,function(result){})
   person.setCidade(request.body.idPessoa,request.body.city,function(result){})
   person.setBairro(request.body.idPessoa, request.body.district,function(result){})
@@ -311,28 +372,43 @@ routes.post("/atualizaDadosEscola", (request, response) =>{
   user.setSenha(request.body.idPessoa,encryptPassword(request.body.password),function(result){console.log(result)})
 })
 
-//NOTE Remove um bolsista
-routes.post("/removerBolsista", (request, response) => {
+//NOTE Remove um bolsista [AUTENTICAR FUNCIONARIO]
+routes.post("/removerBolsista", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   scholar.setintaivo(request.body[0].idPessoa, function(result){
   })
 });
-//NOTE Remove um funcionario
-routes.post("/removerFuncionario", (request, response) => {
+
+//NOTE Remove um funcionario [AUTENTICAR FUNCIONARIO]
+routes.post("/removerFuncionario", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   console.log(request.body[0].idPessoa)
   employee.setInativo(request.body[0].idPessoa, function(result){
   })
 });
 
-//NOTE Remove uma atracao
-routes.post("/removerAtracao", (request, response) => {
+//NOTE Remove uma atracao [AUTENTICAR FUNCIONARIO]
+routes.post("/removerAtracao", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   atracoes.remove(request.body.name, function(result){})
 });
 
-routes.post("/esqueciSenha", function(request){
+// [AUTENTICAR EM QUE?]
+routes.post("/esqueciSenha", (request, response) => {
   person.getByEmail(request.body.email,function(result){
-    user.getById(result[0].idPessoa), function(result){
-      correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
-      user.setSenha("123456",function(result){})
+    if(result.length !== 0){
+      user.getById(result[0].idPessoa), function(result){
+        correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
+        user.setSenha("123456",function(result){})
+      }
+    } else {
+      response.sendStatus(400)
     }
   })  
 })
