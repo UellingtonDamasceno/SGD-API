@@ -63,7 +63,7 @@ routes.post("/adicionarAgendamento", (request, response) => {
     })
   })
 
-  //NOTE TA FEITO
+  //NOTE TA FEITO 
   routes.post("/adicionarEscola", (request, response) => {
     const email = request.body.email;
     const login = request.body.login;    
@@ -292,7 +292,7 @@ Utils.checkIsInRole(ROLES.Employee),
 //NOTE retorna as informações de uma escola [AUTENTICAR ESCOLA]
 routes.post("/retornaDadosEscola", 
 Passport.authenticate(),
-Utils.checkIsInRole(ROLES.School),
+Utils.checkIsInRole(ROLES.School, ROLES.Employee),
 (request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
     var primeiroDados=result[0]
