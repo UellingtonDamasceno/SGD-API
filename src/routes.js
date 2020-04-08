@@ -129,10 +129,13 @@ routes.get("/scholarshipPerfil",
  * Params: Não recebe.
  * Retorna: 200 como sinal de sucesso.
  */
-routes.post("/backup", (request, response) =>{
-  backupManager.createNewBackup().then(()=>{
-    response.sendStatus(200);
-  });
+routes.post("/backup", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
+    backupManager.createNewBackup().then(()=>{
+      response.sendStatus(200);
+    });
 });
 
 /**
@@ -142,12 +145,15 @@ routes.post("/backup", (request, response) =>{
  * Params: Não recebe.
  * Retorna: Lista de todos os arquivos backups encontrados.
  */
-routes.get("/backup", (request, response)=>{
-  backupManager.getAllBackups().then((nameFiles)=>{
-    response.json({
-      files: nameFiles
+routes.get("/backup", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),  
+  (request, response) => {
+    backupManager.getAllBackups().then((nameFiles)=>{
+      response.json({
+        files: nameFiles
+      });
     });
-  });
 });
 
 /**
@@ -160,9 +166,12 @@ routes.get("/backup", (request, response)=>{
  *
  *  Retorna: Sucesso em todos os casos.
  */
-routes.delete("/backup", (request, response) =>{
-  backupManager.deleteBackup(request.body.fileName, response);
-  response.sendStatus(200);
+routes.delete("/backup", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
+    backupManager.deleteBackup(request.body.fileName, response);
+    response.sendStatus(200);
 });
 
 /**
@@ -174,13 +183,16 @@ routes.delete("/backup", (request, response) =>{
  * 
  * Retorna: Uma solicitação para downloads;
  */
-routes.get("/backup/download", (request, response)=>{
-  const fileName = request.query.fileName;
-  response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
-    if(err){
-      console.log(err);
-    }
-  });
+routes.get("/backup/download", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
+    const fileName = request.query.fileName;
+    response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
+      if(err){
+        console.log(err);
+      }
+    });
 });
 
 
