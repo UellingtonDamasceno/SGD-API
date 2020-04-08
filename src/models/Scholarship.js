@@ -52,7 +52,7 @@ exports.getByIdBolsista = function getByIdBolsista(idBolsista, callback){
 exports.getAtivos = function getAtivos(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM bolsistas WHERE intaivo = 0";
+        var sql = "SELECT * FROM bolsistas WHERE inativo = 0";
         connection.query(sql, function(err, result){
             if (err) throw err;
             callback(result);
@@ -64,7 +64,7 @@ exports.getAtivos = function getAtivos(callback){
 exports.getintaivos = function getintaivos(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM bolsistas WHERE intaivo = 1"
+        var sql = "SELECT * FROM bolsistas WHERE inativo = 1"
         connection.query(sql, function(err, result){
             if (err) throw err;
             callback(result);

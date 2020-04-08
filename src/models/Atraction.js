@@ -13,6 +13,18 @@ exports.add = function add(nome, inicioPeriodo, fimPeriodo, descricao, tipo, sem
     })    
 }
 
+exports.getAtracoes = function getAtracoes(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT * FROM atracoes"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });     
+    })
+}
+
 exports.getByName = function getByName(nome, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
