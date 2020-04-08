@@ -332,7 +332,7 @@ routes.post("/esqueciSenha", function(request){
   person.getByEmail(request.body.email,function(result){
     user.getById(result[0].idPessoa), function(result){
       correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
-      user.setSenha("123456",function(result){})
+      user.setSenha(encryptPassword(123456),function(result){})
     }
   })  
 })
