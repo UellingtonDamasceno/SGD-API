@@ -1,9 +1,4 @@
-require("dotenv/config")
-const Cors = require("cors");
 const { Router } = require("express");
-const bodyParser = require("body-parser");
-const express = require("express");
-const app = express();
 const visits = require('../models/Visits.js');
 const school = require('../models/School.js');
 const person = require('../models/Person.js');
@@ -27,13 +22,17 @@ const encryptPassword = password => {
   return bcrypt.hashSync(password, salt)
 }
 
-/*configurando bodyparser  S*/
-routes.use(bodyParser.urlencoded({ extended: false }));
-routes.use(bodyParser.json());
-app.use(Cors());
-app.use(routes);
-
-//ROTAS DE ADICIONAR ALGOs
+//REVIEW Dei uma revisada
+routes.post("/adicionarAgendamento", (request, response) => {
+  school.getByIdEscola(request.body.idSchool,function(result){
+    var responsavel = request.body.responsible
+    var qtdeEstudantes = request.body.students
+    var horarioVisita = request.body.date
+    var serie = request.body.number
+    var observacao = request.body.obs
+    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"A", horarioVisita, (result) =>{});
+  })
+})
 
   //REVIEW Dei uma revisada
   routes.post("/adicionarAgendamento", (request, response) => {
@@ -402,6 +401,3 @@ routes.get("/backup/download/", (request, response)=>{
 
 
 module.exports = routes;
-app.listen(9000, function () {
-  console.log("Servidor Rodando");
-});
