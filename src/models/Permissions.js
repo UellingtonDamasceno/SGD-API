@@ -1,18 +1,10 @@
 const pool = require("../services/database/connection");
 
-<<<<<<< HEAD
-exports.add = function add(idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, cadastrarAtracao, gerirBackup, gerirHorarioBolsista, callback){
-    pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsista, gerirFuncionario,  confirmarVisita, gerarRelatorio,  cadastrarAtracao, gerirBackup, gerirHorarioBolsista) VALUES  ?"
-        var values = [[idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, confirmarVisita, gerarRelatorio, inserirAtividade, cadastrarAtracao, gerirBackup, gerirHorarioBolsista]]
-=======
 exports.add = function add(idFuncionario, gerirBolsistas, gerirFuncionarios, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup, gerirEscolas, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "INSERT INTO permissoes (idFuncionario, gerirBolsistas, gerirFuncionarios,  validarAgendamentos, gerarRelatorio, inserirAtividade, gerirHorarioBolsista, gerirBackup, gerirEscolas ) VALUES  ?"
         var values = [[idFuncionario, gerirBolsistas, gerirFuncionarios, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup, gerirEscolas]]
->>>>>>> bf109c24acb689649095b810090bcbfe207cc0c8
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result);
