@@ -25,6 +25,18 @@ exports.getByResponsavel = function getByResponsavel(Responsavel, callback){
     })
 }
 
+exports.getByIdVisitante = function getByIdVisitante(idVisitante, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT * FROM visitas WHERE idVisitante = ?"
+        connection.query(sql, idVisitante, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
 exports.getByStatus = function getByStatus(status, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;

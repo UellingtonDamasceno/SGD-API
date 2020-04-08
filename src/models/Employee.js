@@ -153,7 +153,7 @@ exports.setAtivo = function setAtivo(idFuncionario, callback){
 exports.setInativo = function setInativo(idFuncionario, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE funcionarios SET Inativo = 1 WHERE idFuncionarios = ?"
+        var sql = "UPDATE funcionarios SET Inativo = 1 WHERE idPessoa = ?"
         connection.query(sql, idFuncionario, function(err, result){
             if(err) throw err;
             callback(result);

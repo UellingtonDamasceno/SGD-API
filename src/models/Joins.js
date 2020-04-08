@@ -13,12 +13,22 @@ exports.getFuncionarioAtivos = function getFuncionariosAtivos(callback){
     });
 }
 
-
-
-exports.getFuncionarioAtivos = function getFuncionariosAtivos(callback){
+exports.getBolsistasAtivos = function getBolsitasAtivos(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT p.nome,p.telefone,p.email, b.inativo FROM pessoas p JOIN bolsistas b ON p.idPessoa=f.idPessoa AND b.inativo = 0";
+        var sql = "SELECT p.idPessoa, p.nome,p.telefone,p.email, b.intaivo FROM pessoas p JOIN bolsistas b ON p.idPessoa=b.idPessoa and b.intaivo = 0";
+        connection.query(sql, function(err, result){
+            if(err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+
+exports.getEscolas = function getEscolas(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT p.nome, e.nomeResponsavel, p.email, p.telefone FROM pessoas p JOIN escolas e ON p.idPessoa=e.idPessoa"
         connection.query(sql, function(err, result){
             if(err) throw err;
             callback(result);

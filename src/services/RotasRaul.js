@@ -11,6 +11,8 @@ const visitor = require('../models/Visitor.js');
 const scholar = require('../models/Scholarship.js');
 const employee = require('../models/Employee.js');
 const horarioTrabalho = require("../models/WorkLoad.js")
+const atracoes = require("../models/Atraction.js")
+const joins = require("../models/Joins.js")
 
 const routes = Router();
 
@@ -20,29 +22,30 @@ routes.use(bodyParser.json());
 app.use(Cors());
 app.use(routes);
 
-//REVIEW 
+//REVIEW Dei uma revisada
 routes.post("/adicionarAgendamento", (request, response) => {
-  var responsavel = request.body.responsible
-  var estudantes = request.body.students
-  var data = request.body.date
-  var numero = request.body.number
-  var observacao = request.body.obs
-
-  console.log(responsavel)
-  console.log(estudantes)
-  console.log(data)
-  console.log(numero)
-  console.log(observacao)
-
-  //Adiciona uma agendamento ao banco de dados ss
-
-  visits.add(16, estudantes, responsavel,"A", data, (result) =>{
-console.log(result);
-  });
-
+  school.getByIdEscola(request.body.idSchool,function(result){
+    var responsavel = request.body.responsible
+    var qtdeEstudantes = request.body.students
+    var horarioVisita = request.body.date
+    var serie = request.body.number
+    var observacao = request.body.obs
+    visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,0, horarioVisita, (result) =>{});
+  })
 })
+
+// Dei uma revisada
+routes.post("/agendamentos", (request, response) => {
+  school.getByIdEscola(request.body.idSchooll,function(result){
+    visits.getByIdVisitante(result[0].idVisitante,function(result){
+      response.send(result)
+    })
+  })
+})
+
+
 /**
- * Route responsible for receiving data from a school and adding it to the database
+ * Route responsible for receiving data from a school and adding it to the databasesss
  */
 //NOTE TA FEITO
 routes.post("/adicionarEscola", (request, response) => {
@@ -78,50 +81,57 @@ routes.post("/adicionarEscola", (request, response) => {
     });
   });
 });
-  //NOTE TA FEITO
+  //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADO
   routes.post("/adicionarBolsista", (request, response) => {
     const login = request.body.login;
+    const cidade = request.body.cidade;
     const name = request.body.name;
     const surname = request.body.surname;
-    const address = request.body.address;
+    const rua = request.body.rua;
+    const bairro = request.body.bairro;
+    const numero = request.body.numero;
     const email = request.body.email;
     const enrollment = request.body.enrollment;
     const cpf = request.body.cpf;
     const phone = request.body.phone;
     const password = request.body.password;
     let idPessoa;
-    //Resolver depois, faltam as informações separadas devidamente. s s
-    person.addPessoa(cpf, name, address, address, address, email, phone, (result) => {
+    //Resolver depois, faltam as informações separadas devidamente. s s s
+    person.addPessoa(cpf, name,surname, "Estado", cidade, rua, bairro, numero, email, phone, (result) => {
       person.getByCPF(cpf, (result) => {
         idPessoa   = result[0].idPessoa;
-          user.add(email, password, idPessoa, (result) => {
-            scholar.add(email, idPessoa, (result) => {
+          user.add(login, password, idPessoa, (result) => {
+            scholar.add(login, idPessoa, (result) => {
           });
         });
       });
     });
   });
-//NOTE TA FEITO
+//NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADO
 routes.post("/adicionarFuncionario", (request, response) => {
+  console.log("eoq")
   const login = request.body.login;
-  const name = request.body.name;
-  const surname = request.body.surname;
-  const address = request.body.address;
-  const email = request.body.email;
-  const cpf = request.body.cpf;
-  const phone = request.body.phone;
-  const password = request.body.password;
-  let idPessoa;
+    const cidade = request.body.cidade;
+    const name = request.body.name;
+    const surname = request.body.surname;
+    const rua = request.body.rua;
+    const bairro = request.body.bairro;
+    const numero = request.body.numero;
+    const email = request.body.email;
+    const cpf = request.body.cpf;
+    const phone = request.body.phone;
+    const password = request.body.password;
+    let idPessoa;
 
-  person.addPessoa(cpf, name, address, address, address, email, phone, (result) => {
-    person.getByCPF(cpf, (result) => {
-      idPessoa = result[0].idPessoa;
-        user.add(email, password, idPessoa, (result) => {
-          employee.add(email, idPessoa, null, false, (result) => {
+    person.addPessoa(cpf, name,surname, "Estado", cidade, rua, bairro, numero, email, phone, (result) => {
+      person.getByCPF(cpf, (result) => {
+        idPessoa = result[0].idPessoa;
+          user.add(login, password, idPessoa, (result) => {
+            employee.add(login, idPessoa, null, false, (result) => {
+            });
           });
-        });
+      });
     });
-  });
 });
 //NOTE TA FEITO
 routes.post("/listarHorarioBolsistas", (request, response) => {
@@ -135,24 +145,31 @@ routes.post("/listarHorarioBolsistas", (request, response) => {
 })
 
 routes.post("/dadosBolsista", (request, response) => {
-  let bolsistas;
-  /*bolsistas.push({ id: 1, name: "Roberto", phone: "75988498927" }); sss
-  bolsistas.push({ id: 2, name: "Daniel", phone: "75941145215" });
-  bolsistas.push({ id: 3, name: "Moisas", phone: "75464646646" });
-  bolsistas.push({ id: 4, name: "Riquelme", phone: "75464646646" });
-  console.log(request.body.idScholarschip) s
-  var bolsista= bolsistas.find(Element => bolsistas.id==request.body.idScholarschip)
-  console.log(bolsista)s
-  */
+  horarioTrabalho.getById(request.body.idScholarschip,function(result){
+    var horarioBolsista= result
+    response.send(horarioBolsista)
+  })
+});
 
-  scholar.getByIdPessoa(request.body.idScholarschip, (result) => {
-    bolsitas = result;
-    response.send(bolsista);
-  });
+routes.post("/addHorarioBolsista", (request, response) => {
+  horarioTrabalho.add(request.body.idScholarschip,request.body.inicioPeriodo,request.body.fimPeriodo, request.body.semana, function(){
+  })
+});
+
+routes.post("/retornaAtracoes", (request, response) => {
+  atracoes.getAtracoes(function(result){
+    var atracoes= result;
+    response.send(atracoes)
+  })
+});
+
+routes.post("/addAtracoes", (request, response) => {
+  atracoes.add(request.body.name,request.body.inicioPeriodo,request.body.fimPeriodo,
+  request.body.description,request.body.type, request.body.week,function(){      
+  })
 });
 //NOTE TAs
 routes.post("/retornaDadosEscola", (request, response) => {
-  console.log(request.body.IDSchool)
   school.getByIdEscola(request.body.IDSchool, function(result){
     var primeiroDados=result[0]
     person.getByPessoa(result[0].idPessoa,function(result){
@@ -164,6 +181,7 @@ routes.post("/retornaDadosEscola", (request, response) => {
             login:terceirosDados.Login,
             password:terceirosDados.senha,
             respName:primeiroDados.nomeResponsavel,
+            respPhone:primeiroDados.telefoneResponsavel,
             respSurname:primeiroDados.repSurname,
             schoolType:primeiroDados.tipoEscola,
             name:segundosDados.nome,
@@ -177,6 +195,7 @@ routes.post("/retornaDadosEscola", (request, response) => {
             idPessoa:segundosDados.idPessoa,
             loginUsuario:terceirosDados.Login
           }
+          console.log(escola)
           response.send(escola)  
       })
     })
@@ -185,85 +204,59 @@ routes.post("/retornaDadosEscola", (request, response) => {
 
   routes.post("/atualizaDadosEscola", (request, response) =>{
     console.log("coe")
-    /*person.setCPF_CNPJ(43,123,function(result){})
-    person.setCidade(43,"setCidade",function(result){})
-    person.setEndereco(43,"setEndereco",function(result){})
-    person.setEstado(43,"setEstado",function(result){})
-    person.setNome(43,"setNome",function(result){})
-    person.setTelefone(43,"setTelefone",function(result){})
-    school.setLogin(15,"setLogin",function(result){})
-    school.setNome(15,"setNome",function(result){})
-    school.setTelefone(15,"setTelefone",function(result){})
-    user.setLogin("danieldouradofsa@gmail.com","setLogin",function(result){})
-    user.setSenha("danieldouradofsa@gmail.com","setSenha",function(result){})*/
+    console.log(request.body.password)
+
+    person.setCPF_CNPJ(request.body.idPessoa,request.body.CNPJ,function(result){})
+    person.setCidade(request.body.idPessoa,request.body.city,function(result){})
+    person.setBairro(request.body.idPessoa, request.body.district,function(result){})
+    person.setNumero(request.body.idPessoa, request.body.number,function(result){})
+    person.setRua(request.body.idPessoa, request.body.street,function(result){})
+    person.setEstado(request.body.idPessoa,request.body.state,function(result){})
+    person.setNome(request.body.idPessoa,request.body.name,function(result){})
+    person.setTelefone(request.body.idPessoa,request.body.phone,function(result){})
+    person.setEmail(request.body.idPessoa,request.body.email,function(result){})
+    //school.setLogin(request.body.IDSchool,request.body.login,function(result){console.log(result)})GUSTAVAO RESOLVE
+    school.setNome(request.body.IDSchool,request.body.respName,function(result){})
+    school.setTelefone(request.body.IDSchool,request.body.respPhone,function(result){console.log(result)})
+    school.setSurName(request.body.IDSchool,request.body.respSurname,function(result){console.log(result)})
+    school.setTipo(request.body.IDSchool,request.body.schoolType,function(result){console.log(result)})
+    //user.setLogin(request.body.idPessoa,request.body.login,function(result){console.log(result)})//GUSTAVO RESOLVE
+    user.setSenha(request.body.idPessoa,request.body.password,function(result){console.log(result)})
   })
-//NOTE TA FEITO
-routes.post("/listarBolsistas", (request, response) => {
-  var bolsistas=[]
-  scholar.getAtivos(function(result){
-    for (let index = 0; index < result.length; index++) {
-      person.getInfo(result[index].idPessoa,function(result){
-        var objeto={
-          nome:result[0].nome,
-          email:result[0].email,
-          telefone:result[0].telefone
-        }
-        bolsistas.push(objeto)
-        if (index==result.length-1) {
-          response.send(bolsistas)
-        }
-      })
-    }
-  }); 
+//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss
+ routes.post("/listarBolsistas", (request, response) => {
+  joins.getBolsistasAtivos(function(result){
+    var bolsistas = result
+    response.send(bolsistas)
+  })
 });
-//NOTE TA FEITO
+
+//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssssss
+routes.post("/removerBolsista", (request, response) => {
+  scholar.setintaivo(request.body[0].idPessoa, function(result){
+  })
+});
+
+routes.post("/removerFuncionario", (request, response) => {
+  console.log(request.body[0].idPessoa)
+  employee.setInativo(request.body[0].idPessoa, function(result){
+  })
+});
+
+
+//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss
 routes.post("/listarFuncionarios", (request, response) => {
-  var funcionarios=[]
-  employee.getAtivos(function(result){
-    for (let index = 0; index < result.length; index++) {
-      person.getInfo2(result[index].idPessoa,function(result){
-        var objeto={
-          nome:result[0].nome,
-          CPF_CNPJ:result[0].CPF_CNPJ,
-          telefone:result[0].telefone
-        }
-        funcionarios.push(objeto)
-        console.log(funcionarios)
-        if (index==result.length-1) {
-          response.send(funcionarios)
-        }
-      })
-    }
-  });
+  joins.getFuncionarioAtivos(function(result){
+    var funcionarios = result
+    response.send(funcionarios)
+  })
 });
-
+//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!
 routes.post("/listarEscolas", (request, response) => {
-  var escolas;
-  /*  
-  escolas.push({
-    id: 1,
-    name: "Colégio doideira",
-    phone: "34346436",
-    email: "doideira@gmail.com"
-  });
-  escolas.push({
-    id: 2,
-    name: "Colégio parceirinho",
-    phone: "31234676",
-    email: "parceirinho@gmail.com"
-  });
-  escolas.push({
-    id: 3,
-    name: "Colégio shiratorizawa",
-    phone: "346474676",
-    email: "shiratorizawa@gmail.com"
-  });
-  */
-  school.listSchools((result) => {
-    escolas = result
-  });
-
-  response.send([escolas]);
+  joins.getEscolas(function(result){
+    console.log(result)
+    response.send(result)
+  })
 });
 
 module.exports = routes;
