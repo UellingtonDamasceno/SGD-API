@@ -19,7 +19,7 @@ const permissoes= require("../models/Permissions.js")
 const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
 const bcrypt = require('bcrypt-nodejs');
-const email= require("./mail/email")
+const correio= require("./mail/email")
 
 
 const encryptPassword = password => {
@@ -33,7 +33,7 @@ routes.use(bodyParser.json());
 app.use(Cors());
 app.use(routes);
 
-//ROTAS DE ADICIONAR ALGO
+//ROTAS DE ADICIONAR ALGOs
 
   //REVIEW Dei uma revisada
   routes.post("/adicionarAgendamento", (request, response) => {
@@ -82,6 +82,7 @@ app.use(routes);
             visitor.getByIdPessoa(idPessoa, (result) => {
               idVisitante = result[0].idVisitante;
               school.add(idVisitante, directorName, respPhone, login, idPessoa,directorSurName,schoolType, (result) => {
+                correio.sendMail(email,"Observatório Astronômico Antares","Parabéns, seu cadastro de Escola foi realizado com sucesso!")
               });
             });
           });
@@ -110,6 +111,7 @@ app.use(routes);
         idPessoa   = result[0].idPessoa;
           user.add(login, password, idPessoa, (result) => {
             scholar.add(login, idPessoa, (result) => {
+              correio.sendMail(email,"Observatório Astronômico Antares","Parabéns, seu cadastro de Bolsista foi realizado com sucesso!")
           });
         });
       });
@@ -117,8 +119,7 @@ app.use(routes);
   });
   //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADOss
   routes.post("/adicionarFuncionario", (request, response) => {
-
-  const login = request.body.login;
+    const login = request.body.login;
     const cidade = request.body.cidade;
     const name = request.body.name;
     const surname = request.body.surname;
@@ -137,8 +138,10 @@ app.use(routes);
           user.add(login, password, idPessoa, (result) => {
             employee.add(login, idPessoa, null, false, (result) => {
               employee.getByIdPessoa(idPessoa, function(result){
-                console.log(result)
-                response.send(result)
+                permissoes.add(result[0].idFuncionario,request.body.gerirB,request.body.gerirF,request.body.validarA
+                  ,request.body.gerarR,request.body.inserirA,request.body.gerirHor, request.body.gerirBackup, request.body.gerirE, function(result){
+                    correio.sendMail(email,"Observatório Astronômico Antares","Parabéns, seu cadastro de funcionário foi realizado com sucesso!")
+                  })
               })
             });
           });
@@ -221,8 +224,10 @@ routes.post("/retornaAtracoes", (request, response) => {
 });
 
 //NOTE retorna as permissoes de um funcionario 
-routes.post("/retornaPermissoes", (request, response) => {
+routes.post("/retornarPermissoes", (request, response) => {
+  console.log(request.body.idFuncionario)
   permissoes.getByIdFuncionario(request.body.idFuncionario, function(result){
+    console.log(result)
     response.send(result)
   })
 });
@@ -326,7 +331,8 @@ routes.post("/removerAtracao", (request, response) => {
 routes.post("/esqueciSenha", function(request){
   person.getByEmail(request.body.email,function(result){
     user.getById(result[0].idPessoa), function(result){
-      email.sendMail(request.body.email,"Sua senha",result[0].senha)
+      correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
+      user.setSenha("123456",function(result){})
     }
   })  
 })

@@ -1,6 +1,6 @@
 const pool = require("../services/database/connection");
 
-exports.add = function add(idVisitante, agendamento, numAlunos, Responsavel, status, serie, observacao, atracoes, hora){
+exports.add = function add(idVisitante, agendamento, numAlunos, Responsavel, status, serie, observacao, atracoes, hora, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "INSERT INTO visitas (idVisitante, agendamento, numAlunos, Responsavel, status, serie, observacao, atracoes, hora ) VALUES  ?"
@@ -13,7 +13,7 @@ exports.add = function add(idVisitante, agendamento, numAlunos, Responsavel, sta
     });
 }
 
-//Retorna todas as pessoas presentes em tbl_pessoa. Retorna um objeto no final
+//Retorna todas as pessoas presentes em tbl_pessoa. Retorna um objeto no finals
 exports.getVisitas = function getVisitas(callback){
     pool.getConnection(function(err, connection){
         if(err) throw err;
