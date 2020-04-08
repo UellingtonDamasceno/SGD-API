@@ -34,7 +34,7 @@ routes.post("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
 
-//REVIEW Dei uma revisada [PRECISA AUTENTICAR?]
+//REVIEW Dei uma revisada [PRECISA AUTENTICAR?] PS: AINDA VAI SER USADA?
 routes.post("/adicionarAgendamento", (request, response) => {
   school.getByIdEscola(request.body.idSchool,function(result){
     var responsavel = request.body.responsible
@@ -52,14 +52,18 @@ routes.post("/adicionarAgendamento", (request, response) => {
   Utils.checkIsInRole(ROLES.School),
   (request, response) => {
     school.getByIdEscola(request.body.idSchool,function(result){
-      var responsavel = request.body.responsible
-      var agendamento = request.body.date1
-      var qtdeEstudantes = request.body.students
-      var horarioVisita = request.body.date
-      var observacao = request.body.obs
-      var serie= request.body.number;
-      var atracoes =request.body.atraçõesT.toString()
-      visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
+      if(result.length !== 0) {
+        var responsavel = request.body.responsible
+        var agendamento = request.body.date1
+        var qtdeEstudantes = request.body.students
+        var horarioVisita = request.body.date
+        var observacao = request.body.obs
+        var serie= request.body.number;
+        var atracoes =request.body.atraçõesT.toString()
+        visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
+      } else {
+        response.sendStatus(400)
+      }
     })
   })
 
@@ -211,9 +215,13 @@ Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
   school.getByIdEscola(request.body.idSchooll,function(result){
-    visits.getByIdVisitante(result[0].idVisitante,function(result){
-      response.send(result)
-    })
+    if(result.length !== 0) {
+      visits.getByIdVisitante(result[0].idVisitante,function(result){
+        response.send(result)
+      })
+    } else {
+      response.sendStatus(400)
+    }
   })
 })
 
@@ -255,10 +263,10 @@ Utils.checkIsInRole(ROLES.Employee),
   })
 })
 
-//NOTE retorna os dados de um bolsista [AUTENTICAR FUNCIONARIO]
+//NOTE retorna os dados de um bolsista [AUTENTICAR BOLSISTA]
 routes.post("/dadosBolsista", 
 Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Employee),
+Utils.checkIsInRole(ROLES.Scholarship),
 (request, response) => {
   horarioTrabalho.getById(request.body.idScholarschip,function(result){
     var horarioBolsista= result
@@ -266,7 +274,7 @@ Utils.checkIsInRole(ROLES.Employee),
   })
 });
 
-//NOTE retorna as atracoes cadastradas no sistema [PRECISA AUTENTICAR?]
+//NOTE retorna as atracoes cadastradas no sistema [AUTENTICAR FUNCIONARIO E ESCOLA]
 routes.post("/retornaAtracoes", 
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee, ROLES.School),
@@ -295,34 +303,38 @@ Passport.authenticate(),
 Utils.checkIsInRole(ROLES.School, ROLES.Employee),
 (request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
-    var primeiroDados=result[0]
-    person.getByPessoa(result[0].idPessoa,function(result){
-      var segundosDados=result[0]
-      user.getById(result[0].idPessoa, function(result){
-          var terceirosDados=result[0]
-          var escola={
-            email:segundosDados.email,
-            login:terceirosDados.Login,
-            password:terceirosDados.senha,
-            respName:primeiroDados.nomeResponsavel,
-            respPhone:primeiroDados.telefoneResponsavel,
-            respSurname:primeiroDados.repSurname,
-            schoolType:primeiroDados.tipoEscola,
-            name:segundosDados.nome,
-            district:segundosDados.bairro,
-            number:segundosDados.numero,
-            street:segundosDados.rua,
-            city:segundosDados.cidade,
-            state:segundosDados.estado,
-            CNPJ:segundosDados.CPF_CNPJ,
-            phone:segundosDados.telefone,
-            idPessoa:segundosDados.idPessoa,
-            loginUsuario:terceirosDados.Login
-          }
-          console.log(escola)
-          response.send(escola)  
+    if(result.length !== 0) {
+      var primeiroDados=result[0]
+      person.getByPessoa(result[0].idPessoa,function(result){
+        var segundosDados=result[0]
+        user.getById(result[0].idPessoa, function(result){
+            var terceirosDados=result[0]
+            var escola={
+              email:segundosDados.email,
+              login:terceirosDados.Login,
+              password:terceirosDados.senha,
+              respName:primeiroDados.nomeResponsavel,
+              respPhone:primeiroDados.telefoneResponsavel,
+              respSurname:primeiroDados.repSurname,
+              schoolType:primeiroDados.tipoEscola,
+              name:segundosDados.nome,
+              district:segundosDados.bairro,
+              number:segundosDados.numero,
+              street:segundosDados.rua,
+              city:segundosDados.cidade,
+              state:segundosDados.estado,
+              CNPJ:segundosDados.CPF_CNPJ,
+              phone:segundosDados.telefone,
+              idPessoa:segundosDados.idPessoa,
+              loginUsuario:terceirosDados.Login
+            }
+            console.log(escola)
+            response.send(escola)  
+        })
       })
-    })
+    } else {
+      response.sendStatus(400)
+    }
   })
 });
 
