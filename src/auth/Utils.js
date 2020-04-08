@@ -6,10 +6,12 @@ const jwtFromAuthHeader = ExtractJwt.fromAuthHeaderAsBearerToken()
 
 const checkIsInRole = (...roles) => (request, response, next) => {
     console.log('Is in role: ' + JSON.stringify(request.body))
+    /*
     if (!request.body.login) { // If use just the token, delete this function
         console.log('!request.body.login')
         return response.redirect('/')
     }
+    */
 
     const token = jwtFromAuthHeader(request)
     const payload = jwt.decode(token, authSecret)

@@ -12,7 +12,7 @@ const param = {
 }
 
 const strategy = new Strategy(param, (payload, done) => {
-    console.log('User (Passport2) \n' + JSON.stringify(payload))
+    // console.log('User (Passport2) \n' + JSON.stringify(payload))
     
     User.getUserByLogin(payload, null, result => {
         let first = result[0]

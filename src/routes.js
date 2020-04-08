@@ -21,53 +21,12 @@ routes.get("/", (request, response) => {
       message: "Hello world"
   });
 });
-
-routes.post("/validateSchoolToken",  (request, response) => {
-  authSchool.validateToken(request, response)
-});
-
+ 
+/*
 routes.post("/adicionarEscola", (request, response) => {
   School.addNewSchool(request, response);
 });
  
-routes.post("/entrarEscola", (request, response) => {
-  authSchool.signIn(request, response);
-}); 
-
-routes.post("/autenticaUsuario", (request, response) => {
-  User.getUserByLogin(request, response, result => {
-    let status;
-    if(!result){
-      status = "Usuário não existe!";
-    }else if(!(result.Senha === request.body.senha)){
-      status = "Senha não confere, tente novamente!";
-    }else{
-      response.sendStatus(200);
-    }
-
-    response.json({
-      status: status
-    });
-  });
-});
-
-routes.post("/autenticaEscola", (request, response) => {
-    School.getSchoolByLogin(request, response, result => {
-      let status;
-      if(!result){
-        status = "Escola não existe!";
-      }else if(!(result.Senha === request.body.senha)){
-        status = "Senha não confere, tente novamente!";
-      }else{
-        response.sendStatus(200);
-      }
-  
-      response.json({
-        status: status
-      });
-
-    });
-});
 
 routes.post("/adicionarVisitante", (request, response) =>{
   Visitor.addNewVisitor(request, response, result =>{
@@ -81,19 +40,17 @@ routes.post("/adicionarVisitante", (request, response) =>{
   });
 });
 
-routes.get("/escolaPerfil", passportSchool.authenticate(), (request, response) => {
-  response.json({
-    worked: true
-  });
-});
+*/
 
 routes.post("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
 
+/*
 routes.post("/adicionarFuncionario", (request, response) => {
   Employee.addNewEmployee(request, response)
 })
+*/
 
 routes.get("/employeePerfil",
   Passport.authenticate(),

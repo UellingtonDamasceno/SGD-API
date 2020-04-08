@@ -1,4 +1,11 @@
 const { Router } = require("express");
+const bodyParser = require("body-parser");
+const express = require("express");
+const app = express();
+const Auth = require('../auth/Auth');
+const Passport = require('../auth/Passport')
+const { ROLES } = require('../auth/Roles')
+const Utils = require('../auth/Utils')
 const visits = require('../models/Visits.js');
 const school = require('../models/School.js');
 const person = require('../models/Person.js');
@@ -24,7 +31,11 @@ const encryptPassword = password => {
   return bcrypt.hashSync(password, salt)
 }
 
-//REVIEW Dei uma revisada
+routes.post("/authUser", (request, response) => {
+  Auth.signIn(request, response)
+});
+
+//REVIEW Dei uma revisada [PRECISA AUTENTICAR?] PS: AINDA VAI SER USADA?
 routes.post("/adicionarAgendamento", (request, response) => {
   school.getByIdEscola(request.body.idSchool,function(result){
     var responsavel = request.body.responsible
@@ -36,21 +47,28 @@ routes.post("/adicionarAgendamento", (request, response) => {
   })
 })
 
-  //REVIEW Dei uma revisadas
-  routes.post("/adicionarAgendamento", (request, response) => {
+  //REVIEW Dei uma revisada [AUTENTICAR ESCOLA]
+  routes.post("/adicionarAgendamento", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.School),
+  (request, response) => {
     school.getByIdEscola(request.body.idSchool,function(result){
-      var responsavel = request.body.responsible
-      var agendamento = request.body.date1
-      var qtdeEstudantes = request.body.students
-      var horarioVisita = request.body.date
-      var observacao = request.body.obs
-      var serie= request.body.number;
-      var atracoes =request.body.atraçõesT.toString()
-      visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
+      if(result.length !== 0) {
+        var responsavel = request.body.responsible
+        var agendamento = request.body.date1
+        var qtdeEstudantes = request.body.students
+        var horarioVisita = request.body.date
+        var observacao = request.body.obs
+        var serie= request.body.number;
+        var atracoes =request.body.atraçõesT.toString()
+        visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
+      } else {
+        response.sendStatus(400)
+      }
     })
   })
 
-  //NOTE TA FEITO
+  //NOTE TA FEITO 
   routes.post("/adicionarEscola", (request, response) => {
     const email = request.body.email;
     const login = request.body.login;    
@@ -91,7 +109,12 @@ routes.post("/adicionarAgendamento", (request, response) => {
       });
     });
   });
-  routes.post("/adicionarBolsista", (request, response) => {
+
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/adicionarBolsista", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     const login = request.body.login;
     const cidade = request.body.cidade;
     const name = request.body.name;
@@ -117,8 +140,13 @@ routes.post("/adicionarAgendamento", (request, response) => {
       });
     });
   });
-  //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADOss
-  routes.post("/adicionarFuncionario", (request, response) => {
+
+
+  //NOTE TA REVISADO FALTA SO VER A PARTE DO ESTADOss [AUTENTICAR FUNCIONARIO]
+  routes.post("/adicionarFuncionario", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     const login = request.body.login;
     const cidade = request.body.cidade;
     const name = request.body.name;
@@ -149,8 +177,11 @@ routes.post("/adicionarAgendamento", (request, response) => {
     });    
   });
 
-  //NOTE TA FEITO
-  routes.post("/addPermissoes", (request, response) => {
+  //NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
+  routes.post("/addPermissoes", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
   idFuncionario=request.body.id
   console.log(request.body)
   //idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup
@@ -160,35 +191,56 @@ routes.post("/adicionarAgendamento", (request, response) => {
   //permissoes.add(request.body.id,false,false,false,false,false,false,false,function(result){})  
   })
 
-  routes.post("/addHorarioBolsista", (request, response) => {
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/addHorarioBolsista", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     horarioTrabalho.add(request.body.idScholarschip,request.body.inicioPeriodo,request.body.fimPeriodo, request.body.semana, function(){
     })
   });
 
-  routes.post("/addAtracoes", (request, response) => {
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/addAtracoes", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
     atracoes.add(request.body.name,request.body.inicioPeriodo,request.body.fimPeriodo,
     request.body.description,request.body.type, request.body.week,function(){      
     })
   });
 
-//NOTE Retorna os agendamentos de uma escola
-routes.post("/agendamentos", (request, response) => {
+//NOTE Retorna os agendamentos de uma escola [AUTENTICAR FUNCIONARIO]
+routes.post("/agendamentos", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   school.getByIdEscola(request.body.idSchooll,function(result){
-    visits.getByIdVisitante(result[0].idVisitante,function(result){
-      response.send(result)
-    })
+    if(result.length !== 0) {
+      visits.getByIdVisitante(result[0].idVisitante,function(result){
+        response.send(result)
+      })
+    } else {
+      response.sendStatus(400)
+    }
   })
 })
 
-//NOTE Retorna todos os agendamentos
-routes.post("/retornaAgendamentos", (request, response) => {
+//NOTE Retorna todos os agendamentos [AUTENTICAR FUNCIONARIO]
+routes.post("/retornaAgendamentos", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   visits.getVisitas(function(result){
     response.send(result)
   })
 })
 
-//NOTE Retorna todos os agendamentos
-routes.post("/cancelaConfirmaAgendamento", (request, response) => {
+//NOTE Retorna todos os agendamentos [AUTENTICAR FUNCIONARIO]
+routes.post("/cancelaConfirmaAgendamento", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   if(request.body.status==1)
     visits.setConfirmado(request.body.idVisitante)
   else if(request.body.status==2)
@@ -198,8 +250,11 @@ routes.post("/cancelaConfirmaAgendamento", (request, response) => {
 })
 
   //Rotas que enviam/listam algo
-//NOTE TA FEITO
-routes.post("/listarHorarioBolsistas", (request, response) => {
+//NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
+routes.post("/listarHorarioBolsistas", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   var horarios = [];
   //Falta adicionar os horários dos bolsistas.
   horarioTrabalho.getHorario(function(result){
@@ -208,23 +263,34 @@ routes.post("/listarHorarioBolsistas", (request, response) => {
     response.send(horarios)
   })
 })
-//NOTE retorna os dados de um bolsista
-routes.post("/dadosBolsista", (request, response) => {
+
+//NOTE retorna os dados de um bolsista [AUTENTICAR BOLSISTA]
+routes.post("/dadosBolsista", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Scholarship),
+(request, response) => {
   horarioTrabalho.getById(request.body.idScholarschip,function(result){
     var horarioBolsista= result
     response.send(horarioBolsista)
   })
 });
-//NOTE retorna as atracoes cadastradas no sistema
-routes.post("/retornaAtracoes", (request, response) => {
+
+//NOTE retorna as atracoes cadastradas no sistema [AUTENTICAR FUNCIONARIO E ESCOLA]
+routes.post("/retornaAtracoes", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee, ROLES.School),
+(request, response) => {
   atracoes.getAtracoes(function(result){
     var atracoes= result;
     response.send(atracoes)
   })
 });
 
-//NOTE retorna as permissoes de um funcionario 
-routes.post("/retornarPermissoes", (request, response) => {
+//NOTE retorna as permissoes de um funcionario [AUTENTICAR FUNCIONARIO]
+routes.post("/retornarPermissoes", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   console.log(request.body.idFuncionario)
   permissoes.getByIdFuncionario(request.body.idFuncionario, function(result){
     console.log(result)
@@ -232,58 +298,75 @@ routes.post("/retornarPermissoes", (request, response) => {
   })
 });
 
-//NOTE retorna as informações de uma escola
-routes.post("/retornaDadosEscola", (request, response) => {
+//NOTE retorna as informações de uma escola [AUTENTICAR ESCOLA]
+routes.post("/retornaDadosEscola", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.School, ROLES.Employee),
+(request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
-    var primeiroDados=result[0]
-    person.getByPessoa(result[0].idPessoa,function(result){
-      var segundosDados=result[0]
-      user.getById(result[0].idPessoa, function(result){
-          var terceirosDados=result[0]
-          var escola={
-            email:segundosDados.email,
-            login:terceirosDados.Login,
-            password:terceirosDados.senha,
-            respName:primeiroDados.nomeResponsavel,
-            respPhone:primeiroDados.telefoneResponsavel,
-            respSurname:primeiroDados.repSurname,
-            schoolType:primeiroDados.tipoEscola,
-            name:segundosDados.nome,
-            district:segundosDados.bairro,
-            number:segundosDados.numero,
-            street:segundosDados.rua,
-            city:segundosDados.cidade,
-            state:segundosDados.estado,
-            CNPJ:segundosDados.CPF_CNPJ,
-            phone:segundosDados.telefone,
-            idPessoa:segundosDados.idPessoa,
-            loginUsuario:terceirosDados.Login
-          }
-          console.log(escola)
-          response.send(escola)  
+    if(result.length !== 0) {
+      var primeiroDados=result[0]
+      person.getByPessoa(result[0].idPessoa,function(result){
+        var segundosDados=result[0]
+        user.getById(result[0].idPessoa, function(result){
+            var terceirosDados=result[0]
+            var escola={
+              email:segundosDados.email,
+              login:terceirosDados.Login,
+              password:terceirosDados.senha,
+              respName:primeiroDados.nomeResponsavel,
+              respPhone:primeiroDados.telefoneResponsavel,
+              respSurname:primeiroDados.repSurname,
+              schoolType:primeiroDados.tipoEscola,
+              name:segundosDados.nome,
+              district:segundosDados.bairro,
+              number:segundosDados.numero,
+              street:segundosDados.rua,
+              city:segundosDados.cidade,
+              state:segundosDados.estado,
+              CNPJ:segundosDados.CPF_CNPJ,
+              phone:segundosDados.telefone,
+              idPessoa:segundosDados.idPessoa,
+              loginUsuario:terceirosDados.Login
+            }
+            console.log(escola)
+            response.send(escola)  
+        })
       })
-    })
+    } else {
+      response.sendStatus(400)
+    }
   })
 });
 
   
-//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss
- routes.post("/listarBolsistas", (request, response) => {
+//NOTE ROTA REVISADA 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss [AUTENTICAR FUNCIONAR]
+ routes.post("/listarBolsistas", 
+ Passport.authenticate(),
+ Utils.checkIsInRole(ROLES.Employee),
+ (request, response) => {
   joins.getBolsistasAtivos(function(result){
     var bolsistas = result
     response.send(bolsistas)
   })
 });
 
-//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss
-routes.post("/listarFuncionarios", (request, response) => {
+//NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss [AUTENTICAR FUNCIONARIO]
+routes.post("/listarFuncionarios", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   joins.getFuncionarioAtivos(function(result){
     var funcionarios = result
     response.send(funcionarios)
   })
 });
-//NOTE Lista os dados das escolas cadastradas
-routes.post("/listarEscolas", (request, response) => {
+
+//NOTE Lista os dados das escolas cadastradas [AUTENTICAR FUNCIONARIO]
+routes.post("/listarEscolas", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   joins.getEscolas(function(result){
     console.log(result)
     response.send(result)
@@ -291,8 +374,11 @@ routes.post("/listarEscolas", (request, response) => {
 });
 
 
-//NOTE atualiza os dados de uma escola
-routes.post("/atualizaDadosEscola", (request, response) =>{
+//NOTE atualiza os dados de uma escola [AUTENTICAR ESCOLA]
+routes.post("/atualizaDadosEscola", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.School),
+(request, response) =>{
   person.setCPF_CNPJ(request.body.idPessoa,request.body.CNPJ,function(result){})
   person.setCidade(request.body.idPessoa,request.body.city,function(result){})
   person.setBairro(request.body.idPessoa, request.body.district,function(result){})
@@ -311,28 +397,43 @@ routes.post("/atualizaDadosEscola", (request, response) =>{
   user.setSenha(request.body.idPessoa,encryptPassword(request.body.password),function(result){console.log(result)})
 })
 
-//NOTE Remove um bolsista
-routes.post("/removerBolsista", (request, response) => {
+//NOTE Remove um bolsista [AUTENTICAR FUNCIONARIO]
+routes.post("/removerBolsista", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   scholar.setintaivo(request.body[0].idPessoa, function(result){
   })
 });
-//NOTE Remove um funcionario
-routes.post("/removerFuncionario", (request, response) => {
+
+//NOTE Remove um funcionario [AUTENTICAR FUNCIONARIO]
+routes.post("/removerFuncionario", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   console.log(request.body[0].idPessoa)
   employee.setInativo(request.body[0].idPessoa, function(result){
   })
 });
 
-//NOTE Remove uma atracao
-routes.post("/removerAtracao", (request, response) => {
+//NOTE Remove uma atracao [AUTENTICAR FUNCIONARIO]
+routes.post("/removerAtracao", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   atracoes.remove(request.body.name, function(result){})
 });
 
-routes.post("/esqueciSenha", function(request){
+// [AUTENTICAR EM QUE?]
+routes.post("/esqueciSenha", (request, response) => {
   person.getByEmail(request.body.email,function(result){
-    user.getById(result[0].idPessoa), function(result){
-      correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
-      user.setSenha(encryptPassword(123456),function(result){})
+    if(result.length !== 0){
+      user.getById(result[0].idPessoa), function(result){
+        correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
+        user.setSenha(encryptPassword(123456),function(result){})
+      }
+    } else {
+      response.sendStatus(400)
     }
   })  
 })
@@ -343,8 +444,11 @@ routes.post("/esqueciSenha", function(request){
  * 
  * Params: Não recebe.
  * Retorna: 200 como sinal de sucesso.
- */
-routes.post("/backup", (request, response) =>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.post("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   backupManager.createNewBackup().then(()=>{
     response.sendStatus(200);
   });
@@ -356,8 +460,11 @@ routes.post("/backup", (request, response) =>{
  * 
  * Params: Não recebe.
  * Retorna: Lista de todos os arquivos backups encontrados.
- */
-routes.get("/backup", (request, response)=>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.get("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   backupManager.getAllBackups().then((nameFiles)=>{
     response.json({
       files: nameFiles
@@ -374,9 +481,12 @@ routes.get("/backup", (request, response)=>{
  *  -- Vem pelo corpo da requisição: body
  *
  *  Retorna: Sucesso em todos os casos.
- */
-routes.delete("/backup", (request, response) =>{
-  backupManager.deleteBackup(request.query.fileName, response);
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.delete("/backup", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
+  backupManager.deleteBackup(request.body.fileName, response);
   response.sendStatus(200);
 });
 
@@ -388,8 +498,11 @@ routes.delete("/backup", (request, response) =>{
  *  -- Vem pela query/url: query
  * 
  * Retorna: Uma solicitação para downloads;
- */
-routes.get("/backup/download/", (request, response)=>{
+ */ // [AUTENTICAR FUNCIONARIO]
+routes.get("/backup/download/", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
   const fileName = request.query.fileName;
   response.download(backupManager.getCompletePath(fileName), fileName, (err)=>{
     if(err){
