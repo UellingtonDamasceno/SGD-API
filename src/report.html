@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        table, th, td{
+          border: 1pt solid black;
+          border-collapse: collapse;
+          text-align: left;
+          padding: 2pt;
+        }
+        th{
+          background-color: rgb(211, 211, 211);
+        }
+        table{
+          /*margin-top: 30pt;*/
+          width: 100%;
+        }
         .SectionTitulo{
           text-align: center;
           background: rgb(228, 225, 225);
           font-size: 14pt;
           padding: 10px;
-          margin-top: 56pt;
           margin-left: 85pt;
           margin-right: 56pt ;
+          /*margin-bottom: 56pt;*/
           font-family: Times;
           /*border: 1px solid rgb(129, 113, 113);*/
         }
         .textSection{
+          size: A4;
           text-align: justify;
           font-size: 12pt;
-
-          margin-top: 0pt;
           margin-left: 85pt;
           margin-right: 56pt ;
-          margin-bottom: 8pt;
+          /*margin-bottom: 8pt;*/
           line-height: 1.5;
         }
 
@@ -34,20 +46,11 @@
         .fimPeriodo{
           font: bold;
         }
-        .novasEscolas{}
-        .novosFuncionarios{}
-        .novosBolsistas{}
-        .agCancelados{}
-        .agConcluidos{}
-        .agConfNaoRealizados{}
-        .agCancelFuncionario{}
-        .agNaoAceito{}
-        .agCanceladoRealizado{}
-        .fimEstagio{}
-        .fimFuncionario{}
-        .escolasMaisFreq{}
-        .quantAgNoturno{}
-        .noturnoMaisFreq{}
+        .Escolas{}
+        .Agendamentos{}
+        .Visitas{}
+        .Bolsistas{}
+        .Funcionarios{}
     </style>
 </head>
 <body>
@@ -62,222 +65,198 @@
     <p>Data de emissão do relatório: %DataEm%.</p>
     <p>Horário de emissão do relatório: %HoraEm%.</p>
     <hr></hr>
-    <p style="text-align: center;">Conteúdo presente no relatório </p>
-    <p class=novasEscolas>• Novas Escolas. </p>
-    <p class=novosFuncionarios>• Novos Funcionarios.</p>
-    <p class=novosBolsistas>• Novos Bolsistas.</p>
-    <p class=agCancelados>• Agendamentos Cancelados.</p>
-    <p class=agConcluidos>• Agendamentos Concluídos.</p>
-    <p class=agConfNaoRealizados>• Agendamentos Confirmados mas não realizados.</p>
-    <p class=agCancelFuncionario>• Agendamentos Cancelados por um Funcionário.</p>
-    <p class=agNaoAceito>• Agendamentos Recusados pelos Funcionários.</p>
-    <p class=agCanceladoRealizado>• Agendamentos Cancelados em que as Escolas estiveram presentes.</p>
-    <p class=fimEstagio>• Bolsistas Cujo estágio findou no período concernente a este relatório.</p>
-    <p class=fimFuncionario>• Funcionários que foram desligados do Observatório no período vigente.</p>
-    <p class=escolasMaisFreq>• Escolas que mais visitaram.</p>
-    <p class=quantAgNoturno>• Quantidade de agendamentos noturnos por pessoa.</p>
-    <p class=noturnoMaisFreq>• Pessoas que mais visitaram o Observatório à noite.</p>
-    <div style="position: absolute; top: 950px;width:75%;"><hr></hr><div style="text-align: center;">Feira de Santana - BA</div><hr></hr></div>
-    <div style="page-break-after: always"></div>
+    <p style="text-align: center;">Conteúdo presente no relatório</p>
+    <p class="Agendamentos">• Informações referentes a Agendamentos.</p>
+    <p class="Bolsistas">• Informações referentes a Bolsistas.</p>
+    <p class="Escolas">• Informações referentes a Escolas. </p>
+    <p class="Funcionarios">• Informações referentes a Funcionários.</p>
+    <p class="Visitas">• Informações referentes a Visitas.</p>
+    <div style="position: absolute; top: 880px;width:75%;"><hr></hr><div style="text-align: center;">Feira de Santana - BA</div><hr></hr></div>
   </div>
   
   
-  <!-- Página Novas Escolas -->
-  <div class=novasEscolas>
-    <div class="SectionTitulo" >Escolas que se cadastraram no período vigente</div>
+  <!-- Agendamentos -->
+  <div class="Agendamentos"><div style="page-break-after: always"></div></div>
+  <div class="Agendamentos">
+    <div class="SectionTitulo" >Análise dos dados referentes aos Agendamentos</div>
     <div class="textSection">
-      <div STYLE="margin-right: 50px;  align-self: center;">
-          <!-- Centralização não funciona -->
-        <table   width =  "360" border="1px"  >
-          <caption>Escolas cadastradas no periodo de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam> </caption>
-          <tr style="background-color: darkgrey;">  
-              <th>Mês</th>
-              <th>Nº</th>
-          </tr>
-          <tr>
-            <td style="width: 188.85px;">Janeiro</td>
-            <td style="width: 45.15px;">%escJan%</td>
-          </tr>
-          <tr>
-              <td>Fevereiro</td> 
-              <td>%escFev%</td>
-          </tr>
-          <tr>
-              <td>Março</td>
-              <td>%escMar% </td>
-          </tr>
-          <tr>
-              <td>Abril</td>
-              <td>%escAbr%</td>
-            </tr>
-            <tr>
-                <td>Maio</td> 
-                <td>  %escMai% </td>
-            </tr>
-            <tr>
-                <td>Junho</td>
-                <td>  %escJun% </td>
-            </tr>
-            <tr>
-              <td>Julho</td>
-              <td>  %escJul% </td>
-            </tr>
-            <tr>
-                <td>Agosto</td> 
-                <td> %escAgo% </td>
-            </tr>
-            <tr>
-                <td>Setembro</td>
-                <td>  %escSet% </td>
-            </tr>
-            <tr>
-                <td>Outubro</td>
-                <td>  %escOut% </td>
-              </tr>
-              <tr>
-                  <td>Novembro</td> 
-                  <td>  %escNov% </td>
-              </tr>
-              <tr>
-                  <td>Dezembro</td>
-                  <td>  %escDez% </td>
-              </tr>       
-        </table>
-      </div>
+      <p style="text-indent: 42pt;">        Durante o período relacionado a este relatório, foram registrados %totalAgendamentos% agendamentos. 
+        Destes, %quantRealizado% foram concluídos no período; 
+        %quantPendente% ainda estão pendentes de confirmação por parte de um funcionário com permissões para tal; 
+        %quantCancelado% foram cancelados ou pelo visitante ou por algum funcionário; 
+        %quantConfirmado% foram confirmados pelos funcionários mas ainda não foram realizados. 
+        <spam id=captionAgendamentosCancelados>A tabela abaixo relaciona os agendamentos que foram cancelados, expirados ou rejeitados no período.</spam>
+      </p>
+        <table id=AgendamentosCancelados></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosConfirmados>A tabela abaixo relaciona os agendamentos que foram confirmados no período mas que ainda não foram concluídos.</p>
+        <table id=AgendamentosConfirmados></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosPendentes>A tabela abaixo relaciona os agendamentos que foram solicitados porém ainda não tiveram confirmação.</p>
+        <table id=AgendamentosPendentes></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosRealizados>A tabela abaixo relaciona os agendamentos que foram concluídos no período ao qual este relatório se dirige.</p>
+        <table id=AgendamentosRealizados></table>
+
     </div>
-    <div style="page-break-after: always"></div>
   </div>
 
-  <!-- Página Novos Funcionários -->
-  <div class=novosFuncionarios>
-    <div class="SectionTitulo" >Novos Funcionários</div>
+  <!-- Página Bolsistas -->
+  <div class="Bolsistas"><div style="page-break-after: always"></div></div>
+  <div class="Bolsistas">
+    <div class="SectionTitulo" >Análise dos dados referentes aos Bolsistas</div>
     <div class="textSection">
 
       <table id=DALEXD></table>
 
     </div>
-    <div style="page-break-after: always"></div>
   </div>
 
-  <!-- Página Novos Bolsistas -->
-  <div class=novosBolsistas>
-    <div class="SectionTitulo" >Novos Bolsistas</div>
+  <!-- Página Escolas -->
+  <div class="Escolas"><div style="page-break-after: always"></div></div>
+  <div class="Escolas">
+    <div class="SectionTitulo" >Análise dos dados referentes às Escolas</div>
+    <div class="textSection">
+    
+    </div>
+  </div>
+
+
+  <!-- Página Funcionarios -->
+  <div class="Funcionarios"><div style="page-break-after: always"></div></div>
+  <div class="Funcionarios">
+    <div class="SectionTitulo">Análise dos dados referentes aos Funcionários</div>
     <div class="textSection">
 
     </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-
-  <!-- Página Agendamentos Cancelados -->
-  <div class=agCancelados>
-    <div class="SectionTitulo" >Agendamentos Cancelados</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
   </div>
 
   
-  <!-- Página Agendamentos Concluídos -->
-  <div class=agConcluidos>
-    <div class="SectionTitulo" >Agendamentos Concluídos</div>
+  <!-- Página Visitas -->
+  <div class="Visitas"><div style="page-break-after: always"></div></div>
+  <div class="Visitas">
+    <div class="SectionTitulo" >Análise dos dados referentes às Visitas</div>
     <div class="textSection">
 
     </div>
-    <div style="page-break-after: always"></div>
   </div>
-
-  <!-- Página Agendamentos Confirmados mas não realizados -->
-  <div class=agConfNaoRealizados>
-    <div class="SectionTitulo" >Agendamentos Confirmados mas não realizados</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-  <!-- Página Agendamentos Cancelados por um Funcionário -->
-  <div class=agCancelFuncionario>
-    <div class="SectionTitulo" >Agendamentos Cancelados por um Funcionário</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-  <!-- Página Agendamentos Recusados pelos Funcionários -->
-  <div class=agNaoAceito>
-    <div class="SectionTitulo" >Agendamentos Recusados pelos Funcionários</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-  <!-- Página Agendamentos Cancelados em que as Escolas estiveram presentes -->
-  <div class=agCanceladoRealizado>
-    <div class="SectionTitulo" >Agendamentos Cancelados em que as Escolas estiveram presentes</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-  <!-- Página Bolsistas Cujo estágio findou no período concernente a este relatório -->
-  <div class=fimEstagio>
-    <div class="SectionTitulo" >Bolsistas Cujo estágio findou no período concernente a este relatório</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-  
-  <!-- Página Funcionários que foram desligados do Observatório no período vigente -->
-  <div class=fimFuncionario>
-    <div class="SectionTitulo" >Funcionários que foram desligados do Observatório no período vigente</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-  
-  <!-- Página Escolas que mais visitaram -->
-  <div class=escolasMaisFreq>
-    <div class="SectionTitulo" >Escolas que mais visitaram</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-  
-  <!-- Página Quantidade de agendamentos noturnos por pessoa -->
-  <div class=quantAgNoturno>
-    <div class="SectionTitulo" >Quantidade de agendamentos noturnos por pessoa</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-  <!-- Página Pessoas que mais visitaram o Observatório à noite -->
-  <div class=noturnoMaisFreq>
-    <div class="SectionTitulo">Pessoas que mais visitaram o Observatório à noite</div>
-    <div class="textSection">
-
-    </div>
-    <div style="page-break-after: always"></div>
-  </div>
-
-
-
 
 </body>
 </html>
+
 <script>
+  function generateTableHead(table, data) {
+    var thead = table.createTHead();
+    var row = thead.insertRow();
+    for (key in data) {
+      var th = document.createElement("th");
+      var text = document.createTextNode(data[data.length- key-1]);
+      th.appendChild(text);
+      row.appendChild(th);
+    }
+  }
+
+  function generateTable(table, data) {
+    for (element in data) {
+      var row = table.insertRow();
+      for (key in data[element]) {
+        var cell = row.insertCell();
+        var text = document.createTextNode(data[element][key]);
+        cell.appendChild(text);
+      }
+    }
+  }
   
   var inicioPeriodo = "?";
-  var fimPeriodo = "?";
+  var fimPeriodo = "?";  
+  var Agendamentos = 1;
+  var Bolsistas = 0;
+  var Escolas = 0;
+  var Funcionarios = 0;
+  var Visitas = 0;
+  var mountains = [];
+  var tblAgendamentosCancelados = 0;
+  var tblAgendamentosConfirmados = 0;
+  var tblAgendamentosRealizados = 0;
+  var tblAgendamentosPendentes = 0;
+  //--------------------------------------------------------------------------
+  if(!Agendamentos){
+    els = document.getElementsByClassName("Agendamentos");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }else{
+    if(tblAgendamentosCancelados!=0){
+      var tabela = document.getElementById("AgendamentosCancelados");
+      var data = Object.keys(tblAgendamentosCancelados[0]);
+      generateTable(tabela, tblAgendamentosCancelados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Cancelados no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosCancelados").innerHTML = '';
+    }
+    if(tblAgendamentosPendentes!=0){
+      var tabela = document.getElementById("AgendamentosPendentes");
+      var data = Object.keys(tblAgendamentosPendentes[0]);
+      generateTable(tabela, tblAgendamentosPendentes);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Pendentes de confirmação no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosPendentes").innerHTML = '';
+    }
+    if(tblAgendamentosConfirmados!=0){
+      var tabela = document.getElementById("AgendamentosConfirmados");
+      var data = Object.keys(tblAgendamentosConfirmados[0]);
+      generateTable(tabela, tblAgendamentosConfirmados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Confirmados no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosConfirmados").innerHTML = '';
+    }
+    if(tblAgendamentosRealizados!=0){
+      var tabela = document.getElementById("AgendamentosRealizados");
+      var data = Object.keys(tblAgendamentosRealizados[0]);
+      generateTable(tabela, tblAgendamentosRealizados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Concluídos no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosRealizados").innerHTML = '';
+    }
+
+    
+  }
+  //------------------------------------------------------------------------------
+  if(!Bolsistas){
+    els = document.getElementsByClassName("Bolsistas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }else{
+    var tabela = document.getElementById("DALEXD");
+    var data = Object.keys(mountains[0]);
+    generateTable(tabela, mountains);
+    generateTableHead(tabela, data);
+    tabela.createCaption().innerHTML = 'Escolas cadastradas no periodo de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+  }
+  //------------------------------------------------------------------------------
+  if(!Escolas){
+    els = document.getElementsByClassName("Escolas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+  //------------------------------------------------------------------------------
+  if(!Funcionarios){
+    els = document.getElementsByClassName("Funcionarios");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+  //------------------------------------------------------------------------------
+  if(!Visitas){
+    els = document.getElementsByClassName("Visitas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+
   els = document.getElementsByClassName("inicioPeriodo");
   for(i in els){
       els[i].innerHTML = inicioPeriodo;
@@ -286,154 +265,4 @@
   for(i in els){
     els[i].innerHTML = fimPeriodo;
   }
-  
-  var novasEscolas = false;
-  var novosFuncionarios = 1;
-  var novosBolsistas = false;
-  var agCancelados = false;
-  var agConcluidos = false;
-  var agConfNaoRealizados = false;
-  var agCancelFuncionario = false;
-  var agNaoAceito = false;
-  var agCanceladoRealizado = false;
-  var fimEstagio = false;
-  var fimFuncionario = false;
-  var escolasMaisFreq = false;
-  var quantAgNoturno = false;
-  var noturnoMaisFreq = false;
-
-  if(!novasEscolas){
-    els = document.getElementsByClassName("novasEscolas");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!novosFuncionarios){
-    els = document.getElementsByClassName("novosFuncionarios");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!novosBolsistas){
-    els = document.getElementsByClassName("novosBolsistas");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agCancelados){
-    els = document.getElementsByClassName("agCancelados");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agConcluidos){
-    els = document.getElementsByClassName("agConcluidos");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agConfNaoRealizados){
-    els = document.getElementsByClassName("agConfNaoRealizados");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agCancelFuncionario){
-    els = document.getElementsByClassName("agCancelFuncionario");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agNaoAceito){
-    els = document.getElementsByClassName("agNaoAceito");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!agCanceladoRealizado){
-    els = document.getElementsByClassName("agCanceladoRealizado");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!fimEstagio){
-    els = document.getElementsByClassName("fimEstagio");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!fimFuncionario){
-    els = document.getElementsByClassName("fimFuncionario");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------
-  if(!escolasMaisFreq){
-    els = document.getElementsByClassName("escolasMaisFreq");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-    //------------------------------------------------------------------------------
-  if(!quantAgNoturno){
-    els = document.getElementsByClassName("quantAgNoturno");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-  //------------------------------------------------------------------------------  
-  if(!noturnoMaisFreq){
-    els = document.getElementsByClassName("noturnoMaisFreq");
-    for(i in els){
-      els[i].innerHTML = "";
-    }
-  }
-
-
-
-
-
-
-  var mountains = true;
-
-function generateTableHead(table, data) {
-  var thead = table.createTHead();
-  var row = thead.insertRow();
-  for (key in data) {
-    var th = document.createElement("th");
-    var text = document.createTextNode(data[key]);
-    th.appendChild(text);
-    row.appendChild(th);
-  }
-}
-
-function generateTable(table, data) {
-  for (element in data) {
-    var row = table.insertRow();
-    for (key in data[element]) {
-      var cell = row.insertCell();
-      var text = document.createTextNode(data[element][key]);
-      cell.appendChild(text);
-    }
-  }
-}
-
-var table = document.getElementById("DALEXD");
-var data = Object.keys(mountains[0]);
-generateTable(table, mountains);
-generateTableHead(table, data);
-
-
-
 </script>

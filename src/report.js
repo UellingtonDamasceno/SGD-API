@@ -20,21 +20,23 @@ routes.get('/MakeReport/:name', (req,res)=>{
     content = await contentReplace(content, req);
 
     var x = './'+req.params.name;
-    pdf.create(content, {})
+    pdf.create(content, {format: 'Letter'})
       .toFile(x,(err, jj)=>{
         if(err)
             console.log("Erro ao salvar o arquivo.") 
     });
-    await pdf.create(content,{format: 'letter'
+    await pdf.create(content,{format: "A4", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
+      "height": "30mm",
+      "contents": ''
+    }
     }).toStream((err, stream) =>{
       if (err)
         console.log("Erro ao exibir o arquivo!");
       else{
         stream.pipe(res);
+        //console.log(content);
       }
     });
-
-
   }
 
 
@@ -51,63 +53,40 @@ routes.get('/MakeReport/:name', (req,res)=>{
     content = content.replace("%DataEm%",data.getDate()+'/'+data.getMonth()+'/'+data.getFullYear());
     content = content.replace("%HoraEm%",data.getHours()+'h:'+data.getMinutes()+'min');
 
-    if (req.query.novasEscolas!=null){
+    if (req.query.Agendamentos!=null){
+      var visitasList = await visitasFind();
+      var agCancelado = await quantCancelado();
+      var agRealizado = await quantRealizado();
+      var agPendente = await quantPendente();
+      var agConfirmado = await quantConfirmado();
+      content = content.replace("%totalAgendamentos%", visitasList[0]);
+      content = content.replace("%quantRealizado%", agRealizado[0]);
+      content = content.replace("%quantPendente%", agPendente[0]);
+      content = content.replace("%quantCancelado%", agCancelado[0]);
+      content = content.replace("%quantConfirmado%", agConfirmado[0]);
+      content = content.replace("tblAgendamentosCancelados = 0;", agCancelado[1]);
+      content = content.replace("tblAgendamentosConfirmados = 0;", agConfirmado[1]);
+      content = content.replace("tblAgendamentosPendentes = 0;", agPendente[1]);
+      content = content.replace("tblAgendamentosRealizados = 0;", agRealizado[1]);
       var datatable = await escolasXD();
-      content = content.replace("novasEscolas = false", "novasEscolas = 1");
-      content = content.replace("var mountains = true;", datatable);
-      //console.log(datatable);   
+      content = content.replace("Agendamentos = 0", "Agendamentos = 1");
+      content = content.replace("var mountains = [];", datatable);
     }
     
-    if(req.query.novosFuncionarios!=null){
-      content = content.replace("novosFuncionarios = false", "novosFuncionarios = 1" );
+    if(req.query.Bolsistas!=null){
+      content = content.replace("Bolsistas = 0", "Bolsistas = 1" );
     }
     
-    if(req.query.novosBolsistas!=null){
-      content = content.replace("novosBolsistas = false", "novosBolsistas = 1");
+    if(req.query.Escolas!=null){
+      content = content.replace("Escolas = 0", "Escolas = 1");
     }
     
-    if(req.query.agCancelados!=null){
-      content = content.replace("agCancelados = false", "agCancelados = 1");
+    if(req.query.Funcionarios!=null){
+      content = content.replace("Funcionarios = 0", "Funcionarios = 1");
     }    
     
-    if(req.query.agConcluidos!=null){
-      content = content.replace("agConcluidos = false", "agConcluidos = 1");
-    }
-    
-    if(req.query.agConfNaoRealizados!=null){
-      content = content.replace("agConfNaoRealizados = false", "agConfNaoRealizados = 1");
-    }
-    
-    if(req.query.agCancelFuncionario!=null){
-      content = content.replace("agCancelFuncionario = false", "agCancelFuncionario = 1");
-    }
-    
-    if(req.query.agNaoAceito!=null){
-      content = content.replace("agNaoAceito = false", "agNaoAceito = 1");
-    }
-    
-    if(req.query.agCanceladoRealizado!=null){
-      content = content.replace("agCanceladoRealizado = false", "agCanceladoRealizado = 1");
-    }
-    
-    if(req.query.fimEstagio!=null){
-      content = content.replace("fimEstagio = false", "fimEstagio = 1");
-    }
-    
-    if(req.query.fimFuncionario!=null){
-      content = content.replace("fimFuncionario = false", "fimFuncionario = 1" );
-    }
-
-    if(req.query.escolasMaisFreq!=null){
-      content = content.replace("escolasMaisFreq = false", "escolasMaisFreq = 1");
-    }
-    
-    if(req.query.quantAgNoturno!=null){
-      content = content.replace("quantAgNoturno = false", "quantAgNoturno = 1");
-    }
-    
-    if(req.query.noturnoMaisFreq!=null){
-      content = content.replace("noturnoMaisFreq = false", "noturnoMaisFreq = 1");
+    if(req.query.Visitas!=null){
+      content = content.replace("Visitas = 0", "Visitas = 1");
     }
     return content;
   };
@@ -117,17 +96,88 @@ routes.get('/MakeReport/:name', (req,res)=>{
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT * FROM escolas"
+        var sql = "SELECT idEscola, nomeResponsavel, idPessoa FROM escolas"
         connection.query(sql, function(err, result){
             if (err) throw err;
-            console.log(result);
             resolve('var mountains ='+ JSON.stringify(result)+';');
             connection.release();
         });
       });
-      //resolve (escolasPorPeriodo(inicioPeriodo,fimPeriodo));
     });
     return datatable
   }
+
+  async function visitasFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length]);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function quantCancelado(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 3";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblAgendamentosCancelados = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+  async function quantConfirmado(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 1";
+        connection.query(sql, function(err, result){  
+            if (err) throw err;
+            resolve([result.length, 'tblAgendamentosConfirmados = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+  async function quantPendente(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 0";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblAgendamentosPendentes = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+  async function quantRealizado(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 2";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblAgendamentosRealizados = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
 
   module.exports = routes;
