@@ -48,6 +48,18 @@ exports.getByPessoa = function getByPessoa(idPessoa, callback){
     })
 }
 
+exports.getByEmail = function getByEmail(email, callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT * FROM pessoas WHERE email = ?";
+        connection.query(sql, email, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    })
+}
+
 //Retorna todas as pessoas presentes em tbl_pessoa. Retorna um objeto no final
 exports.getPessoas = function getPessoas(callback){
     pool.getConnection(function(err, connection){

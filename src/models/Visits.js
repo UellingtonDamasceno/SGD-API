@@ -13,6 +13,19 @@ exports.add = function add(idVisitante, numAlunos, Responsavel, status, agendame
     });
 }
 
+//Retorna todas as pessoas presentes em tbl_pessoa. Retorna um objeto no final
+exports.getVisitas = function getVisitas(callback){
+    pool.getConnection(function(err, connection){
+        if(err) throw err;
+        var sql = "SELECT * FROM visits";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release()
+        });
+    });   
+}
+
 exports.getByResponsavel = function getByResponsavel(Responsavel, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
