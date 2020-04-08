@@ -12,6 +12,7 @@ const joins = require("../models/Joins.js")
 
 const permissoes= require("../models/Permissions.js")
 
+
 const backupManager = require("../services/backup/BackupManager");
 const routes = Router();
 const bcrypt = require('bcrypt-nodejs');
@@ -35,7 +36,7 @@ routes.post("/adicionarAgendamento", (request, response) => {
   })
 })
 
-  //REVIEW Dei uma revisada
+  //REVIEW Dei uma revisadas
   routes.post("/adicionarAgendamento", (request, response) => {
     school.getByIdEscola(request.body.idSchool,function(result){
       var responsavel = request.body.responsible
@@ -336,8 +337,6 @@ routes.post("/esqueciSenha", function(request){
   })  
 })
 
-
-
 /**
  * Rota: /backup
  *  - Tipo: post
@@ -377,7 +376,7 @@ routes.get("/backup", (request, response)=>{
  *  Retorna: Sucesso em todos os casos.
  */
 routes.delete("/backup", (request, response) =>{
-  backupManager.deleteBackup(request.body.fileName, response);
+  backupManager.deleteBackup(request.query.fileName, response);
   response.sendStatus(200);
 });
 
