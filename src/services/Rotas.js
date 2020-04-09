@@ -21,7 +21,7 @@ const joins = require("../models/Joins.js")
 const permissoes= require("../models/Permissions.js")
 
 
-const backupManager = require("../services/backup/BackupManager");
+const backupManager = require("./backup/BackupManager");
 const routes = Router();
 const bcrypt = require('bcrypt-nodejs');
 const correio= require("./mail/email")
