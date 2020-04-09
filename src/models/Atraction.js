@@ -3,7 +3,7 @@ const pool = require("../services/database/connection");
 exports.add = function add(nome, inicioPeriodo, fimPeriodo, descricao, tipo, semana, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO atracoes (nome, inicioPeriodo, fimPeriodo, descricao, tipo, semana) VALUES ?"
+        var sql = "INSERT INTO atracoes (nome, incioPeriodo, fimPeriodo, descricao, tipo, semana) VALUES ?"
         var values = [[nome, inicioPeriodo, fimPeriodo, descricao, tipo, semana]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
@@ -155,7 +155,7 @@ exports.setSemana = function setSemana(nome, semana, callback){
 exports.remove = function remove(nome, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "DELET FROM atracoes WHERE nome = ?"
+        var sql = "DELETE FROM atracoes WHERE nome = ?"
         connection.query(sql, nome, function(err, result){
             if (err) throw err;
             callback(result);

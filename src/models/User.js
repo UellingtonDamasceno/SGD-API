@@ -52,11 +52,11 @@ exports.setLogin = function setLogin(idPessoa, Login, callback){
     });
 }
 
-exports.setSenha = function setSenha(idPessoa, Senha, callback){
+exports.setSenha = function setSenha(idPessoa, senha, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "UPDATE usuarios SET Senha = ? WHERE idPessoa = ?"
-        var values = [Senha, idPessoa];
+        var sql = "UPDATE usuarios SET senha = ? WHERE idPessoa = ?"
+        var values = [senha, idPessoa];
         connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);

@@ -38,3 +38,15 @@ exports.getEscolas = function getEscolas(callback){
         });
     });
 }
+
+exports.getVisitaEscola = function getVisitaEscola(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT  p.nome, v.agendamento, v.hora, v.numAlunos, v.status, e.nomeResponsavel, v.idVisitante FROM escolas e JOIN visitas v ON e.idVisitante = v.idVisitante JOIN pessoas p ON p.idPessoa = e.idPessoa"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            callback(result)
+            connection.release();
+        })
+    })
+}

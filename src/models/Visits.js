@@ -17,7 +17,7 @@ exports.add = function add(idVisitante, agendamento, numAlunos, Responsavel, sta
 exports.getVisitas = function getVisitas(callback){
     pool.getConnection(function(err, connection){
         if(err) throw err;
-        var sql = "SELECT * FROM visits";
+        var sql = "SELECT * FROM visitas";
         connection.query(sql, function(err, result){
             if (err) throw err;
             callback(result);
@@ -88,11 +88,12 @@ exports.remove = function remove(nome, callback){
 }
 
 
-exports.setConfirmado = function setConfirmado(idVisitante){
+exports.setConfirmado = function setConfirmado(idVisitante, agendamento, hora, callback){
     pool.getConnection(function(err, connection){
+        var values= [idVisitante,agendamento,hora]
         if (err) throw err;
-        var sql = "UPDATE visitas SET status = 1 WHERE idVisitante = ?"
-        connection.query(sql, idVisitante, function (err, result){
+        var sql = "UPDATE visitas SET status = 1 WHERE idVisitante = ? and agendamento = ? and hora = ?"
+        connection.query(sql, values, function (err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -101,11 +102,12 @@ exports.setConfirmado = function setConfirmado(idVisitante){
 }
 
 
-exports.setRealizado = function setRealizado(idVisitante){
+exports.setRealizado = function setRealizado(idVisitante, agendamento, hora, callback){
     pool.getConnection(function(err, connection){
+        var values= [idVisitante,agendamento,hora]
         if (err) throw err;
-        var sql = "UPDATE visitas SET status = 2 WHERE idVisitante = ?"
-        connection.query(sql, idVisitante, function(err, result){
+        var sql = "UPDATE visitas SET status = 2 WHERE idVisitante = ? and agendamento = ? and hora = ?"
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();
@@ -113,11 +115,24 @@ exports.setRealizado = function setRealizado(idVisitante){
     })
 }
 
-exports.setCancelado = function setCancelado(idVisitante){
+exports.setCancelado = function setCancelado(idVisitante, agendamento, hora, callback){
     pool.getConnection(function(err, connection){
+        var values= [idVisitante,agendamento,hora]
         if (err) throw err;
-        var sql = "UPDATE visitas SET status = 3 WHERE idVisitante = ?"
-        connection.query(sql, idVisitante, function(err, result){
+        var sql = "UPDATE visitas SET status = 3 WHERE idVisitante = ? and agendamento = ? and hora = ?"
+        connection.query(sql, values, function(err, result){
+            if (err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+exports.setPendente = function setPendente(idVisitante, agendamento, hora, callback){
+    pool.getConnection(function(err, connection){
+        var values= [idVisitante,agendamento,hora]
+        if (err) throw err;
+        var sql = "UPDATE visitas SET status = 0 WHERE idVisitante = ? and agendamento = ? and hora = ?"
+        connection.query(sql, values, function(err, result){
             if (err) throw err;
             callback(result);
             connection.release();

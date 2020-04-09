@@ -36,7 +36,7 @@ routes.post("/authUser", (request, response) => {
 });
 
 //REVIEW Dei uma revisada [PRECISA AUTENTICAR?] PS: AINDA VAI SER USADA?
-routes.post("/adicionarAgendamento", (request, response) => {
+/*routes.post("/adicionarAgendamento", (request, response) => {
   school.getByIdEscola(request.body.idSchool,function(result){
     var responsavel = request.body.responsible
     var qtdeEstudantes = request.body.students
@@ -45,7 +45,7 @@ routes.post("/adicionarAgendamento", (request, response) => {
     var observacao = request.body.obs
     visits.add(result[0].idVisitante, qtdeEstudantes, responsavel,"A", horarioVisita, (result) =>{});
   })
-})
+})*/
 
   //REVIEW Dei uma revisada [AUTENTICAR ESCOLA]
   routes.post("/adicionarAgendamento", 
@@ -59,7 +59,7 @@ routes.post("/adicionarAgendamento", (request, response) => {
         var qtdeEstudantes = request.body.students
         var horarioVisita = request.body.date
         var observacao = request.body.obs
-        var serie= request.body.number;
+        var serie= request.body.number
         var atracoes =request.body.atraçõesT.toString()
         visits.add(result[0].idVisitante, agendamento, qtdeEstudantes, responsavel,"0",serie,observacao,atracoes, horarioVisita, (result) =>{});
       } else {
@@ -178,17 +178,14 @@ routes.post("/adicionarAgendamento", (request, response) => {
   });
 
   //NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
-  routes.post("/addPermissoes", 
-  Passport.authenticate(),
-  Utils.checkIsInRole(ROLES.Employee),
-  (request, response) => {
-  idFuncionario=request.body.id
-  console.log(request.body)
-  //idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup
-  permissoes.add(idFuncionario,request.body.gerirB,request.body.gerirF,request.body.validarA
-    ,request.body.gerarR,request.body.inserirA,request.body.gerirHor, request.body.gerirBackup,function(result){
-  })
-  //permissoes.add(request.body.id,false,false,false,false,false,false,false,function(result){})  
+  routes.post("/addPermissoes", Passport.authenticate(), Utils.checkIsInRole(ROLES.Employee), (request, response) => {
+    idFuncionario=request.body.id
+    console.log(request.body)
+    //idFuncionario, gerirBolsista, gerirFuncionario, validarAgendamentos, gerarRelatorio, inserirAtividade,gerirHorarioBolsista, gerirBackup
+    permissoes.add(idFuncionario,request.body.gerirB,request.body.gerirF,request.body.validarA
+      ,request.body.gerarR,request.body.inserirA,request.body.gerirHor, request.body.gerirBackup,function(result){
+    })
+    //permissoes.add(request.body.id,false,false,false,false,false,false,false,function(result){})  ss
   })
 
   // [AUTENTICAR FUNCIONARIO]
@@ -201,23 +198,20 @@ routes.post("/adicionarAgendamento", (request, response) => {
   });
 
   // [AUTENTICAR FUNCIONARIO]
-  routes.post("/addAtracoes", 
-  Passport.authenticate(),
-  Utils.checkIsInRole(ROLES.Employee),
-  (request, response) => {
+  routes.post("/addAtracoes", Passport.authenticate(), Utils.checkIsInRole(ROLES.Employee), (request, response) => {
     atracoes.add(request.body.name,request.body.inicioPeriodo,request.body.fimPeriodo,
-    request.body.description,request.body.type, request.body.week,function(){      
-    })
+    request.body.description,request.body.type, request.body.week,function(result){})
   });
 
-//NOTE Retorna os agendamentos de uma escola [AUTENTICAR FUNCIONARIO]
+//NOTE Retorna os agendamentos de uma escola [AUTENTICAR ESCOLA]
 routes.post("/agendamentos", 
 Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Employee),
+Utils.checkIsInRole(ROLES.School),
 (request, response) => {
   school.getByIdEscola(request.body.idSchooll,function(result){
     if(result.length !== 0) {
       visits.getByIdVisitante(result[0].idVisitante,function(result){
+        console.log(result)
         response.send(result)
       })
     } else {
@@ -231,7 +225,8 @@ routes.post("/retornaAgendamentos",
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
-  visits.getVisitas(function(result){
+  joins.getVisitaEscola(function(result){
+    console.log(result)
     response.send(result)
   })
 })
@@ -241,19 +236,30 @@ routes.post("/cancelaConfirmaAgendamento",
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
-  if(request.body.status==1)
-    visits.setConfirmado(request.body.idVisitante)
-  else if(request.body.status==2)
-    visits.setRealizado(request.body.idVisitante)  
-  else
-    visits.setCancelado(request.body.idVisitante)
+  console.log(request.body)
+  if(request.body.status==1){
+    console.log("é pra confirmar")
+    visits.setConfirmado(request.body.idVisitante,request.body.agendamento,request.body.hora,function(result){})
+  }
+  else if(request.body.status==2){
+  console.log("é pra realizar")
+    visits.setRealizado(request.body.idVisitante,request.body.agendamento,request.body.hora,function(result){})
+  }
+  else if(request.body.status==3){
+  console.log("é pra cancelar")
+    visits.setCancelado(request.body.idVisitante,request.body.agendamento,request.body.hora,function(result){})
+  }
+  else{
+    console.log("é pra deixar pendente")
+    visits.setPendente(request.body.idVisitante,request.body.agendamento,request.body.hora,function(result){console.log(result)})
+  }
 })
 
   //Rotas que enviam/listam algo
 //NOTE TA FEITO [AUTENTICAR FUNCIONARIO]
 routes.post("/listarHorarioBolsistas", 
-Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Employee),
+/*Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),*/
 (request, response) => {
   var horarios = [];
   //Falta adicionar os horários dos bolsistas.
@@ -301,7 +307,7 @@ Utils.checkIsInRole(ROLES.Employee),
 //NOTE retorna as informações de uma escola [AUTENTICAR ESCOLA]
 routes.post("/retornaDadosEscola", 
 Passport.authenticate(),
-Utils.checkIsInRole(ROLES.School, ROLES.Employee),
+Utils.checkIsInRole(ROLES.School),
 (request, response) => {
   school.getByIdEscola(request.body.IDSchool, function(result){
     if(result.length !== 0) {
@@ -388,12 +394,12 @@ Utils.checkIsInRole(ROLES.School),
   person.setNome(request.body.idPessoa,request.body.name,function(result){})
   person.setTelefone(request.body.idPessoa,request.body.phone,function(result){})
   person.setEmail(request.body.idPessoa,request.body.email,function(result){})
-  //school.setLogin(request.body.IDSchool,request.body.login,function(result){console.log(result)})GUSTAVAO RESOLVE
+  //school.setLogin(request.body.IDSchool,request.body.login,function(result){console.log(result)})GUSTAVAO RESOLVES
   school.setNome(request.body.IDSchool,request.body.respName,function(result){})
   school.setTelefone(request.body.IDSchool,request.body.respPhone,function(result){console.log(result)})
   school.setSurName(request.body.IDSchool,request.body.respSurname,function(result){console.log(result)})
   school.setTipo(request.body.IDSchool,request.body.schoolType,function(result){console.log(result)})
-  //user.setLogin(request.body.idPessoa,request.body.login,function(result){console.log(result)})//GUSTAVO RESOLVE
+  //user.setLogin(request.body.idPessoa,request.body.login,function(result){console.log(result)})//GUSTAVO RESOLVEss
   user.setSenha(request.body.idPessoa,encryptPassword(request.body.password),function(result){console.log(result)})
 })
 
@@ -421,17 +427,20 @@ routes.post("/removerAtracao",
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
-  atracoes.remove(request.body.name, function(result){})
+  console.log(request.body.nome)
+  atracoes.remove(request.body.nome, function(result){})
 });
 
 // [AUTENTICAR EM QUE?]
 routes.post("/esqueciSenha", (request, response) => {
   person.getByEmail(request.body.email,function(result){
     if(result.length !== 0){
-      user.getById(result[0].idPessoa), function(result){
-        correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 123456")
-        user.setSenha(encryptPassword(123456),function(result){})
-      }
+      var idPessoa=result[0].idPessoa;
+      console.log(request.body.email)
+      user.getById(result[0].idPessoa,function(result){
+        correio.sendMail(request.body.email,"Sua senha","Sua nova senha é: 1234567")
+        user.setSenha(idPessoa,encryptPassword(1234567),function(result){})
+      })
     } else {
       response.sendStatus(400)
     }
@@ -486,7 +495,7 @@ routes.delete("/backup",
 Passport.authenticate(),
 Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
-  backupManager.deleteBackup(request.body.fileName, response);
+  backupManager.deleteBackup(request.query.fileName, response);
   response.sendStatus(200);
 });
 
