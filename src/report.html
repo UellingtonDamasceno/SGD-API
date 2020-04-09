@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table, th, td{
+          border: 1pt solid black;
+          border-collapse: collapse;
+          text-align: left;
+          padding: 2pt;
+        }
+        th{
+          background-color: rgb(211, 211, 211);
+        }
+        table{
+          /*margin-top: 30pt;*/
+          width: 100%;
+        }
+        .SectionTitulo{
+          text-align: center;
+          background: rgb(228, 225, 225);
+          font-size: 14pt;
+          padding: 10px;
+          margin-left: 85pt;
+          margin-right: 56pt ;
+          /*margin-bottom: 56pt;*/
+          font-family: Times;
+          /*border: 1px solid rgb(129, 113, 113);*/
+        }
+        .textSection{
+          size: A4;
+          text-align: justify;
+          font-size: 12pt;
+          margin-left: 85pt;
+          margin-right: 56pt ;
+          /*margin-bottom: 8pt;*/
+          line-height: 1.5;
+        }
+
+        .margemSuperior{
+          margin-top: 30pt;
+        }
+        .inicioPeriodo{
+          font: bold;
+        }
+        .fimPeriodo{
+          font: bold;
+        }
+        .Escolas{}
+        .Agendamentos{}
+        .Visitas{}
+        .Bolsistas{}
+        .Funcionarios{}
+    </style>
+</head>
+<body>
+  <!--<div class="margemSuperior">  </div>-->
+  <div class="SectionTitulo">Relatório de visitação do Observatório Antares</div>
+  <div class="textSection">
+    <p STYLE="TEXT-Align:CENTER;">Período de vigência deste relatório: <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>.</p>
+  </div>
+	<div class ="textSection"> 
+    <hr></hr>
+    <p>Usuário responsável pela emissão do relatório: %UserEm%.</p>
+    <p>Data de emissão do relatório: %DataEm%.</p>
+    <p>Horário de emissão do relatório: %HoraEm%.</p>
+    <hr></hr>
+    <p style="text-align: center;">Conteúdo presente no relatório</p>
+    <p class="Agendamentos">• Informações referentes a Agendamentos.</p>
+    <p class="Bolsistas">• Informações referentes a Bolsistas.</p>
+    <p class="Escolas">• Informações referentes a Escolas. </p>
+    <p class="Funcionarios">• Informações referentes a Funcionários.</p>
+    <p class="Visitas">• Informações referentes a Visitas.</p>
+    <div style="position: absolute; top: 880px;width:75%;"><hr></hr><div style="text-align: center;">Feira de Santana - BA</div><hr></hr></div>
+  </div>
+  
+  
+  <!-- Agendamentos -->
+  <div class="Agendamentos"><div style="page-break-after: always"></div></div>
+  <div class="Agendamentos">
+    <div class="SectionTitulo" >Análise dos dados referentes aos Agendamentos</div>
+    <div class="textSection">
+      <p style="text-indent: 42pt;">        Durante o período relacionado a este relatório, foram registrados %totalAgendamentos% agendamentos. 
+        Destes, %quantRealizado% foram concluídos no período; 
+        %quantPendente% ainda estão pendentes de confirmação por parte de um funcionário com permissões para tal; 
+        %quantCancelado% foram cancelados ou pelo visitante ou por algum funcionário; 
+        %quantConfirmado% foram confirmados pelos funcionários mas ainda não foram realizados. 
+        <spam id=captionAgendamentosCancelados>A tabela abaixo relaciona os agendamentos que foram cancelados, expirados ou rejeitados no período.</spam>
+      </p>
+        <table id=AgendamentosCancelados></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosConfirmados>A tabela abaixo relaciona os agendamentos que foram confirmados no período mas que ainda não foram concluídos.</p>
+        <table id=AgendamentosConfirmados></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosPendentes>A tabela abaixo relaciona os agendamentos que foram solicitados porém ainda não tiveram confirmação.</p>
+        <table id=AgendamentosPendentes></table>
+        <p style="text-indent: 42pt;" id=captionAgendamentosRealizados>A tabela abaixo relaciona os agendamentos que foram concluídos no período ao qual este relatório se dirige.</p>
+        <table id=AgendamentosRealizados></table>
+
+    </div>
+  </div>
+
+  <!-- Página Bolsistas -->
+  <div class="Bolsistas"><div style="page-break-after: always"></div></div>
+  <div class="Bolsistas">
+    <div class="SectionTitulo" >Análise dos dados referentes aos Bolsistas</div>
+    <div class="textSection">
+
+      <table id=DALEXD></table>
+
+    </div>
+  </div>
+
+  <!-- Página Escolas -->
+  <div class="Escolas"><div style="page-break-after: always"></div></div>
+  <div class="Escolas">
+    <div class="SectionTitulo" >Análise dos dados referentes às Escolas</div>
+    <div class="textSection">
+    
+    </div>
+  </div>
+
+
+  <!-- Página Funcionarios -->
+  <div class="Funcionarios"><div style="page-break-after: always"></div></div>
+  <div class="Funcionarios">
+    <div class="SectionTitulo">Análise dos dados referentes aos Funcionários</div>
+    <div class="textSection">
+
+    </div>
+  </div>
+
+  
+  <!-- Página Visitas -->
+  <div class="Visitas"><div style="page-break-after: always"></div></div>
+  <div class="Visitas">
+    <div class="SectionTitulo" >Análise dos dados referentes às Visitas</div>
+    <div class="textSection">
+
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script>
+  function generateTableHead(table, data) {
+    var thead = table.createTHead();
+    var row = thead.insertRow();
+    for (key in data) {
+      var th = document.createElement("th");
+      var text = document.createTextNode(data[data.length- key-1]);
+      th.appendChild(text);
+      row.appendChild(th);
+    }
+  }
+
+  function generateTable(table, data) {
+    for (element in data) {
+      var row = table.insertRow();
+      for (key in data[element]) {
+        var cell = row.insertCell();
+        var text = document.createTextNode(data[element][key]);
+        cell.appendChild(text);
+      }
+    }
+  }
+  
+  var inicioPeriodo = "?";
+  var fimPeriodo = "?";  
+  var Agendamentos = 1;
+  var Bolsistas = 0;
+  var Escolas = 0;
+  var Funcionarios = 0;
+  var Visitas = 0;
+  var mountains = [];
+  var tblAgendamentosCancelados = 0;
+  var tblAgendamentosConfirmados = 0;
+  var tblAgendamentosRealizados = 0;
+  var tblAgendamentosPendentes = 0;
+  //--------------------------------------------------------------------------
+  if(!Agendamentos){
+    els = document.getElementsByClassName("Agendamentos");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }else{
+    if(tblAgendamentosCancelados!=0){
+      var tabela = document.getElementById("AgendamentosCancelados");
+      var data = Object.keys(tblAgendamentosCancelados[0]);
+      generateTable(tabela, tblAgendamentosCancelados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Cancelados no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosCancelados").innerHTML = '';
+    }
+    if(tblAgendamentosPendentes!=0){
+      var tabela = document.getElementById("AgendamentosPendentes");
+      var data = Object.keys(tblAgendamentosPendentes[0]);
+      generateTable(tabela, tblAgendamentosPendentes);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Pendentes de confirmação no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosPendentes").innerHTML = '';
+    }
+    if(tblAgendamentosConfirmados!=0){
+      var tabela = document.getElementById("AgendamentosConfirmados");
+      var data = Object.keys(tblAgendamentosConfirmados[0]);
+      generateTable(tabela, tblAgendamentosConfirmados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Confirmados no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosConfirmados").innerHTML = '';
+    }
+    if(tblAgendamentosRealizados!=0){
+      var tabela = document.getElementById("AgendamentosRealizados");
+      var data = Object.keys(tblAgendamentosRealizados[0]);
+      generateTable(tabela, tblAgendamentosRealizados);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Agendamentos Concluídos no período entre <spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("captionAgendamentosRealizados").innerHTML = '';
+    }
+
+    
+  }
+  //------------------------------------------------------------------------------
+  if(!Bolsistas){
+    els = document.getElementsByClassName("Bolsistas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }else{
+    var tabela = document.getElementById("DALEXD");
+    var data = Object.keys(mountains[0]);
+    generateTable(tabela, mountains);
+    generateTableHead(tabela, data);
+    tabela.createCaption().innerHTML = 'Escolas cadastradas no periodo de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+  }
+  //------------------------------------------------------------------------------
+  if(!Escolas){
+    els = document.getElementsByClassName("Escolas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+  //------------------------------------------------------------------------------
+  if(!Funcionarios){
+    els = document.getElementsByClassName("Funcionarios");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+  //------------------------------------------------------------------------------
+  if(!Visitas){
+    els = document.getElementsByClassName("Visitas");
+    for(i in els){
+      els[i].innerHTML = "";
+    }
+  }
+
+  els = document.getElementsByClassName("inicioPeriodo");
+  for(i in els){
+      els[i].innerHTML = inicioPeriodo;
+  }
+  els = document.getElementsByClassName("fimPeriodo");
+  for(i in els){
+    els[i].innerHTML = fimPeriodo;
+  }
+</script>

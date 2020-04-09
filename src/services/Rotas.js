@@ -17,6 +17,9 @@ const employee = require('../models/Employee.js');
 const horarioTrabalho = require("../models/WorkLoad.js")
 const atracoes = require("../models/Atraction.js")
 const joins = require("../models/Joins.js")
+const report = require("../report.js");
+app.use(report);
+
 
 const permissoes= require("../models/Permissions.js")
 
