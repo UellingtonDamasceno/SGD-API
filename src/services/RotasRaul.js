@@ -13,6 +13,7 @@ const employee = require('../models/Employee.js');
 const horarioTrabalho = require("../models/WorkLoad.js")
 const atracoes = require("../models/Atraction.js")
 const joins = require("../models/Joins.js")
+const report = require("../report.js");
 
 const routes = Router();
 
@@ -21,6 +22,7 @@ routes.use(bodyParser.urlencoded({ extended: false }));
 routes.use(bodyParser.json());
 app.use(Cors());
 app.use(routes);
+app.use(report);
 
 //REVIEW Dei uma revisada
 routes.post("/adicionarAgendamento", (request, response) => {
@@ -133,6 +135,7 @@ routes.post("/adicionarFuncionario", (request, response) => {
       });
     });
 });
+
 //NOTE TA FEITO
 routes.post("/listarHorarioBolsistas", (request, response) => {
   var horarios = [];

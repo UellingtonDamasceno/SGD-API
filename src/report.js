@@ -10,8 +10,9 @@ const pool = require("./services/database/connection");
 
 
 routes.get('/MakeReport/:name', (req,res)=>{
-    
     create(req,res);
+    var da43 = new Date();
+    console.log(da43);
     
   });
 
@@ -29,6 +30,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
       "height": "30mm",
       "contents": ''
     }
+
     }).toStream((err, stream) =>{
       if (err)
         console.log("Erro ao exibir o arquivo!");
@@ -126,7 +128,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 3";
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante";
         connection.query(sql, function(err, result){
             if (err) throw err;
             resolve([result.length, 'tblAgendamentosCancelados = '+ JSON.stringify(result)+';']);
@@ -140,7 +142,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 1";
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante";
         connection.query(sql, function(err, result){  
             if (err) throw err;
             resolve([result.length, 'tblAgendamentosConfirmados = '+ JSON.stringify(result)+';']);
@@ -168,7 +170,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante where z.status = 2";
+        var sql = "SELECT z.agendamento as Data, z.serie as Ano, z.numAlunos as Visitantes, x.telefone as Telefone, x.nome as Colégio FROM pessoas AS x INNER JOIN visitantes as y ON x.idPessoa=y.idPessoa INNER JOIN visitas AS z ON y.idVisitante = z.idVisitante";
         connection.query(sql, function(err, result){
             if (err) throw err;
             resolve([result.length, 'tblAgendamentosRealizados = '+ JSON.stringify(result)+';']);
