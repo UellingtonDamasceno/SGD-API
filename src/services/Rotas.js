@@ -32,9 +32,17 @@ const encryptPassword = password => {
   return bcrypt.hashSync(password, salt)
 }
 
+routes.get("/", (request, response) => {
+  response.json({
+      status: "connected",
+      message: "Hello world"
+  });
+});
+
 routes.post("/authUser", (request, response) => {
   Auth.signIn(request, response)
 });
+
 
 //REVIEW Dei uma revisada [PRECISA AUTENTICAR?] PS: AINDA VAI SER USADA?
 /*routes.post("/adicionarAgendamento", (request, response) => {
