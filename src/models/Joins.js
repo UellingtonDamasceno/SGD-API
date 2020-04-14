@@ -27,6 +27,18 @@ exports.getBolsistasAtivos = function getBolsitasAtivos(callback){
     });
 }
 
+exports.getBolsistasAtivos2 = function getBolsistasAtivos2(callback){
+    pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT p.nome,p.surname, b.idBolsista FROM pessoas p JOIN bolsistas b ON p.idPessoa=b.idPessoa and b.intaivo = 0";
+        connection.query(sql, function(err, result){
+            if(err) throw err;
+            callback(result);
+            connection.release();
+        });
+    });
+}
+
 exports.getEscolas = function getEscolas(callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;

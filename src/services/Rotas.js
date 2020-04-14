@@ -194,12 +194,25 @@ routes.post("/authUser", (request, response) => {
   Passport.authenticate(),
   Utils.checkIsInRole(ROLES.Employee),
   (request, response) => {
-    horarioTrabalho.add(request.body.idScholarschip,request.body.inicioPeriodo,request.body.fimPeriodo, request.body.semana, function(){
-    })
+    horarioTrabalho.add(request.body.idScholarschip,request.body.inicioPeriodo,request.body.fimPeriodo, request.body.semana, function(){})
   });
 
   // [AUTENTICAR FUNCIONARIO]
-  routes.post("/addAtracoes", Passport.authenticate(), Utils.checkIsInRole(ROLES.Employee), (request, response) => {
+  routes.post("/addVariosHorariosBolsista", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (request, response) => {
+    for(var a=0;a<request.body.schedule.length;a++){
+      horarioTrabalho.add(request.body.idScholarschip, request.body.schedule[a].inicioPeriodo, request.body.schedule[a].fimPeriodo,
+      request.body.schedule[a].semana, function(result){})
+    }
+  });
+
+  // [AUTENTICAR FUNCIONARIO]
+  routes.post("/addAtracoes", 
+  Passport.authenticate(), 
+  Utils.checkIsInRole(ROLES.Employee),
+   (request, response) => {
     atracoes.add(request.body.name,request.body.inicioPeriodo,request.body.fimPeriodo,
     request.body.description,request.body.type, request.body.week,function(result){})
   });
@@ -358,6 +371,17 @@ Utils.checkIsInRole(ROLES.School),
   })
 });
 
+//NOTE ROTA REVISADA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!sssss [AUTENTICAR FUNCIONAR]
+routes.post("/listarDadosBolsistas", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(request, response) => {
+  joins.getBolsistasAtivos2(function(result){
+    var bolsistas = result
+    response.send(bolsistas)
+  })
+});
+
 //NOTE ROTA ESTA REVISADA!!!!!!!!!!!!!!!!!!!!!!!!!ssss [AUTENTICAR FUNCIONARIO]
 routes.post("/listarFuncionarios", 
 Passport.authenticate(),
@@ -448,6 +472,14 @@ routes.post("/esqueciSenha", (request, response) => {
   })  
 })
 
+//NOTE remove todos os horarios de um bolsista [AUTENTICAR BOLSISTA]
+routes.post("/removerHorarioBolsista", 
+Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Scholarship),
+(request, response) => {
+  horarioTrabalho.remove(request.body.idBolsista, function(result){})
+});
+
 /**
  * Rota: /backup
  *  - Tipo: post
@@ -521,5 +553,4 @@ Utils.checkIsInRole(ROLES.Employee),
   });
 });
 
-
-module.exports = routes;
+module.exports = routes

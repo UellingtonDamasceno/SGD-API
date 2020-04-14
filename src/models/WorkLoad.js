@@ -120,7 +120,7 @@ exports.setSemana = function setSemana(idBolsista, semana, callback){
 exports.remove = function remove(idBolsista, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "DELET FROM horarioTrabalho WHERE idBolsista = ?"
+        var sql = "DELETE FROM horarioTrabalho WHERE idBolsista = ?"
         connection.query(sql, idBolsista, function(err, result){
             if (err) throw err;
             callback(result);
