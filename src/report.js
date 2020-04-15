@@ -13,8 +13,7 @@ const Utils = require('./auth/Utils')
 
 
 
-routes.get('/MakeReport/:name',Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Employee),
+routes.get('/MakeReport/:name',
 (req,res)=>{
     create(req,res);
   });
