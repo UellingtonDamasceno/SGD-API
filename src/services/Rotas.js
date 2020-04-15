@@ -486,7 +486,7 @@ routes.post("/esqueciSenha", (request, response) => {
 //NOTE remove todos os horarios de um bolsista [AUTENTICAR BOLSISTA]
 routes.post("/removerHorarioBolsista", 
 Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Scholarship),
+Utils.checkIsInRole(ROLES.Employee),
 (request, response) => {
   horarioTrabalho.remove(request.body.idBolsista, function(result){})
 });
