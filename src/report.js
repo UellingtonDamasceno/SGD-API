@@ -206,7 +206,7 @@ routes.get('/MakeReport/:name',
     })
   }
 
-  routes.get("/listarRelatorios", 
+  routes.post("/listarRelatorios", 
   //Passport.authenticate(),
   //Utils.checkIsInRole(ROLES.Employee),
   (request, response) => {
