@@ -6,11 +6,16 @@ const joins = require("./models/Joins");
 const escola = require("./models/School");
 const pool = require("./services/database/connection");
 const SqlString = require('sqlstring');
+const Passport = require('./auth/Passport')
+const { ROLES } = require('./auth/Roles')
+const Utils = require('./auth/Utils')
 
 
 
 
-routes.get('/MakeReport/:name', (req,res)=>{
+routes.get('/MakeReport/:name',Passport.authenticate(),
+Utils.checkIsInRole(ROLES.Employee),
+(req,res)=>{
     create(req,res);
   });
 
