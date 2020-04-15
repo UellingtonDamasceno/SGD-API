@@ -11,9 +11,6 @@ const pool = require("./services/database/connection");
 
 routes.get('/MakeReport/:name', (req,res)=>{
     create(req,res);
-    var da43 = new Date();
-    console.log(da43);
-    
   });
 
   async function create(req, res){
@@ -26,7 +23,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
         if(err)
             console.log("Erro ao salvar o arquivo.") 
     });
-    await pdf.create(content,{format: "A4", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
+    await pdf.create(content,{"height": "296mm", "width": "210mm", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
       "height": "30mm",
       "contents": ''
     }
