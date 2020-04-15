@@ -40,12 +40,6 @@ routes.get('/MakeReport/:name',
         res.type('application/pdf');
         res.statusCode = 200;
         res.send(buffer);
-        var data7 = new Date();
-        addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
-          req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
-             req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
-             buffer,
-                (result) =>{});
       }
     });
 
@@ -98,13 +92,18 @@ routes.get('/MakeReport/:name',
       content = content.replace("tblAgendamentosConfirmados = 0;", agConfirmado[1]);
       content = content.replace("tblAgendamentosPendentes = 0;", agPendente[1]);
       content = content.replace("tblAgendamentosRealizados = 0;", agRealizado[1]);
-      var datatable = await escolasXD();
       content = content.replace("Agendamentos = 0", "Agendamentos = 1");
-      content = content.replace("var mountains = [];", datatable);
     }
     
     if(req.query.Bolsistas!=null){
       content = content.replace("Bolsistas = 0", "Bolsistas = 1" );
+      var bolsistasList = await bolsistasFind();
+      var bolsistasInativo = await bolsistasInativoList();
+      var bolsistasAtivo = await bolsistasAtivoList();
+      content = content.replace("%quantBolsistaInativo%", bolsistasInativo[0]);
+      content = content.replace("%quantBolsistaAtivo%", bolsistasAtivo[0]);
+      content = content.replace("%quantBolsistas%", bolsistasList[0]);
+      content = content.replace("tblBolsistasAtivos = 0;", bolsistasAtivo[1]);
     }
     
     if(req.query.Escolas!=null){
@@ -135,6 +134,52 @@ routes.get('/MakeReport/:name',
       });
     });
     return datatable
+  }
+
+  async function bolsistasFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT intaivo from bolsistas";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length]);
+            connection.release();
+        });
+      });
+    });
+    return datatable;
+
+  }
+
+  async function bolsistasInativoList(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT intaivo from bolsistas where intaivo = 1";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length]);
+            connection.release();
+        });
+      });
+    });
+    return datatable;
+  }
+
+  async function bolsistasAtivoList(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT z.telefone as Telefone , z.surname as Sobrenome, z.nome as Nome from pessoas as z inner join bolsistas as y on z.idPessoa = y.idPessoa where intaivo = 0";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblBolsistasAtivos = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable;
   }
 
   async function visitasFind(){

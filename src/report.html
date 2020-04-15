@@ -103,6 +103,9 @@
   <div class="Bolsistas">
     <div class="SectionTitulo" >Análise dos dados referentes aos Bolsistas</div>
     <div class="textSection">
+      <p style="text-indent: 42pt;"> Na data de emissão deste relatório, há no sistema um total de %quantBolsistas%, dos quais %quantBolsistaInativo% estão inativos e %quantBolsistaAtivo% estão ativos. </p>
+      <spam id=captionBolsistasAtivos>A tabela abaixo relaciona os bolsistas ativos.</spam>
+      <table id=BolsistasAtivos></table>
 
       <table id=DALEXD></table>
 
@@ -171,11 +174,11 @@
   var Escolas = 0;
   var Funcionarios = 0;
   var Visitas = 0;
-  var mountains = [];
   var tblAgendamentosCancelados = 0;
   var tblAgendamentosConfirmados = 0;
   var tblAgendamentosRealizados = 0;
   var tblAgendamentosPendentes = 0;
+  var tblBolsistasAtivos = 0;
   //--------------------------------------------------------------------------
   if(!Agendamentos){
     els = document.getElementsByClassName("Agendamentos");
@@ -229,11 +232,15 @@
       els[i].innerHTML = "";
     }
   }else{
-    var tabela = document.getElementById("DALEXD");
-    var data = Object.keys(mountains[0]);
-    generateTable(tabela, mountains);
-    generateTableHead(tabela, data);
-    tabela.createCaption().innerHTML = 'Escolas cadastradas no periodo de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+    if(tblBolsistasAtivos!=0){
+      var tabela = document.getElementById("BolsistasAtivos");
+      var data = Object.keys(tblBolsistasAtivos[0]);
+      generateTable(tabela, tblBolsistasAtivos);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Bolsistas ativos no período de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById("bolsistasAtivos").innerHTML = '';
+    }
   }
   //------------------------------------------------------------------------------
   if(!Escolas){
