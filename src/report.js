@@ -14,8 +14,6 @@ const Utils = require('./auth/Utils')
 
 
 routes.get('/MakeReport/:name',
-  Passport.authenticate(),
-  Utils.checkIsInRole(ROLES.Employee),
 (req,res)=>{
     create(req,res);
   });
@@ -243,8 +241,6 @@ routes.get('/MakeReport/:name',
 
 
   routes.get("/RelatorioPorID/:ID", 
-  Passport.authenticate(),
-  Utils.checkIsInRole(ROLES.Employee),
   (req,res) =>{
     pool.getConnection(function(err, connection){
       if (err) throw err;
