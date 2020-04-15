@@ -223,7 +223,7 @@ routes.get('/MakeReport/:name',
   });
 
 
-  routes.get("/RelatorioPorID/:ID", (req,res) =>{
+  routes.post("/RelatorioPorID/:ID", (req,res) =>{
     pool.getConnection(function(err, connection){
       if (err) throw err;
       var sql = "SELECT relatorio FROM relatorios WHERE idRelatorio = ?";
