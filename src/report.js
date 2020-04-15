@@ -40,7 +40,25 @@ routes.get('/MakeReport/:name',
         res.type('application/pdf');
         res.statusCode = 200;
         res.send(buffer);
-        console.log(buffer);
+        var data7 = new Date();
+        addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
+          req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
+             req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
+             buffer,
+                (result) =>{});
+      }
+    });
+
+
+    await pdf.create(content,{"format":"A4", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
+      "height": "30mm",
+      "contents": ''
+    }
+
+    }).toBuffer((err, buffer) =>{
+      if (err)
+        console.log("Erro ao exibir o arquivo!");
+      else{
         var data7 = new Date();
         addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
@@ -212,10 +230,9 @@ routes.get('/MakeReport/:name',
   (request, response) => {
     pool.getConnection(function(err, connection){
       if (err) throw err;
-      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario";
+      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, x.surname, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario";
       connection.query(sql, function(err, result){
           if (err) throw err;
-          console.log(result);
           response.send(result);
           connection.release();
       });
