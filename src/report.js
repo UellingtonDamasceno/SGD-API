@@ -5,6 +5,7 @@ const pdf = require("html-pdf");
 const joins = require("./models/Joins");
 const escola = require("./models/School");
 const pool = require("./services/database/connection");
+const SqlString = require('sqlstring');
 
 
 
@@ -28,16 +29,18 @@ routes.get('/MakeReport/:name', (req,res)=>{
       "contents": ''
     }
 
-    }).toStream((err, stream) =>{
+    }).toBuffer((err, buffer) =>{
       if (err)
         console.log("Erro ao exibir o arquivo!");
       else{
-        stream.pipe(res);
-        var data7 = new Date();    
+        res.type('application/pdf');
+        res.statusCode = 200;
+        res.send(buffer);
+        var data7 = new Date();
         addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
-               x,
+             buffer,
                 (result) =>{});
       }
     });
@@ -189,7 +192,7 @@ routes.get('/MakeReport/:name', (req,res)=>{
     pool.getConnection(function(err, connection){
         if (err) throw err;
         var sql = "INSERT INTO relatorios (criadoEm, fimPeriodo, inicioPeriodo, relatorio) VALUES ?" ;
-        var values = [[criadoEm, fimPeriodo, inicioPeriodo, relatorio]];
+        var values = [[SqlString.raw("STR_TO_DATE('"+criadoEm+"','%d/%m/%Y')"), fimPeriodo, inicioPeriodo, relatorio]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result)
