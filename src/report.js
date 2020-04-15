@@ -20,6 +20,7 @@ routes.get('/MakeReport/:name',
 
   async function create(req, res){
     var content = fs.readFileSync('./src/report.html', 'utf-8');
+    var userName = await nomeFuncionario(req.query.idFuncionario);
     content = await contentReplace(content, req);
 
     var x = './'+req.params.name;
@@ -54,11 +55,19 @@ routes.get('/MakeReport/:name',
         console.log("Erro ao exibir o arquivo!");
       else{
         var data7 = new Date();
-        addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
+        if(userName == 'Funcionário não encontrado'){
+          addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
-             buffer,
+             buffer, null,
                 (result) =>{});
+        }else{
+          addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
+          req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
+             req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
+             buffer, req.query.idFuncionario,
+                (result) =>{});
+        }
       }
     });
   }
@@ -70,10 +79,10 @@ routes.get('/MakeReport/:name',
     var data = new Date();
     inicioPeriodo = req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio;
     fimPeriodo = req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim;
-
+    var userName = await nomeFuncionario(req.query.idFuncionario);
     content = content.replace('inicioPeriodo = "?"','inicioPeriodo = "'+inicioPeriodo+'"');
     content = content.replace('fimPeriodo = "?"','fimPeriodo = "'+fimPeriodo+'"');
-    content = content.replace("%UserEm%","Usuário Logado");
+    content = content.replace("%UserEm%",userName); 
     content = content.replace("%DataEm%",data.getDate()+'/'+data.getMonth()+'/'+data.getFullYear());
     content = content.replace("%HoraEm%",data.getHours()+'h:'+data.getMinutes()+'min');
 
@@ -256,11 +265,11 @@ routes.get('/MakeReport/:name',
 
 
 
-  async function addRelatorio(criadoEm, fimPeriodo, inicioPeriodo, relatorio, callback){
+  async function addRelatorio(criadoEm, fimPeriodo, inicioPeriodo, relatorio, id, callback){
     pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "INSERT INTO relatorios (criadoEm, fimPeriodo, inicioPeriodo, relatorio) VALUES ?" ;
-        var values = [[SqlString.raw("STR_TO_DATE('"+criadoEm+"','%d/%m/%Y')"), fimPeriodo, inicioPeriodo, relatorio]];
+        var sql = "INSERT INTO relatorios (criadoEm, fimPeriodo, inicioPeriodo, relatorio, idFuncionario) VALUES ?" ;
+        var values = [[SqlString.raw("STR_TO_DATE('"+criadoEm+"','%d/%m/%Y')"), fimPeriodo, inicioPeriodo, relatorio, id]];
         connection.query(sql, [values], function(err, result){
             if (err) throw err;
             callback(result)
@@ -275,7 +284,7 @@ routes.get('/MakeReport/:name',
   (request, response) => {
     pool.getConnection(function(err, connection){
       if (err) throw err;
-      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, x.surname, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario";
+      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, x.surname, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario ORDER BY z.criadoEm";
       connection.query(sql, function(err, result){
           if (err) throw err;
           response.send(result);
@@ -299,9 +308,26 @@ routes.get('/MakeReport/:name',
       });
     });
   });
+  
+  async function nomeFuncionario(id){
+    if(id == null)
+      return('Funcionário não encontrado');
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT x.nome as Nome, x.surname as Sobrenome FROM pessoas as x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa WHERE idFuncionario = ?";
+        connection.query(sql, id, function(err, result){
+            if (err) throw err;
+            if(result.length!=0)
+              resolve(''+result[0].Nome + ' '+result[0].Sobrenome);
+            else
+              resolve('Funcionário não encontrado');
+            connection.release();
+        });
+      });
+    });
+    return datatable;
 
-
-
-
+  }
 
   module.exports = routes;
