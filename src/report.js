@@ -14,6 +14,8 @@ const Utils = require('./auth/Utils')
 
 
 routes.get('/MakeReport/:name',
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
 (req,res)=>{
     create(req,res);
   });
@@ -225,8 +227,8 @@ routes.get('/MakeReport/:name',
   }
 
   routes.get("/listarRelatorios", 
-  //Passport.authenticate(),
-  //Utils.checkIsInRole(ROLES.Employee),
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
   (request, response) => {
     pool.getConnection(function(err, connection){
       if (err) throw err;
@@ -240,7 +242,10 @@ routes.get('/MakeReport/:name',
   });
 
 
-  routes.get("/RelatorioPorID/:ID", (req,res) =>{
+  routes.get("/RelatorioPorID/:ID", 
+  Passport.authenticate(),
+  Utils.checkIsInRole(ROLES.Employee),
+  (req,res) =>{
     pool.getConnection(function(err, connection){
       if (err) throw err;
       var sql = "SELECT relatorio FROM relatorios WHERE idRelatorio = ?";
