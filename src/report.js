@@ -40,6 +40,7 @@ routes.get('/MakeReport/:name',
         res.type('application/pdf');
         res.statusCode = 200;
         res.send(buffer);
+        console.log(buffer);
         var data7 = new Date();
         addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
@@ -205,40 +206,35 @@ routes.get('/MakeReport/:name',
     })
   }
 
-  routes.post("/listarRelatorios", 
+  routes.get("/listarRelatorios", 
   //Passport.authenticate(),
   //Utils.checkIsInRole(ROLES.Employee),
   (request, response) => {
-    var reports = new Promise ((resolve, reject)=>{
-      pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario";
-        connection.query(sql, function(err, result){
-            if (err) throw err;
-            console.log(result);
-            resolve(result);
-            connection.release();
-        });
+    pool.getConnection(function(err, connection){
+      if (err) throw err;
+      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario";
+      connection.query(sql, function(err, result){
+          if (err) throw err;
+          console.log(result);
+          response.send(result);
+          connection.release();
       });
     });
-    response.send(reports);
   });
 
 
   routes.get("/RelatorioPorID/:ID", (req,res) =>{
-    var report = new Promise ((resolve, reject)=>{
-      pool.getConnection(function(err, connection){
-        if (err) throw err;
-        var sql = "SELECT relatorio FROM relatorios WHERE idRelatorio = ?";
-        connection.query(sql, req.params.ID, function(err, result){
-            if (err) throw err;
-            resolve(result);
-            console.log(result);
-            connection.release();
-        });   
+    pool.getConnection(function(err, connection){
+      if (err) throw err;
+      var sql = "SELECT relatorio FROM relatorios WHERE idRelatorio = ?";
+      connection.query(sql, req.params.ID, function(err, result){
+          if (err) throw err;
+          res.type('application/pdf');
+          res.statusCode = 200;
+          res.send(result[0].relatorio);
+          connection.release();
       });
     });
-    res.send(report.data);
   });
 
 
