@@ -27,7 +27,7 @@ routes.get('/MakeReport/:name',
     pdf.create(content, {format: 'Letter'})
       .toFile(x,(err, jj)=>{
         if(err)
-            console.log("Erro ao salvar o arquivo.") 
+            console.log("Erro ao salvar o arquivo") 
     });
     await pdf.create(content,{"height": "434mm", "width": "308mm", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
       "height": "30mm",
