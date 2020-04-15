@@ -206,7 +206,7 @@ routes.get('/MakeReport/:name',
     })
   }
 
-  routes.post("/listarRelatorios", 
+  routes.get("/listarRelatorios", 
   //Passport.authenticate(),
   //Utils.checkIsInRole(ROLES.Employee),
   (request, response) => {
@@ -223,7 +223,7 @@ routes.get('/MakeReport/:name',
   });
 
 
-  routes.post("/RelatorioPorID/:ID", (req,res) =>{
+  routes.get("/RelatorioPorID/:ID", (req,res) =>{
     pool.getConnection(function(err, connection){
       if (err) throw err;
       var sql = "SELECT relatorio FROM relatorios WHERE idRelatorio = ?";
