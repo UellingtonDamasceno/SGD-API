@@ -14,7 +14,7 @@ const Utils = require('./auth/Utils')
 
 
 routes.get('/MakeReport/:name',Passport.authenticate(),
-Utils.checkIsInRole(ROLES.Employee),
+Utils.checkIsInRole(ROLES.Admin),
 (req,res)=>{
     create(req,res);
   });
