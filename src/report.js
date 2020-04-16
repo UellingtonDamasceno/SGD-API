@@ -105,6 +105,14 @@ routes.get('/MakeReport/:name',
     
     if(req.query.Escolas!=null){
       content = content.replace("Escolas = 0", "Escolas = 1");
+      var quantEscolas = await escolasXD();
+      var escolasConcluidas = await escolasConcluidasFind();
+      var escolasCanceladas = await escolasCanceladasFind();
+      content = content.replace("%quantEscolas%", ''+quantEscolas);
+      content = content.replace("%quantAgendamentosEscolas%", 'Desconhecido');
+      content = content.replace("%quantAgendamentosConcluidosEscolas%", escolasConcluidas[0]);
+      content = content.replace("tblEscolasConcluidos = 0;", escolasConcluidas[1]);
+      content = content.replace("tblEscolasCanceladas = 0;", escolasCanceladas[1]);
     }
     
     if(req.query.Funcionarios!=null){
@@ -122,16 +130,48 @@ routes.get('/MakeReport/:name',
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT idEscola, nomeResponsavel, idPessoa FROM escolas"
+        var sql = "SELECT idEscola FROM escolas"
         connection.query(sql, function(err, result){
             if (err) throw err;
-            resolve('var mountains ='+ JSON.stringify(result)+';');
+            resolve(result.length);
             connection.release();
         });
       });
     });
     return datatable
   }
+  async function escolasConcluidasFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT b.NVisitas as Visitas, a.telefone as Telefone, a.cidade as Cidade, a.nome as Nome FROM pessoas as a INNER JOIN (SELECT b.idPessoa, a.NVisitas from escolas AS b INNER JOIN (SELECT idvisitante, COUNT(*) as NVisitas from visitas where status = 2 GROUP by idVisitante) as a on a.idvisitante = b.idVisitante) as b on a.idPessoa = b.idPessoa"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblEscolasConcluidos = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function escolasCanceladasFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT b.NVisitas as Visitas, a.telefone as Telefone, a.cidade as Cidade, a.nome as Nome FROM pessoas as a INNER JOIN (SELECT b.idPessoa, a.NVisitas from escolas AS b INNER JOIN (SELECT idvisitante, COUNT(*) as NVisitas from visitas where status = 3 GROUP by idVisitante) as a on a.idvisitante = b.idVisitante) as b on a.idPessoa = b.idPessoa"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblEscolasCanceladas = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable;
+  }
+
+
+
 
   async function bolsistasFind(){
     var datatable = new Promise ((resolve, reject)=>{

@@ -106,9 +106,6 @@
       <p style="text-indent: 42pt;"> Na data de emissão deste relatório, há no sistema um total de %quantBolsistas%, dos quais %quantBolsistaInativo% estão inativos e %quantBolsistaAtivo% estão ativos. </p>
       <spam id=captionBolsistasAtivos>A tabela abaixo relaciona os bolsistas ativos.</spam>
       <table id=BolsistasAtivos></table>
-
-      <table id=DALEXD></table>
-
     </div>
   </div>
 
@@ -117,7 +114,14 @@
   <div class="Escolas">
     <div class="SectionTitulo" >Análise dos dados referentes às Escolas</div>
     <div class="textSection">
-    
+      <p style="text-indent: 42pt;">O sistema possui registro de %quantEscolas% escolas cadastradas. Destas, 
+        %quantAgendamentosEscolas% já realizaram agendamentos e %quantAgendamentosConcluidosEscolas% escolas já
+        visitaram o Observatório Antares.<spam id=captionEscolasConcluidos>A tabela abaixo relaciona as 
+          escolas que concluiram visitas ao Observatório e a quantidade de vezes o fizeram.</spam></p>
+        <table id=EscolasConcluidos></table>
+        <p style="text-indent: 42pt;"></p><spam id=captionEscolasCanceladas>A tabela abaixo relaciona as escolas e a quantidade de vezes 
+          que tiveram visitas canceladas.</spam>
+        <table id=EscolasCanceladas></table>
     </div>
   </div>
 
@@ -179,6 +183,8 @@
   var tblAgendamentosRealizados = 0;
   var tblAgendamentosPendentes = 0;
   var tblBolsistasAtivos = 0;
+  var tblEscolasCanceladas = 0;
+  var tblEscolasConcluidos = 0;
   //--------------------------------------------------------------------------
   if(!Agendamentos){
     els = document.getElementsByClassName("Agendamentos");
@@ -247,6 +253,25 @@
     els = document.getElementsByClassName("Escolas");
     for(i in els){
       els[i].innerHTML = "";
+    }
+  }else{
+    if(tblEscolasCanceladas){
+      var tabela = document.getElementById("EscolasCanceladas");
+      var data = Object.keys(tblEscolasCanceladas[0]);
+      generateTable(tabela, tblEscolasCanceladas);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Escolas que tiveram visitas canceladas no período de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById('EscolasCanceladas').innerHTML = '';
+    }
+    if(tblEscolasConcluidos){
+      var tabela = document.getElementById("EscolasConcluidos");
+      var data = Object.keys(tblEscolasConcluidos[0]);
+      generateTable(tabela, tblEscolasConcluidos);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Escolas que concluiram visitas no período de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById('EscolasCanceladas').innerHTML = '';
     }
   }
   //------------------------------------------------------------------------------
