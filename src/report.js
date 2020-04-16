@@ -110,7 +110,7 @@ routes.get('/MakeReport/:name',
       var escolasCanceladas = await escolasCanceladasFind();
       var escolasPendentes = await escolasPendentesFind();
       content = content.replace("%quantEscolas%", ''+quantEscolas);
-      content = content.replace("%quantAgendamentosEscolas%", 'Desconhecido');
+      content = content.replace("%quantAgendamentosEscolas%", ''+(escolasConcluidas[0]+escolasPendentes[0]+escolasCanceladas[0]));
       content = content.replace("%quantAgendamentosConcluidosEscolas%", escolasConcluidas[0]);
       content = content.replace("tblEscolasConcluidos = 0;", escolasConcluidas[1]);
       content = content.replace("tblEscolasCanceladas = 0;", escolasCanceladas[1]);
