@@ -108,11 +108,13 @@ routes.get('/MakeReport/:name',
       var quantEscolas = await escolasXD();
       var escolasConcluidas = await escolasConcluidasFind();
       var escolasCanceladas = await escolasCanceladasFind();
+      var escolasPendentes = await escolasPendentesFind();
       content = content.replace("%quantEscolas%", ''+quantEscolas);
       content = content.replace("%quantAgendamentosEscolas%", 'Desconhecido');
       content = content.replace("%quantAgendamentosConcluidosEscolas%", escolasConcluidas[0]);
       content = content.replace("tblEscolasConcluidos = 0;", escolasConcluidas[1]);
       content = content.replace("tblEscolasCanceladas = 0;", escolasCanceladas[1]);
+      content = content.replace("tblEscolasPendentes = 0;", escolasPendentes[1]);
     }
     
     if(req.query.Funcionarios!=null){
@@ -169,7 +171,21 @@ routes.get('/MakeReport/:name',
     });
     return datatable;
   }
-
+  
+  async function escolasPendentesFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT b.NVisitas as Visitas, a.telefone as Telefone, a.cidade as Cidade, a.nome as Nome FROM pessoas as a INNER JOIN (SELECT b.idPessoa, a.NVisitas from escolas AS b INNER JOIN (SELECT idvisitante, COUNT(*) as NVisitas from visitas where status = 0 or status = 1 GROUP by idVisitante) as a on a.idvisitante = b.idVisitante) as b on a.idPessoa = b.idPessoa"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblEscolasPendentes = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable;
+  }
 
 
 

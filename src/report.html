@@ -119,9 +119,14 @@
         visitaram o Observatório Antares.<spam id=captionEscolasConcluidos>A tabela abaixo relaciona as 
           escolas que concluiram visitas ao Observatório e a quantidade de vezes o fizeram.</spam></p>
         <table id=EscolasConcluidos></table>
-        <p style="text-indent: 42pt;"></p><spam id=captionEscolasCanceladas>A tabela abaixo relaciona as escolas e a quantidade de vezes 
+        <p style="text-indent: 42pt;"></p><spam id=captionEscolasCanceladas>A tabela abaixo relaciona as escolas 
+          e a quantidade de vezes 
           que tiveram visitas canceladas.</spam>
         <table id=EscolasCanceladas></table>
+        <p style="text-indent: 42pt;"></p><spam id=captionEscolasPendentes>A tabela abaixo relaciona as escolas que 
+          possueem agendadas e ainda não concluídas ou aceitas.</spam>
+        <table id=EscolasPendentes></table>
+
     </div>
   </div>
 
@@ -185,6 +190,7 @@
   var tblBolsistasAtivos = 0;
   var tblEscolasCanceladas = 0;
   var tblEscolasConcluidos = 0;
+  var tblEscolasPendentes = 0;
   //--------------------------------------------------------------------------
   if(!Agendamentos){
     els = document.getElementsByClassName("Agendamentos");
@@ -272,6 +278,15 @@
       tabela.createCaption().innerHTML = 'Escolas que concluiram visitas no período de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
     }else{
       document.getElementById('EscolasCanceladas').innerHTML = '';
+    }
+    if(tblEscolasPendentes){
+      var tabela = document.getElementById("EscolasPendentes");
+      var data = Object.keys(tblEscolasPendentes[0]);
+      generateTable(tabela, tblEscolasPendentes);
+      generateTableHead(tabela, data);
+      tabela.createCaption().innerHTML = 'Escolas que possuem agendamentos não concluídos no período de <spam class="inicioPeriodo"></spam> a <spam class="fimPeriodo"></spam>';
+    }else{
+      document.getElementById('EscolasPendentes').innerHTML = '';
     }
   }
   //------------------------------------------------------------------------------
