@@ -284,7 +284,7 @@ routes.get('/MakeReport/:name',
   (request, response) => {
     pool.getConnection(function(err, connection){
       if (err) throw err;
-      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, x.surname, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario ORDER BY z.criadoEm";
+      var sql = "SELECT z.idRelatorio as ID, x.nome as NomeResponsavel, x.surname, z.criadoEm as Criacao, z.inicioPeriodo, z.fimPeriodo FROM pessoas AS x INNER JOIN funcionarios as y ON x.idPessoa = y.idPessoa INNER JOIN relatorios AS z ON y.idFuncionario = z.idFuncionario ORDER BY z.idRelatorio desc";
       connection.query(sql, function(err, result){
           if (err) throw err;
           response.send(result);
