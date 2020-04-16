@@ -136,7 +136,14 @@
   <div class="Funcionarios">
     <div class="SectionTitulo">Análise dos dados referentes aos Funcionários</div>
     <div class="textSection">
-
+      <p style="text-indent: 42pt;">O sistema possui registro de %quantFuncionarios% funcionários cadastradas. 
+        <spam id=captionFuncionariosInativosText>Todavia, %quantFuncionariosDesligados% foram inativados no sistema
+          não podendo exercer suas funções anteriores.</spam><spam id=captionFuncionariosAtivos>A tabela abaixo 
+            relaciona os funcionários ativos no portal.</spam></p>
+        <table id=funcionariosAtivos></table>
+        <p style="text-indent: 42pt;"></p><spam id=captionFuncionariosInativos>A tabela abaixo relaciona os
+          funcionários que foram inativados.</spam>
+        <table id=funcionariosInativos></table>
     </div>
   </div>
 
@@ -191,6 +198,8 @@
   var tblEscolasCanceladas = 0;
   var tblEscolasConcluidos = 0;
   var tblEscolasPendentes = 0;
+  var tblFuncionariosAtivos = 0;
+  var tblFuncionariosInativos = 0;
   //--------------------------------------------------------------------------
   if(!Agendamentos){
     els = document.getElementsByClassName("Agendamentos");
@@ -295,6 +304,26 @@
     for(i in els){
       els[i].innerHTML = "";
     }
+  }else{
+    if(tblFuncionariosAtivos){
+        var tabela = document.getElementById("funcionariosAtivos");
+        var data = Object.keys(tblFuncionariosAtivos[0]);
+        generateTable(tabela, tblFuncionariosAtivos);
+        generateTableHead(tabela, data);
+        tabela.createCaption().innerHTML = 'Funcionários que estão ativos no período entre<spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+      }else{
+        document.getElementById('funcionariosAtivos').innerHTML = '';
+      }
+      if(tblFuncionariosInativos){
+        var tabela = document.getElementById("funcionariosInativos");
+        var data = Object.keys(tblFuncionariosInativos[0]);
+        generateTable(tabela, tblFuncionariosInativos);
+        generateTableHead(tabela, data);
+        tabela.createCaption().innerHTML = 'Funcionários que estão inativos no período entre<spam class="inicioPeriodo"></spam> e <spam class="fimPeriodo"></spam>';
+      }else{
+        document.getElementById('captionFuncionariosInativosText').innerHTML = '';
+        document.getElementById('funcionariosInativosText').innerHTML = '';
+      }
   }
   //------------------------------------------------------------------------------
   if(!Visitas){

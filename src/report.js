@@ -119,6 +119,12 @@ routes.get('/MakeReport/:name',
     
     if(req.query.Funcionarios!=null){
       content = content.replace("Funcionarios = 0", "Funcionarios = 1");
+      var funcionariosAtivos = await funcionariosInativosFind();
+      var funcionariosInativos = await funcionariosAtivosFind();
+      content = content.replace("%quantFuncionarios%", ''+(funcionariosInativos[0]+funcionariosAtivos[0]));
+      content = content.replace("%quantFuncionariosDesligados%", ''+funcionariosInativos[0]);
+      content = content.replace("tblFuncionariosAtivos = 0;", funcionariosAtivos[1]);
+      content = content.replace("tblFuncionariosInativos = 0;", funcionariosInativos[1]);
     }    
     
     if(req.query.Visitas!=null){
@@ -142,6 +148,37 @@ routes.get('/MakeReport/:name',
     });
     return datatable
   }
+
+  async function funcionariosAtivosFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT b.telefone as telefone, b.email as Email,b.surname as Sobrenome,b.nome as Nome FROM funcionarios as a inner join pessoas as b on a.idPessoa = b.idPessoa where a.inativo = 0"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblFuncionariosAtivos = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function funcionariosInativosFind(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT b.telefone as telefone, b.email as Email,b.surname as Sobrenome,b.nome as Nome FROM funcionarios as a inner join pessoas as b on a.idPessoa = b.idPessoa where a.inativo = 1"
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'tblFuncionariosInativos = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
   async function escolasConcluidasFind(){
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
