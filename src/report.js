@@ -29,23 +29,8 @@ routes.get('/MakeReport/:name',
         if(err)
             console.log("Erro ao salvar o arquivo") 
     });
+
     await pdf.create(content,{"height": "434mm", "width": "308mm", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
-      "height": "30mm",
-      "contents": ''
-    }
-
-    }).toBuffer((err, buffer) =>{
-      if (err)
-        console.log("Erro ao exibir o arquivo!");
-      else{
-        res.type('application/pdf');
-        res.statusCode = 200;
-        res.send(buffer);
-      }
-    });
-
-
-    await pdf.create(content,{"format":"A4", "border":{"top": "0pt", "right": "0", "bottom": "57", "left": "0pt"},"header": {
       "height": "30mm",
       "contents": ''
     }
@@ -68,6 +53,9 @@ routes.get('/MakeReport/:name',
              buffer, req.query.idFuncionario,
                 (result) =>{});
         }
+        res.type('application/pdf');
+        res.statusCode = 200;
+        res.send(buffer);
       }
     });
   }
