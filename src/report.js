@@ -167,7 +167,7 @@ routes.get('/MakeReport/:name',
     var datatable = new Promise ((resolve, reject)=>{
       pool.getConnection(function(err, connection){
         if (err) throw err;
-        var sql = "SELECT b.telefone as telefone, b.email as Email,b.surname as Sobrenome,b.nome as Nome FROM funcionarios as a inner join pessoas as b on a.idPessoa = b.idPessoa where a.inativo = 0"
+        var sql = "SELECT b.telefone as telefone, b.surname as Sobrenome,b.nome as Nome FROM funcionarios as a inner join pessoas as b on a.idPessoa = b.idPessoa where a.inativo = 0"
         connection.query(sql, function(err, result){
             if (err) throw err;
             resolve([result.length, 'tblFuncionariosAtivos = '+ JSON.stringify(result)+';']);
