@@ -40,7 +40,8 @@ routes.get('/MakeReport/:name',
         console.log("Erro ao exibir o arquivo!");
       else{
         var data7 = new Date();
-        if(userName == 'Funcionário não encontrado'){
+        //console.log(content);
+        /*if(userName == 'Funcionário não encontrado'){
           addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
@@ -52,7 +53,7 @@ routes.get('/MakeReport/:name',
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
              buffer, req.query.idFuncionario,
                 (result) =>{});
-        }
+        }*/
         res.type('application/pdf');
         res.statusCode = 200;
         res.send(buffer);
@@ -129,6 +130,20 @@ routes.get('/MakeReport/:name',
     
     if(req.query.Visitas!=null){
       content = content.replace("Visitas = 0", "Visitas = 1");
+      var quantVisitantesPorSerie = await visitantesPorSerie();
+      var quantVisitasPorSerie = await visitasPorSerie();
+      var quantVisitantesPorAtracao = await visitantesPorAtracao();
+      var quantVisitasPorAtracao = await visitasPorAtracao();
+      var quantVisitantesPorHorario = await visitantesPorHorario();
+      var quantVisitasPorHorario = await visitasPorHorario();
+      var agRealizado = await quantRealizado();
+      content = content.replace("%quantVisitasConcluidas%", agRealizado[0]);
+      content = content.replace("visitantesPorSerie = 0;", quantVisitantesPorSerie[1]);
+      content = content.replace("visitasPorSerie = 0;", quantVisitasPorSerie[1]);
+      content = content.replace("visitantesPorAtracao = 0;", quantVisitantesPorAtracao[1]);
+      content = content.replace("visitasPorAtracao = 0;", quantVisitasPorAtracao[1]);
+      content = content.replace("visitantesPorHorario = 0;", quantVisitantesPorHorario[1]);
+      content = content.replace("visitasPorHorario = 0;", quantVisitasPorHorario[1]);
     }
     return content;
   };
@@ -408,7 +423,97 @@ routes.get('/MakeReport/:name',
       });
     });
     return datatable;
-
   }
+
+  async function visitantesPorSerie(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT serie as Série, sum(numAlunos) as Visitantes from visitas where status = 2 GROUP by serie";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitantesPorSerie = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function visitasPorSerie(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT serie as Série, count(*) as Visitas from visitas where status = 2 GROUP by serie";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitasPorSerie = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function visitantesPorAtracao(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT atracoes as Atração, SUM(numAlunos) as 'Visitantes' from visitas where status = 2 GROUP by atracoes";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitantesPorAtracao = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function visitasPorAtracao(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT atracoes as 'Atrações', COUNT(*) as Visitas from visitas where status = 2 GROUP by atracoes";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitasPorAtracao = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function visitantesPorHorario(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT hora as Horário, AVG(numAlunos) as 'Média de Visitantes' from visitas where status = 2 GROUP by hora";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitantesPorHorario = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+
+  async function visitasPorHorario(){
+    var datatable = new Promise ((resolve, reject)=>{
+      pool.getConnection(function(err, connection){
+        if (err) throw err;
+        var sql = "SELECT hora as Horário, COUNT(*) as Visitas  from visitas where status = 2 GROUP by hora";
+        connection.query(sql, function(err, result){
+            if (err) throw err;
+            resolve([result.length, 'visitasPorHorario = '+ JSON.stringify(result)+';']);
+            connection.release();
+        });
+      });
+    });
+    return datatable
+  }
+  
 
   module.exports = routes;
