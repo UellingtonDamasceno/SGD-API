@@ -40,8 +40,7 @@ routes.get('/MakeReport/:name',
         console.log("Erro ao exibir o arquivo!");
       else{
         var data7 = new Date();
-        //console.log(content);
-        /*if(userName == 'Funcionário não encontrado'){
+        if(userName == 'Funcionário não encontrado'){
           addRelatorio(''+data7.getDate()+'/'+data7.getMonth()+'/'+data7.getFullYear(),
           req.query.diaFim+'/'+req.query.mesFim+'/'+req.query.anoFim,
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
@@ -53,7 +52,7 @@ routes.get('/MakeReport/:name',
              req.query.diaInicio+'/'+req.query.mesInicio+'/'+req.query.anoInicio,
              buffer, req.query.idFuncionario,
                 (result) =>{});
-        }*/
+        }
         res.type('application/pdf');
         res.statusCode = 200;
         res.send(buffer);
