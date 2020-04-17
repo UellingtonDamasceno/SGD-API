@@ -312,8 +312,8 @@
 function transporData(data){
 		var result = {};
 		for (element in data) {
-			result[''+ Object.keys(data[0])[0]+' '+data[element][Object.keys(data[0])[0]] + 
-			': '+ data[element][Object.keys(data[0])[1]] + ' ' + Object.keys(data[0])[1]] 
+			result[''+ Object.keys(data[0])[0]+': '+data[element][Object.keys(data[0])[0]]+ 
+			'   -   '+ Object.keys(data[0])[1] + ': ' + data[element][Object.keys(data[0])[1]]]
 			= data[element][Object.keys(data[0])[1]];
 		}
 		return result;
